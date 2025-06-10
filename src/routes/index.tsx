@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "../features/Home/HomePage";
-import LoginPage from "../features/Login/LoginPage";
+import LandingWrapper from "../features/Landing/LandingWrapper";
+// import Homepage from "../features/Home/HomePage";
+// import Loginpage from "../features/Login/LoginPage";
 import OAuthCallback from "../features/Login/OAuthCallback";
 import DashBoardPage from "../features/Dashboard/DashboardPage";
 // import TrashPage from '../features/Trash/TrashPage';
@@ -11,8 +12,10 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LandingWrapper />} />
+        <Route path="/login" element={<LandingWrapper />} />
+        {/* <Route path="/" element={<HomePage />} /> */}
+        {/* <Route path="/login" element={<LoginPage />} /> */}
         <Route path="/oauth/callback" element={<OAuthCallback />} />
         <Route path="/dashboard" element={<DashBoardPage />} />
         {/* <Route path="/trash" element={<TrashPage />} /> */}

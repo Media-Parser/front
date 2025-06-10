@@ -1,15 +1,16 @@
-// 📁 src/features/Homepage/Homepage.tsx
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './Home.module.css';
-import Layout from '../../components/Layout/Layout';
+/* 📁 src/features/Home/HomePage.tsx */
 
-const fullText = '안녕하세요\n함께 중립적 기사 컨펌을 시작해볼까요?';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./Home.module.css";
+
+const fullText = "안녕하세요\n함께 중립적 기사 컨펌을 시작해볼까요?";
 
 const Homepage = () => {
   const navigate = useNavigate();
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     let i = 0;
@@ -20,30 +21,34 @@ const Homepage = () => {
       } else {
         clearInterval(interval);
       }
-    }, 200);
+    }, 100);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev);
-    }, 500); // 깜빡임 속도
+    }, 500);
     return () => clearInterval(cursorInterval);
   }, []);
 
+  const handleStart = () => {
+    setIsFadingOut(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
+  };
+
   return (
-    <Layout showHeader={false} showSidebar={false}>
-      <div className={styles.container}>
-        <h1 className={styles.title}>기잣말〯ᄊᆞ미</h1>
-        <p className={styles.subtitle}>
-          {displayedText}
-          <span className={styles.cursor}>{showCursor ? '|' : ' '}</span>
-        </p>
-        <button className={styles.button} onClick={() => navigate('/login')}>
-          시작하기
-        </button>
-      </div>
-    </Layout>
+    <div className={styles.homepageContainer}>
+      <p className={`${styles.subtitle} ${isFadingOut ? styles.fadeOut : ""}`}>
+        {displayedText}
+        <span className={styles.cursor}>{showCursor ? "|" : " "}</span>
+      </p>
+      <button className={styles.button} onClick={handleStart}>
+        시작하기
+      </button>
+    </div>
   );
 };
 
