@@ -1,14 +1,12 @@
 // src/components/Sidebar/Sidebar.tsx
 import styles from "./Sidebar.module.css"; // 기존 .css → .module.css
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  const [selectedMenu, setSelectedMenu] = useState("문서");
   const navigate = useNavigate();
 
   const topMenus = [
-    { label: "문서", path: "/" },
+    { label: "문서", path: "/dashboard" },
     { label: "휴지통", path: "/trash" },
     { label: "계정", path: "/account" },
   ];
@@ -19,9 +17,10 @@ const Sidebar = () => {
   ];
 
   const handleMenuClick = (menu: { label: string; path: string }) => {
-    setSelectedMenu(menu.label);
     navigate(menu.path);
   };
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <aside className={styles.sidebar}>
@@ -32,7 +31,7 @@ const Sidebar = () => {
               <li
                 key={menu.label}
                 className={`${styles.menuItem} ${
-                  selectedMenu === menu.label ? styles.active : ""
+                  isActive(menu.path) ? styles.active : ""
                 }`}
                 onClick={() => handleMenuClick(menu)}
               >
@@ -51,7 +50,7 @@ const Sidebar = () => {
               <li
                 key={menu.label}
                 className={`${styles.menuItem} ${
-                  selectedMenu === menu.label ? styles.active : ""
+                  isActive(menu.path) ? styles.active : ""
                 }`}
                 onClick={() => handleMenuClick(menu)}
               >

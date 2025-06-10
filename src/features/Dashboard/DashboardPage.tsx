@@ -1,8 +1,9 @@
-// src/features/Home/DashboardPage.tsx
+/* 📁 src/features/Home/DashboardPage.tsx */
+
 import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import Layout from "../../components/Layout/Layout";
-import DocumentCard from "../../components/DocumentCard/DocumentCard"; // 분리한 컴포넌트
+import DocumentCard from "../../components/DocumentCard/DocumentCard";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
