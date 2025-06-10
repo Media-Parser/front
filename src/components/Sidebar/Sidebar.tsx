@@ -1,59 +1,64 @@
 // src/components/Sidebar/Sidebar.tsx
-import styles from './Sidebar.module.css';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import styles from "./Sidebar.module.css"; // 기존 .css → .module.css
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  const [selectedMenu, setSelectedMenu] = useState('문서');
   const navigate = useNavigate();
 
   const topMenus = [
-    { label: '문서', icon: '📄', path: '/' },
-    { label: '휴지통', icon: '🗑️', path: '/trash' },
-    { label: '계정', icon: '👤', path: '/account' },
+    { label: "문서", path: "/dashboard" },
+    { label: "휴지통", path: "/trash" },
+    { label: "계정", path: "/account" },
   ];
 
   const bottomMenus = [
-    { label: '지원', icon: '💬', path: '/support' },
-    { label: '로그아웃', icon: '🔓', path: '/logout' },
+    { label: "지원", path: "/support" },
+    { label: "로그아웃", path: "/logout" },
   ];
 
   const handleMenuClick = (menu: { label: string; path: string }) => {
-    setSelectedMenu(menu.label);
     navigate(menu.path);
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.topSection}>
-        <ul className={styles.menu}>
-          {topMenus.map((menu) => (
-            <li
-              key={menu.label}
-              className={`${styles.menuItem} ${selectedMenu === menu.label ? styles.active : ''}`}
-              onClick={() => handleMenuClick(menu)}
-            >
-              <span className={styles.icon}>{menu.icon}</span>
-              {menu.label}
-            </li>
-          ))}
-        </ul>
+      <div className={styles.mainNav}>
+        <nav>
+          <ul>
+            {topMenus.map((menu) => (
+              <li
+                key={menu.label}
+                className={`${styles.menuItem} ${
+                  isActive(menu.path) ? styles.active : ""
+                }`}
+                onClick={() => handleMenuClick(menu)}
+              >
+                {menu.label}
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className={styles.separator}></div>
       </div>
 
-      <div className={styles.bottomSection}>
-        <hr />
-        <ul className={styles.menu}>
-          {bottomMenus.map((menu) => (
-            <li
-              key={menu.label}
-              className={`${styles.menuItem} ${selectedMenu === menu.label ? styles.active : ''}`}
-              onClick={() => handleMenuClick(menu)}
-            >
-              <span className={styles.icon}>{menu.icon}</span>
-              {menu.label}
-            </li>
-          ))}
-        </ul>
+      <div className={styles.bottomNav}>
+        <nav>
+          <ul>
+            {bottomMenus.map((menu) => (
+              <li
+                key={menu.label}
+                className={`${styles.menuItem} ${
+                  isActive(menu.path) ? styles.active : ""
+                }`}
+                onClick={() => handleMenuClick(menu)}
+              >
+                {menu.label}
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </aside>
   );

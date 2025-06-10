@@ -1,13 +1,30 @@
 /* src/components/Sidebar/Sidebar.module.css */
+/* ul 태그에 해당 */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 .sidebar {
   width: 180px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2rem 1rem;
-  border-right: 1px solid #ddd;
+  padding: 20px 0;
   background-color: #fff;
+}
+
+.topSection {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px 0;
+}
+
+.bottomSection {
+  padding: 15px 0;
+  border-top: 1px solid #000000;
 }
 
 .menu {
@@ -19,19 +36,20 @@
 .menuItem {
   display: flex;
   align-items: center;
-  margin-bottom: 1.2rem;
-  font-size: 16px;
-  color: #444;
+  padding: 12px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 0.95em;
+  color: #000000;
+  transition: background-color 0.2s ease;
 }
 
 .menuItem:hover {
-  color: #e6b800; /* 어두운 노란색 */
+  background-color: #e9ecef;
 }
 
 .active {
-  color: #ffd54f; /* 밝은 노란색 */
+  background-color: #fff7d6;
+  color: #000000;
   font-weight: bold;
 }
 
