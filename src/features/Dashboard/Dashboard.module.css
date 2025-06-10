@@ -1,0 +1,55 @@
+/* src/features/Home/Dashboard.module.css */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
+
+.mainArea {
+  flex-grow: 1;
+  padding: 25px;
+  background-color: #ffffff;
+  overflow-y: auto;
+}
+
+.searchBar {
+  flex: 1;
+  max-width: 500px;
+  padding: 6px 12px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.mainAreaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.mainAreaHeader h2 {
+  font-size: 1.8em;
+  color: black;
+  margin: 0;
+}
+
+.uploadButton {
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #fbe51bd9;
+  color: black;
+}
+
+.uploadButton:hover {
+  background-color: #f9d314;
+}
+
+.documentSection h3 {
+  color: black;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
