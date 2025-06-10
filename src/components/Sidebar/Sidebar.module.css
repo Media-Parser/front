@@ -56,3 +56,41 @@ ul {
 .icon {
   margin-right: 8px;
 }
+
+/* 문서 카테고리 드롭 다운 */
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  font-size: 0.95em;
+  color: #000000;
+  transition: background-color 0.2s ease;
+}
+
+.menuLabel {
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.dropdownArrow {
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+  padding: 2px 4px;
+  margin-left: 12px;
+  transition: color 0.2s ease;
+}
+
+.dropdownArrow:hover {
+  color: #000;
+}
+
+.subMenuItem:hover {
+  text-decoration: underline;
+}
+.subMenuItem {
+  display: flex;
+  align-items: center;    /* 세로 가운데 */
+  justify-content: center; /* 가로 가운데 */
+}
