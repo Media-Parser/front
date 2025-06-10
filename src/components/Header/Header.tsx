@@ -1,12 +1,15 @@
-// src/components/Header/Header.tsx
-import styles from './Header.module.css';
+// src/components/Header.tsx
+import styles from "./Header.module.css";
+import logoImage from "../../assets/logo.png";
 
 const Header = () => {
   return (
-    <header className={styles.header}>
-      <h1 className={styles.title}>기잣·말ᄊᆞ미</h1>
+    <div className={styles.appHeader}>
+      <div className={styles.title}>
+        <img className={styles.logoImage} src={logoImage} alt="로고" />
+      </div>
       <hr className={styles.divider} />
-    </header>
+    </div>
   );
 };
 

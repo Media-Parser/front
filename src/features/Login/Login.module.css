@@ -1,13 +1,13 @@
 /* 📁 src/features/Login/Login.module.css */
 
 .container {
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  background-image: url('/src/assets/hunminjeongeum-bg.jpg');
+  background-image: url("/src/assets/hunminjeongeum-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -17,24 +17,24 @@
 }
 
 .container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.85); 
+  background-color: rgba(255, 255, 255, 0.85);
   z-index: 0;
 }
 
 .title,
 .buttonBox {
   position: relative;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .title {
-  font-family: 'Noto Serif KR', serif;
+  font-family: "Noto Serif KR", serif;
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 32px;
@@ -86,8 +86,8 @@
   border: 1px solid #eee;
 }
 
-.naver {  
+.naver {
   background-color: #03c75a;
   color: #000;
-  border: 1px solid #eee; 
+  border: 1px solid #eee;
 }

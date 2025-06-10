@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
-import Header from '../Header/Header';
-import Sidebar from '../Sidebar/Sidebar';
-import styles from './Layout.module.css';
+import type { ReactNode } from "react";
+import Header from "../Header/Header";
+import Sidebar from "../Sidebar/Sidebar";
+import styles from "./Layout.module.css";
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,7 +9,11 @@ interface LayoutProps {
   showSidebar?: boolean;
 }
 
-const Layout = ({ children, showHeader = true, showSidebar = true }: LayoutProps) => {
+const Layout = ({
+  children,
+  showHeader = true,
+  showSidebar = true,
+}: LayoutProps) => {
   return (
     <div className={styles.wrapper}>
       {showHeader && <Header />}
@@ -22,8 +26,6 @@ const Layout = ({ children, showHeader = true, showSidebar = true }: LayoutProps
 };
 
 export default Layout;
-
-
 
 // ✅ 사용 예시
 
