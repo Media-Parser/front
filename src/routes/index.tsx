@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingWrapper from "../features/Landing/LandingWrapper";
-// import Homepage from "../features/Home/HomePage";
-// import Loginpage from "../features/Login/LoginPage";
 import OAuthCallback from "../features/Login/OAuthCallback";
 import DashBoardPage from "../features/Dashboard/DashboardPage";
-// import TrashPage from '../features/Trash/TrashPage';
+import TrashPage from "../features/Trash/TrashPage";
 // import DetailPage from '../features/Detail/DetailPage';
 // import UploadPage from '../features/Upload/UploadPage';
+// import Homepage from "../features/Home/HomePage";
+// import Loginpage from "../features/Login/LoginPage";
 
 const AppRouter = () => {
   return (
@@ -18,7 +18,7 @@ const AppRouter = () => {
         {/* <Route path="/login" element={<LoginPage />} /> */}
         <Route path="/oauth/callback" element={<OAuthCallback />} />
         <Route path="/dashboard" element={<DashBoardPage />} />
-        {/* <Route path="/trash" element={<TrashPage />} /> */}
+        <Route path="/trash" element={<TrashPage />} />
         {/* <Route path="/detail/:id" element={<DetailPage />} /> */}
         {/* <Route path="/upload" element={<UploadPage />} /> */}
       </Routes>
