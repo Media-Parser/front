@@ -1,0 +1,16 @@
+.header {
+    padding: 1rem 2rem;
+    background-color: white;
+  }
+  
+  .title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 24px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc;
+  }
+  
