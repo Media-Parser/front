@@ -1,5 +1,3 @@
-/* 📁 src/features/Landing/LandingWrapper.tsx */
-
 import { useLocation } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import Homepage from "../Home/HomePage";

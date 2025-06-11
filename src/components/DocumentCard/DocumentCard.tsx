@@ -8,6 +8,7 @@ interface DocumentCardProps {
   download?: boolean;
   remove?: boolean;
   onClick?: () => void;
+  onDelete?: () => void; // ✅ 삭제 이벤트 핸들러 추가
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -17,13 +18,14 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
   download,
   remove,
   onClick,
+  onDelete, // ✅ props 받기
 }) => {
   return (
     <div
       className={styles.card}
-      onClick={onClick}
       role="button"
       tabIndex={0}
+      onClick={onClick}
       onKeyPress={onClick}
     >
       <h3>{title}</h3>
@@ -31,7 +33,17 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
       <div className={styles.cardActions}>
         {score && <span>점수</span>}
         {download && <span>다운로드</span>}
-        {remove && <span>삭제</span>}
+        {remove && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // 카드 전체 클릭 방지
+              onDelete?.();
+            }}
+            className={styles.deleteButton}
+          >
+            삭제
+          </button>
+        )}
       </div>
     </div>
   );

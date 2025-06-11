@@ -45,9 +45,12 @@ const Homepage = () => {
         {displayedText}
         <span className={styles.cursor}>{showCursor ? "|" : " "}</span>
       </p>
-      <button className={styles.button} onClick={handleStart}>
-        시작하기
-      </button>
+      <button
+  className={`${styles.button} ${isFadingOut ? styles.fadeOut : ""}`}
+  onClick={handleStart}
+>
+  시작하기
+</button>
     </div>
   );
 };
