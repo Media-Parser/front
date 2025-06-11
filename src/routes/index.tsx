@@ -3,6 +3,8 @@ import LandingWrapper from "../features/Landing/LandingWrapper";
 import OAuthCallback from "../features/Login/OAuthCallback";
 import DashBoardPage from "../features/Dashboard/DashboardPage";
 import TrashPage from "../features/Trash/TrashPage";
+import AccountPage from "../features/Account/AccountPage";
+import SupportPage from "../features/Support/SupportPage";  
 // import DetailPage from '../features/Detail/DetailPage';
 // import UploadPage from '../features/Upload/UploadPage';
 // import Homepage from "../features/Home/HomePage";
@@ -19,6 +21,8 @@ const AppRouter = () => {
         <Route path="/oauth/callback" element={<OAuthCallback />} />
         <Route path="/dashboard" element={<DashBoardPage />} />
         <Route path="/trash" element={<TrashPage />} />
+        <Route path="/account" element={<AccountPage />} />
+        <Route path="/support" element={<SupportPage />} />
         {/* <Route path="/detail/:id" element={<DetailPage />} /> */}
         {/* <Route path="/upload" element={<UploadPage />} /> */}
       </Routes>
