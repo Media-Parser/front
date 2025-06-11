@@ -1,0 +1,70 @@
+.mainArea {
+  padding: 20px;
+}
+
+.mainAreaHeader {
+  margin-bottom: 20px;
+}
+
+.mainAreaHeaderTitle {
+  font-size: 1.8em;
+  color: black;
+  margin: 0;
+}
+
+.default {
+  display: inline-block;
+  font-size: 14px;
+  color: #555;
+}
+
+.formArea {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.input,
+.textarea,
+.select {
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.submitButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #fbe51bd9;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 15%;
+  margin-left: auto;
+}
+
+.submitButton:hover {
+  background-color: #f9d314;
+}
