@@ -12,8 +12,7 @@ const TrashPage = () => {
     navigate(`/detail/${docId}`);
   };
 
-  // 날짜 기준으로 분류
-  const today = "2025.06.10"; // 예시용, 실제로는 오늘 날짜를 구해서 사용 가능
+  const today = "2025.06.10"; 
   const todayDocs = trashDocuments.filter(doc => doc.date === today);
   const earlierDocs = trashDocuments.filter(doc => doc.date !== today);
 
@@ -28,7 +27,6 @@ const TrashPage = () => {
             placeholder="검색어를 입력하세요"
           />
         </div>
-
         <section className={styles.documentSection}>
           <h3>Today</h3>
           <div className={styles.cardGrid}>
@@ -42,7 +40,7 @@ const TrashPage = () => {
                   date={doc.date}
                   score={doc.score}
                   download={doc.download}
-                  remove={true} // 삭제됨 표시
+                  remove={true}
                   onClick={() => handleCardClick(doc.id)}
                 />
               ))

@@ -1,3 +1,5 @@
+/* 📁 src/components/DocumentCard/DocumentCard.tsx */
+
 import React from "react";
 import styles from "./DocumentCard.module.css";
 
@@ -8,7 +10,8 @@ interface DocumentCardProps {
   download?: boolean;
   remove?: boolean;
   onClick?: () => void;
-  onDelete?: () => void; // ✅ 삭제 이벤트 핸들러 추가
+  onDelete?: () => void; 
+  onRightClick?: () => void;
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -18,7 +21,8 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
   download,
   remove,
   onClick,
-  onDelete, // ✅ props 받기
+  onDelete,
+  onRightClick,
 }) => {
   return (
     <div
@@ -27,6 +31,10 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
       tabIndex={0}
       onClick={onClick}
       onKeyPress={onClick}
+      onContextMenu={(e) => {
+        e.preventDefault();  // 기본 우클릭 메뉴 차단
+        onRightClick?.();
+      }}
     >
       <h3>{title}</h3>
       <p>{date}</p>

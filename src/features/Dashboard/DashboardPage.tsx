@@ -8,6 +8,9 @@ import DocumentCard from "../../components/DocumentCard/DocumentCard";
 import type { Document } from "../../types/documents";
 import { addToTrash } from "../../store/slices/trashSlice";
 import { setDocuments, deleteDocument } from "../../store/slices/documentSlice";
+import { moveToTrash } from "../../store/slices/documentSlice";
+import { openDetail } from "../../store/slices/rightClickDetailSlice";
+import DocumentDetailSidebar from "../DocumentDetailSideBar/DocumentDetailSideBar";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -16,16 +19,17 @@ const DashboardPage = () => {
 
   const handleDelete = (doc: Document) => {
     dispatch(deleteDocument(doc.id)); // 문서 목록에서 삭제
-    dispatch(addToTrash(doc));         // 휴지통으로 이동
+    dispatch(moveToTrash(doc));         // 휴지통으로 이동 (서버)
+    dispatch(addToTrash(doc));         // 휴지통으로 이동 (로컬)
   };
 
   useEffect(() => {
     dispatch(setDocuments([
       { id: "doc1", title: "오늘 문서 1", date: "2025.06.10", score: true, download: true, remove: true },
-      { id: "doc2", title: "오늘 문서 2", date: "2025.06.10" },
-      { id: "doc3", title: "지난 문서 1", date: "2025.05.30" },
-      { id: "doc4", title: "지난 문서 2", date: "2025.05.25" },
-      { id: "doc5", title: "지난 문서 3", date: "2025.05.20" },
+      { id: "doc2", title: "오늘 문서 2", date: "2025.06.10", score: true, download: true, remove: true },
+      { id: "doc3", title: "지난 문서 1", date: "2025.05.30", score: true, download: true, remove: true },
+      { id: "doc4", title: "지난 문서 2", date: "2025.05.25", score: true, download: true, remove: true },
+      { id: "doc5", title: "지난 문서 3", date: "2025.05.20", score: true, download: true, remove: true },
     ]));
   }, [dispatch]);
 
@@ -35,7 +39,17 @@ const DashboardPage = () => {
   return (
     <Layout>
       <div className={styles.mainArea}>
-        {/* ... 생략 ... */}
+        <div className={styles.mainAreaHeader}>
+          <h2>문서</h2>
+          <input
+            type="search"
+            className={styles.searchBar}
+            placeholder="검색어를 입력하세요"
+          />
+          <div className={styles.uploadButton}>
+            <button>파일업로드</button>
+          </div>
+        </div>
         <section className={styles.documentSection}>
           <h3>Earlier</h3>
           <div className={styles.cardGrid}>
@@ -48,11 +62,13 @@ const DashboardPage = () => {
                 download={doc.download}
                 remove={doc.remove}
                 onClick={() => navigate(`/detail/${doc.id}`)}
-                onDelete={() => handleDelete(doc)}  // 삭제 핸들러 연결
+                onDelete={() => handleDelete(doc)}
+                onRightClick={() => dispatch(openDetail(doc))}
               />
             ))}
           </div>
         </section>
+        <DocumentDetailSidebar />
       </div>
     </Layout>
   );
