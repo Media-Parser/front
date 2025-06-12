@@ -1,16 +1,22 @@
-// src/features/Dashboard/DashboardPage.tsx
+// 📁 src/features/Dashboard/DashboardPage.tsx
 
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import styles from "./Dashboard.module.css";
 import Layout from "../../components/Layout/Layout";
-import DocumentCard from "./components/DocumentCard";
+
+import DocumentCard from "../../components/DocumentCard/DocumentCard";
+import { useGroupedDocuments } from "../../hooks/useGroupedDocuments";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
-import { useGroupedDocuments } from "../../hooks/useGroupedDocuments";
+import { openDetail } from "../../store/slices/rightClickDetailSlice";
+import DocumentDetailSidebar from "../DocumentDetailSideBar/DocumentDetailSideBar";
+
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -85,17 +91,20 @@ const DashboardPage = () => {
                     title={doc.title ?? doc.filename ?? ""}
                     date={doc.date ?? ""}
                     score={doc.score}
-                    download={true}
-                    remove={true}
-                    onClick={() => handleCardClick(doc.id ?? doc._id)}
-                    onDelete={() => deleteDocument(doc.id ?? doc._id)}
-                    onDownload={() => downloadDocument(doc.id ?? doc._id)}
+                    download={doc.download}
+                    remove={doc.remove}
+                    onClick={() => handleCardClick(doc.id)}
+                    onDelete={() => deleteDocument(doc.id)}
+                    onDownload={() => downloadDocument(doc.id)}
+                    onRightClick={() => dispatch(openDetail(doc))} // 💡 기존 slice 기능도 유지
                   />
                 ))}
               </div>
             </section>
           ))
         )}
+
+        <DocumentDetailSidebar />
       </div>
     </Layout>
   );

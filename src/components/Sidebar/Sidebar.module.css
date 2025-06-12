@@ -88,7 +88,9 @@ ul {
 
 .subMenuItem:hover {
   text-decoration: underline;
+  color: #f9d314;
 }
+
 .subMenuItem {
   display: flex;
   align-items: center;    /* 세로 가운데 */

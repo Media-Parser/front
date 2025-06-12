@@ -46,13 +46,13 @@
 
 .subtitle {
   white-space: pre-line;
-  font-size: 2.5vmin;
   color: #333;
   min-height: 4rem;
   margin-bottom: 2rem;
   line-height: 1.6;
   position: relative;
-  text-align: center;
+  text-align: center; 
+  font-size: 18px;
 }
 
 /* Slide left animation */
@@ -86,21 +86,17 @@
   background-color: #666;
   color: white;
   border: none;
-  padding: 0.75rem 2rem;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 3vw, 2rem);
   border-radius: 4px;
-  font-size: 2vmin;
+  font-size: clamp(0.9rem, 2vmin, 1.2rem);
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
   max-width: 200px;
-  width: fit-content;
+  min-width: 120px;
+  width: auto;
   margin-top: 1rem;
   position: relative;
   align-self: center;
-  /* Button stays in place - no animation */
-}
-
-.button:hover {
-  background-color: #444;
 }
 
 /* Fade out animation */

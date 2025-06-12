@@ -1,0 +1,17 @@
+// 📁 store/store.ts
+import { configureStore } from '@reduxjs/toolkit';
+import documentReducer from './slices/documentSlice';
+import trashReducer from "./slices/trashSlice"; // 추가
+import rightClickDetailReducer from "./slices/rightClickDetailSlice";
+
+export const store = configureStore({
+  reducer: {
+    document: documentReducer,
+    trash: trashReducer, 
+    rightClickDetail: rightClickDetailReducer,
+    // 앞으로 추가될 trash, ui 등도 여기에!
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
