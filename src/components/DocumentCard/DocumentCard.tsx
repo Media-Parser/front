@@ -1,17 +1,16 @@
-/* 📁 src/components/DocumentCard/DocumentCard.tsx */
-
 import React from "react";
 import styles from "./DocumentCard.module.css";
 
 interface DocumentCardProps {
   title?: string;
   date?: string;
-  score?: boolean;
+  score?: number;
   download?: boolean;
   remove?: boolean;
   onClick?: () => void;
   onDelete?: () => void; 
   onRightClick?: () => void;
+  onDownload?: () => void;
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -23,6 +22,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
   onClick,
   onDelete,
   onRightClick,
+  onDownload,
 }) => {
   return (
     <div
@@ -39,12 +39,24 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
       <h3>{title}</h3>
       <p>{date}</p>
       <div className={styles.cardActions}>
-        {score && <span>점수</span>}
-        {download && <span>다운로드</span>}
+        {score && <span>점수: {score}</span>}
+
+        {download && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();  // 카드 전체 클릭 막기
+              onDownload?.();
+            }}
+            className={styles.downloadButton}
+          >
+            다운로드
+          </button>
+        )}
+
         {remove && (
           <button
             onClick={(e) => {
-              e.stopPropagation(); // 카드 전체 클릭 방지
+              e.stopPropagation(); // 카드 전체 클릭 막기
               onDelete?.();
             }}
             className={styles.deleteButton}

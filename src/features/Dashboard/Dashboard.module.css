@@ -1,4 +1,4 @@
-/* src/features/Home/Dashboard.module.css */
+/* src/features/Dashboard/Dashboard.module.css */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
 
 .mainArea {
@@ -52,4 +52,15 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+
+.noDocuments {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh; /* 화면 기준 높이 */
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
 }
