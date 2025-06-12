@@ -69,20 +69,33 @@ const Sidebar = () => {
                 </div>
                 {/* Show submenu right below 문서 when dropdown is open */}
                 {menu.hasDropdown && isDocDropdownOpen && (
-                  <ul className={styles.subMenu}>
-                    {documentSubmenus.map((submenu) => (
-                      <li
-                        key={submenu.label}
-                        className={`${styles.subMenuItem} ${
-                          isActive(submenu.path) ? styles.active : ""
-                        }`}
-                        onClick={() => navigate(submenu.path)}
-                      >
-                        {submenu.label}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+  <ul className={styles.subMenu}>
+    {/* 🟡 카테고리 추가 버튼을 최상단에 배치 */}
+    <li
+      className={styles.subMenuItem}
+      onClick={() => {
+        // 예: 모달 열기 또는 페이지 이동
+        console.log("카테고리 추가 클릭");
+      }}
+    >
+      + 카테고리 추가
+    </li>
+
+    {/* 기존 카테고리 목록 */}
+    {documentSubmenus.map((submenu) => (
+      <li
+        key={submenu.label}
+        className={`${styles.subMenuItem} ${
+          isActive(submenu.path) ? styles.active : ""
+        }`}
+        onClick={() => navigate(submenu.path)}
+      >
+        {submenu.label}
+      </li>
+    ))}
+  </ul>
+)}
+
               </li>
             ))}
           </ul>

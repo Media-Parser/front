@@ -1,0 +1,25 @@
+.editorArea {
+    padding: 2rem;
+  }
+  
+  .titleInput {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .contentArea {
+    width: 100%;
+    height: 400px;
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .buttonGroup {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+  }
+  

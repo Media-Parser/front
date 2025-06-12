@@ -5,6 +5,7 @@ import DashBoardPage from "../features/Dashboard/DashboardPage";
 import TrashPage from "../features/Trash/TrashPage";
 import AccountPage from "../features/Account/AccountPage";
 import SupportPage from "../features/Support/SupportPage";  
+import EditorPage from "../features/Editor/EditorPage";
 // import DetailPage from '../features/Detail/DetailPage';
 // import UploadPage from '../features/Upload/UploadPage';
 // import Homepage from "../features/Home/HomePage";
@@ -23,6 +24,7 @@ const AppRouter = () => {
         <Route path="/trash" element={<TrashPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/support" element={<SupportPage />} />
+        <Route path="/editor/:id" element={<EditorPage />} />
         {/* <Route path="/detail/:id" element={<DetailPage />} /> */}
         {/* <Route path="/upload" element={<UploadPage />} /> */}
       </Routes>

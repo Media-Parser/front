@@ -1,7 +1,11 @@
 /* 📁 src/store/slices/documentSlice.ts */
 // 일반 문서 상태 관리 (문서 로드, 휴지통 이동 등)
 
-import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { fetchDocuments, updateDeleteYn } from "../../api/documentAPI";
 import type { Document } from "../../types/documents";
 import { addToTrash } from "../slices/trashSlice";
@@ -9,8 +13,8 @@ import { addToTrash } from "../slices/trashSlice";
 // 일반 문서 상태 타입 정의
 interface DocumentState {
   documents: Document[]; // 일반 문서 목록
-  loading: boolean;      // 로딩 상태
-  error?: string;        // 에러 메시지
+  loading: boolean; // 로딩 상태
+  error?: string; // 에러 메시지
 }
 
 // 초기 상태
@@ -57,7 +61,9 @@ const documentSlice = createSlice({
     },
     // 특정 문서를 ID 기준으로 삭제
     deleteDocument(state, action: PayloadAction<string>) {
-      state.documents = state.documents.filter(doc => doc.id !== action.payload);
+      state.documents = state.documents.filter(
+        (doc) => doc.id !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {
@@ -79,7 +85,9 @@ const documentSlice = createSlice({
       })
       // 문서를 휴지통으로 옮긴 후 리스트에서 제거
       .addCase(moveToTrash.fulfilled, (state, action) => {
-        state.documents = state.documents.filter(doc => doc.id !== action.payload.id);
+        state.documents = state.documents.filter(
+          (doc) => doc.id !== action.payload.id
+        );
       })
       // 휴지통 이동 실패
       .addCase(moveToTrash.rejected, (state, action) => {

@@ -3,9 +3,12 @@ import styles from "./TrashPage.module.css";
 import Layout from "../../components/Layout/Layout";
 import DocumentCard from "../../components/DocumentCard/DocumentCard";
 import { useAppSelector } from "../../store/hooks";
+import { restoreFromTrash } from "../../store/slices/trashSlice";
+import { useAppDispatch } from "../../store/hooks";
 
 const TrashPage = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const trashDocuments = useAppSelector(state => state.trash.trashDocuments);
   
   const handleCardClick = (docId: string) => {
@@ -15,6 +18,9 @@ const TrashPage = () => {
   const today = "2025.06.10"; 
   const todayDocs = trashDocuments.filter(doc => doc.date === today);
   const earlierDocs = trashDocuments.filter(doc => doc.date !== today);
+  const handleRestore = (docId: string) => {
+    dispatch(restoreFromTrash(docId));
+  };
 
   return (
     <Layout>
@@ -36,12 +42,14 @@ const TrashPage = () => {
               todayDocs.map((doc) => (
                 <DocumentCard
                   key={doc.id}
+                  id={doc.id}
                   title={doc.title}
                   date={doc.date}
-                  score={doc.score}
+                  //score={doc.score}
                   download={doc.download}
                   remove={true}
                   onClick={() => handleCardClick(doc.id)}
+                  onDelete={() => handleRestore(doc.id)} 
                 />
               ))
             )}
@@ -57,12 +65,14 @@ const TrashPage = () => {
               earlierDocs.map((doc) => (
                 <DocumentCard
                   key={doc.id}
+                  id={doc.id}
                   title={doc.title}
                   date={doc.date}
-                  score={doc.score}
+                  //score={doc.score}
                   download={doc.download}
                   remove={true}
                   onClick={() => handleCardClick(doc.id)}
+                  onDelete={() => handleRestore(doc.id)}
                 />
               ))
             )}
