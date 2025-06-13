@@ -1,6 +1,10 @@
 // src/hooks/useDocumentActions.ts
 import { useEffect, useState, useCallback } from "react";
-import { deleteDocumentApi, getDocumentsApi } from "../lib/api/documents_api";
+import {
+  deleteDocumentApi,
+  getDocumentsApi,
+  downloadDocumentApi,
+} from "../lib/api/documents_api";
 import type { Document } from "../types/documents_type";
 
 export const useDocumentActions = () => {
@@ -35,12 +39,12 @@ export const useDocumentActions = () => {
       }));
 
       setDocuments(normalized);
-      setError(null); // ← 에러 초기화
+      setError(null);
     } catch (err: any) {
       setError(
         err?.response?.data?.detail ||
-        err?.message ||
-        "문서 목록을 불러오지 못했습니다."
+          err?.message ||
+          "문서 목록을 불러오지 못했습니다."
       );
       setDocuments([]);
     }
@@ -64,8 +68,41 @@ export const useDocumentActions = () => {
   };
 
   const downloadDocument = (id: string) => {
-    window.open(`/documents/${id}/download`, "_blank");
+    // 문서 정보(title, file_type)를 찾기
+    const doc = documents.find((d) => d.id === id);
+    downloadDocumentApi(id).then((res) => {
+      const blob = res.data as Blob;
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+  
+      // Content-Disposition에서 파일명 추출 (서버 우선)
+      const disposition = res.headers["content-disposition"];
+      let finalFilename = "";
+      if (disposition) {
+        let match = disposition.match(/filename\*=UTF-8''([^;]+)/);
+        if (match && match[1]) {
+          finalFilename = decodeURIComponent(match[1]);
+        } else {
+          match = disposition.match(/filename="?([^"]+)"?/);
+          if (match && match[1]) {
+            finalFilename = match[1];
+          }
+        }
+      }
+      // 없거나 빈값이면 직접 조합
+      if (!finalFilename && doc) {
+        finalFilename = `${doc.title}.${doc.file_type}`;
+      }
+  
+      link.setAttribute("download", finalFilename || "document");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    });
   };
+  
 
   return {
     documents,

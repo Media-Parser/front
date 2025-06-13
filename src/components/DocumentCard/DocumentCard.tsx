@@ -1,37 +1,50 @@
+// src/features/Dashboard/components/DocumentCard.tsx
 import React from "react";
 import styles from "./DocumentCard.module.css";
+import dayjs from "dayjs";
 
 interface DocumentCardProps {
-  title?: string;
-  date?: string;
-  score?: boolean;
+  title: string;
+  date: string;
   download?: boolean;
   remove?: boolean;
   onClick?: () => void;
+  onDelete?: () => void;
+  onDownload?: () => void;
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({
-  title = "제목 없음",
-  date = "날짜 없음",
-  score,
+  title,
+  date,
   download,
   remove,
   onClick,
+  onDelete,
+  onDownload,
 }) => {
   return (
-    <div
-      className={styles.card}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyPress={onClick}
-    >
-      <h3>{title}</h3>
-      <p>{date}</p>
+    <div className={styles.card} onClick={onClick}>
+      <div className={styles.cardContent}>
+        <h4 className={styles.cardTitle}>{title}</h4>
+        <p className={styles.cardDate}>{dayjs(date).format("YYYY-MM-DD")}</p>
+      </div>
       <div className={styles.cardActions}>
-        {score && <span>점수</span>}
-        {download && <span>다운로드</span>}
-        {remove && <span>삭제</span>}
+        {download && (
+          <button
+            className={styles.cardButton}
+            onClick={(e) => { e.stopPropagation(); onDownload?.(); }}
+          >
+            다운로드
+          </button>
+        )}
+        {remove && (
+          <button
+            className={styles.cardButton}
+            onClick={(e) => { e.stopPropagation(); onDelete?.(); }}
+          >
+            삭제
+          </button>
+        )}
       </div>
     </div>
   );

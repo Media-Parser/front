@@ -42,6 +42,10 @@
   background-color: #f9d314;
 }
 
+.uploadIcon {
+  margin-right: 8px;  /* 아이콘과 텍스트 사이 여백 */
+}
+
 .documentSection h3 {
   color: black;
   margin-top: 20px;
@@ -63,4 +67,26 @@
   font-size: 1rem;
   color: #999;
   text-align: center;
+}
+
+.loading {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+  height: 100vh;
+}
+
+.error {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: red;
+  text-align: center;
+  height: 100vh;
 }

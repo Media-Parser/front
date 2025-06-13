@@ -1,20 +1,26 @@
 // src/features/Dashboard/DashboardPage.tsx
 
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import Layout from "../../components/Layout/Layout";
-import DocumentCard from "./components/DocumentCard";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
-import { useGroupedDocuments } from "../../hooks/useGroupedDocuments";
+import dayjs from "dayjs";
+import isToday from "dayjs/plugin/isToday";
+import isYesterday from "dayjs/plugin/isYesterday";
+import relativeTime from "dayjs/plugin/relativeTime";
+import DocumentGroupSection from "./components/DocumentGroupSection";
+import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
+import { FaCloudUploadAlt } from "react-icons/fa";
+
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(relativeTime);
 
 const DashboardPage = () => {
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 문서 목록 및 액션 훅
   const {
     documents,
     loading,
@@ -22,10 +28,9 @@ const DashboardPage = () => {
     refetch,
     deleteDocument,
     downloadDocument,
-  } = useDocumentActions();
+    } = useDocumentActions();
 
-  // 그룹핑 (검색어 반영)
-  const { groupedDocs } = useGroupedDocuments(searchTerm, documents);
+  const groupedDocs = groupDocumentsByDate(documents);
 
   // 파일 업로드 훅 (업로드 성공 시 목록 새로고침)
   const { uploadFile } = useFileUpload(refetch);
@@ -36,13 +41,8 @@ const DashboardPage = () => {
     if (file) await uploadFile(file);
   };
 
-  // 문서카드 클릭 상세 이동
-  const handleCardClick = (id: string) => {
-    navigate(`/detail/${id}`);
-  };
-
-  if (loading) return <div>불러오는 중...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (loading) return <div className={styles.loading}>불러오는 중...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
 
   return (
     <Layout>
@@ -67,6 +67,7 @@ const DashboardPage = () => {
             className={styles.uploadButton}
             onClick={() => fileInputRef.current?.click()}
           >
+            <FaCloudUploadAlt className={styles.uploadIcon}/>
             파일 업로드
           </button>
         </div>
@@ -75,25 +76,14 @@ const DashboardPage = () => {
             <span>저장된 문서가 없습니다.</span>
           </div>
         ) : (
-          Object.entries(groupedDocs).map(([date, docs]) => (
-            <section key={date} className={styles.documentSection}>
-              <h3>{date}</h3>
-              <div className={styles.cardGrid}>
-                {docs.map((doc) => (
-                  <DocumentCard
-                    key={doc.id ?? doc._id}
-                    title={doc.title ?? doc.filename ?? ""}
-                    date={doc.date ?? ""}
-                    score={doc.score}
-                    download={true}
-                    remove={true}
-                    onClick={() => handleCardClick(doc.id ?? doc._id)}
-                    onDelete={() => deleteDocument(doc.id ?? doc._id)}
-                    onDownload={() => downloadDocument(doc.id ?? doc._id)}
-                  />
-                ))}
-              </div>
-            </section>
+          Object.entries(groupedDocs).map(([label, docs]) => (
+            <DocumentGroupSection
+              key={label}
+              groupLabel={label}
+              documents={docs}
+              onDelete={deleteDocument}
+              onDownload={downloadDocument}
+            />
           ))
         )}
       </div>

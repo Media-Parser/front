@@ -9,7 +9,7 @@ import SupportPage from "../features/Support/SupportPage";
 // import UploadPage from '../features/Upload/UploadPage';
 // import Homepage from "../features/Home/HomePage";
 // import Loginpage from "../features/Login/LoginPage";
-import ProtectedRoute from "./ProtectdRoute";
+import ProtectedRoute from "./protectdRoute";
 
 const AppRouter = () => {
   return (

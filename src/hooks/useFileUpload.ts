@@ -1,7 +1,7 @@
 // src/hooks/useFileUpload.ts
 // 설명: 파일 업로드를 처리하는 로직 분리
 // 사용 위치: 파일 업로드 기능이 필요한 컴포넌트
-import axios from "axios";
+import api from "../lib/api/api";
 
 // 파일 업로드 커스텀 훅
 export const useFileUpload = (onSuccess: () => void) => {
@@ -25,12 +25,17 @@ export const useFileUpload = (onSuccess: () => void) => {
     const formData = new FormData();
     formData.append("file", file);
 
+    const user_id = localStorage.getItem("user_id") ?? "";
+    formData.append("user_id", user_id);
+
     try {
-      await axios.post(uploadUrl, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+      await api.post(uploadUrl, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+      alert("업로드 성공!");
       onSuccess();
     } catch (error) {
+      alert("업로드 실패");
       console.error("업로드 실패", error);
     }
   };

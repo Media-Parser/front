@@ -1,13 +1,44 @@
 .card {
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  min-height: 150px;
-  display: flex;
-  flex-direction: column;
-  aspect-ratio: 1 / 1;
+  /* 기존 스타일 유지 */
+  /* background: #fafafa;
+  border-radius: 12px;
+  padding: 24px 18px 18px 18px;
+  box-shadow: 0 2px 12px #0001;
+  margin: 0 auto;
   cursor: pointer;
-  padding: 10px;
-  box-sizing: border-box;
+  min-width: 220px;
+  max-width: 330px; */
+
+  padding: 18px 16px;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(40,40,40,0.08);
+  background: #fff;
+  min-width: 0;
+  max-width: 100%;
+  /* width: 100%; 제거하거나 조정 */
+  /* 필요하다면 height도 auto로 */
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+
+.cardContent {
+  margin-bottom: 20px;
+}
+
+.cardTitle {
+  font-size: 1.18rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cardDate {
+  font-size: 0.96em;
+  color: #666;
+  margin-bottom: 8px;
 }
 
 .cardActions {
@@ -20,6 +51,19 @@
   color: #6c757d;
 }
 
-.cardActions span:hover {
+.cardButton {
+  padding: 8px 22px;
+  font-size: 1em;
+  background: #efefef;
   color: #333;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-width: 86px;
+  text-align: center;
+}
+.cardButton:hover {
+  background: #fde600b3;
+  color: #111;
 }
