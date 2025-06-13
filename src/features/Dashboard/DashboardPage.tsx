@@ -1,16 +1,23 @@
-/* 📁 src/features/Home/DashboardPage.tsx */
-import { useEffect } from "react";
+// 📁 src/features/Dashboard/DashboardPage.tsx
+
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import styles from "./Dashboard.module.css";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import Layout from "../../components/Layout/Layout";
+
 import DocumentCard from "../../components/DocumentCard/DocumentCard";
+
 import type { Document } from "../../types/documents";
 import { addToTrash } from "../../store/slices/trashSlice";
 import { setDocuments, deleteDocument } from "../../store/slices/documentSlice";
 import { moveToTrash } from "../../store/slices/documentSlice";
 import { openDetail } from "../../store/slices/documentDetailSlice";
+import { useGroupedDocuments } from "../../hooks/useGroupedDocuments";
+import { useFileUpload } from "../../hooks/useFileUpload";
+import { useDocumentActions } from "../../hooks/useDocumentActions";
 import DocumentDetailSidebar from "../DocumentDetailSideBar/DocumentDetailSideBar";
+
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -84,10 +91,22 @@ const DashboardPage = () => {
             type="search"
             className={styles.searchBar}
             placeholder="검색어를 입력하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <div className={styles.uploadButton}>
-            <button>파일업로드</button>
-          </div>
+          <input
+            type="file"
+            accept=".hwp, .hwpx"
+            ref={fileInputRef}
+            onChange={handleUpload}
+            style={{ display: "none" }}
+          />
+          <button
+            className={styles.uploadButton}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            파일 업로드
+          </button>
         </div>
         <section className={styles.documentSection}>
           <h3>Earlier</h3>
@@ -105,8 +124,35 @@ const DashboardPage = () => {
                 onRightClick={() => dispatch(openDetail(doc))}
               />
             ))}
+        {Object.keys(groupedDocs).length === 0 ? (
+          <div className={styles.noDocuments}>
+            <span>저장된 문서가 없습니다.</span>
+
           </div>
-        </section>
+        ) : (
+          Object.entries(groupedDocs).map(([date, docs]) => (
+            <section key={date} className={styles.documentSection}>
+              <h3>{date}</h3>
+              <div className={styles.cardGrid}>
+                {docs.map((doc) => (
+                  <DocumentCard
+                    key={doc.id ?? doc._id}
+                    title={doc.title ?? doc.filename ?? ""}
+                    date={doc.date ?? ""}
+                    score={doc.score}
+                    download={doc.download}
+                    remove={doc.remove}
+                    onClick={() => handleCardClick(doc.id)}
+                    onDelete={() => deleteDocument(doc.id)}
+                    onDownload={() => downloadDocument(doc.id)}
+                    onRightClick={() => dispatch(openDetail(doc))} // 💡 기존 slice 기능도 유지
+                  />
+                ))}
+              </div>
+            </section>
+          ))
+        )}
+
         <DocumentDetailSidebar />
       </div>
     </Layout>

@@ -1,5 +1,3 @@
-/* 📁 src/components/DocumentCard/DocumentCard.tsx */
-
 import React from "react";
 import styles from "./DocumentCard.module.css";
 import { useLocation } from "react-router-dom";
@@ -13,6 +11,7 @@ interface DocumentCardProps {
   onClick?: () => void;
   onDelete?: () => void;
   onRightClick?: () => void;
+  onDownload?: () => void;
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -23,6 +22,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
   onClick,
   onDelete,
   onRightClick,
+  onDownload,
 }) => {
   const location = useLocation();
   const isTrashPage = location.pathname === "/trash";
