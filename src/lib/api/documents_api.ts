@@ -42,5 +42,5 @@ export const deleteAllTrashDocumentsApi = async () => {
 
 // 사용자 정보 조회
 export const getUserInfoApi = async (user_id: string) => {
-  return await api.get(`/auth/${user_id}`);
+  return await api.get(`/users/${user_id}`);
 };
