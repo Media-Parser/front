@@ -26,44 +26,33 @@
 
 
 .cardContent {
-  margin-bottom: 20px;
-}
-
-.cardTitle {
-  font-size: 1.18rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.cardDate {
-  font-size: 0.96em;
-  color: #666;
-  margin-bottom: 8px;
+  margin-bottom: 12px; /* 기존 20px → 조금 줄임 */
 }
 
 .cardActions {
-  margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid #e0e0e0;
+  margin-top: 12px;              /* 적절한 여백 */
   display: flex;
-  justify-content: space-around;
-  font-size: 0.8em;
-  color: #6c757d;
+  justify-content: center;       /* 가운데 정렬 */
+  gap: 12px;                     /* 버튼 간의 간격 추가 */
+  flex-wrap: wrap;               /* 버튼이 많아지면 줄바꿈 */
+  padding-top: 8px;
+  border-top: 1px solid #e0e0e0;
 }
 
 .cardButton {
-  padding: 8px 22px;
-  font-size: 1em;
-  background: #efefef;
+  padding: 6px 16px;             /* 버튼 크기 조정 */
+  font-size: 0.88em;             /* 살짝 작게 */
+  background: #f1f1f1;
   color: #333;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
-  min-width: 86px;
+  min-width: 80px;
   text-align: center;
+  transition: background 0.2s;
 }
+
 .cardButton:hover {
-  background: #fde600b3;
+  background: #fde600cc;
   color: #111;
 }

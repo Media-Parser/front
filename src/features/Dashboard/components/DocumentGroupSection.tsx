@@ -6,8 +6,11 @@ import styles from "./DocumentGroupSection.module.css";
 interface DocumentGroupSectionProps {
   groupLabel: string;
   documents: any[];
-  onDelete: (id: string) => void; 
-  onDownload: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onDownload?: (id: string) => void;
+  onRestore?: (id: string) => void;
+  onPermanentDelete?: (id: string) => void;
+  isTrashPage?: boolean;
 }
 
 const PREVIEW_COUNT = 3;
@@ -17,6 +20,9 @@ const DocumentGroupSection = ({
   documents,
   onDelete,
   onDownload,
+  onRestore,
+  onPermanentDelete,
+  isTrashPage,
 }: DocumentGroupSectionProps) => {
   const [showAll, setShowAll] = useState(false);
 
@@ -42,8 +48,11 @@ const DocumentGroupSection = ({
           <DocumentCard
             key={doc.id ?? doc._id}
             {...doc}
-            onDelete={() => onDelete(doc.id ?? doc._id)}
-            onDownload={() => onDownload(doc.id ?? doc._id)}
+            onDelete={() => onDelete?.(doc.id ?? doc._id)}
+            onDownload={() => onDownload?.(doc.id ?? doc._id)}
+            onRestore={() => onRestore?.(doc.id ?? doc._id)}
+            onPermanentDelete={() => onPermanentDelete?.(doc.id ?? doc._id)}
+            isTrashPage={isTrashPage}
           />
         ))}
       </div>

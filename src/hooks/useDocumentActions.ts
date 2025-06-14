@@ -69,7 +69,7 @@ export const useDocumentActions = () => {
 
   const downloadDocument = (id: string) => {
     // 문서 정보(title, file_type)를 찾기
-    const doc = documents.find((d) => d.id === id);
+    const doc = documents.find((d) => d.doc_id === id);
     downloadDocumentApi(id).then((res) => {
       const blob = res.data as Blob;
       const url = window.URL.createObjectURL(blob);

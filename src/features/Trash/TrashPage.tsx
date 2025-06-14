@@ -1,33 +1,45 @@
-/* 📁 src/features/Trash/TrashPage.tsx */
-import { useNavigate } from "react-router-dom";
+// 📁 src/features/Trash/TrashPage.tsx
+import { useState } from "react";
 import styles from "./TrashPage.module.css";
 import Layout from "../../components/Layout/Layout";
-import DocumentCard from "../../components/DocumentCard/DocumentCard";
+import DocumentGroupSection from "../Dashboard/components/DocumentGroupSection"; // 그룹 섹션이 있다면
+import { useTrashActions } from "../../hooks/useTrashActions";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
+import type { Document } from "../../types/documents_type";
 
 const TrashPage = () => {
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const user_id = localStorage.getItem("user_id") ?? "";
 
-  const handleCardClick = (docId: string) => {
-    navigate(`/detail/${docId}`);
+  const {
+    trashDocs,
+    loading,
+    error,
+    restoreDocument,
+    deleteDocument,
+    deleteAllDocuments,
+  } = useTrashActions(user_id);
+
+  // 검색어 필터링
+  const filteredDocs = trashDocs.filter((doc: Document) =>
+    doc.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 날짜별 그룹핑
+  const groupedDocs = groupDocumentsByDate(filteredDocs); // created_dt 기반
+
+  const handleRestore = (doc_id: string) => {
+    restoreDocument(doc_id);
   };
 
-  const todayDocs = [
-    {
-      id: "doc1",
-      title: "오늘 문서 1",
-      date: "2025.06.10",
-      score: true,
-      download: true,
-      remove: true,
-    },
-    { id: "doc2", title: "오늘 문서 2", date: "2025.06.10" },
-  ];
+  const handlePermanentDelete = (doc_id: string) => {
+    deleteDocument(doc_id);
+  };
 
-  const earlierDocs = [
-    { id: "doc3", title: "지난 문서 1", date: "2025.05.30" },
-    { id: "doc4", title: "지난 문서 2", date: "2025.05.25" },
-    { id: "doc5", title: "지난 문서 3", date: "2025.05.20" },
-  ];
+  const handleDeleteAll = () => {
+    deleteAllDocuments();
+  };
 
   return (
     <Layout>
@@ -38,39 +50,37 @@ const TrashPage = () => {
             type="search"
             className={styles.searchBar}
             placeholder="검색어를 입력하세요"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <button
+            className={styles.uploadButton}
+            onClick={handleDeleteAll}
+          >
+            <FaCloudUploadAlt className={styles.uploadIcon} />
+            전체 삭제
+          </button>
         </div>
-
-        <section className={styles.documentSection}>
-          <h3>Today</h3>
-          <div className={styles.cardGrid}>
-            {todayDocs.map((doc) => (
-              <DocumentCard
-                key={doc.id}
-                title={doc.title}
-                date={doc.date}
-                score={doc.score}
-                download={doc.download}
-                remove={doc.remove}
-                onClick={() => handleCardClick(doc.id)}
-              />
-            ))}
+        {loading ? (
+          <div className={styles.loading}>로딩 중...</div>
+        ) : error ? (
+          <div className={styles.error}>{error}</div>
+        ) : Object.keys(groupedDocs).length === 0 ? (
+          <div className={styles.noDocuments}>
+            <span>삭제된 문서가 없습니다.</span>
           </div>
-        </section>
-
-        <section className={styles.documentSection}>
-          <h3>Earlier</h3>
-          <div className={styles.cardGrid}>
-            {earlierDocs.map((doc) => (
-              <DocumentCard
-                key={doc.id}
-                title={doc.title}
-                date={doc.date}
-                onClick={() => handleCardClick(doc.id)}
-              />
-            ))}
-          </div>
-        </section>
+        ) : (
+          Object.entries(groupedDocs).map(([label, docs]) => (
+            <DocumentGroupSection
+              key={label}
+              groupLabel={label}
+              documents={docs}
+              onRestore={handleRestore}
+              onPermanentDelete={handlePermanentDelete}
+              isTrashPage
+            />
+          ))
+        )}
       </div>
     </Layout>
   );

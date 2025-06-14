@@ -16,7 +16,7 @@ export const useGroupedDocuments = (searchTerm: string, documents: Document[]) =
     // 날짜별 그룹화
     const grouped: Record<string, Document[]> = {};
     filtered.forEach((doc) => {
-      const date = doc.date || "미지정";
+      const date = doc.created_dt || "미지정";
       if (!grouped[date]) grouped[date] = [];
       grouped[date].push(doc);
     });

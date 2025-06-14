@@ -1,4 +1,4 @@
-/* src/features/Home/Dashboard.module.css */
+/* src/features/Trash/TrashPage.module.css */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
 
 .mainArea {
@@ -15,8 +15,6 @@
   font-size: 1em;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .mainAreaHeader {
@@ -44,6 +42,10 @@
   background-color: #f9d314;
 }
 
+.uploadIcon {
+  margin-right: 8px;  /* 아이콘과 텍스트 사이 여백 */
+}
+
 .documentSection h3 {
   color: black;
   margin-top: 20px;
@@ -52,6 +54,39 @@
 
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+
+.noDocuments {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh; /* 화면 기준 높이 */
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+}
+
+.loading {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+  height: 100vh;
+}
+
+.error {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: red;
+  text-align: center;
+  height: 100vh;
 }

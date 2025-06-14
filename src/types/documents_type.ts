@@ -1,29 +1,35 @@
-// 
+// src/types/documents_type.ts
+// 문서 타입 정의
 export interface Document {
-  _id: string; // DB에서 온 실제 ObjectId
-  id?: string; // 필요시 string으로 변환된 id
+  doc_id: string; // DB에서 온 실제 ObjectId
+  user_id?: string; // 필요시 string으로 변환된 id
   title?: string;
-  filename?: string;
-  date?: string; // 날짜 필드는 필요에 따라 추가
+  contents?: string;
+  created_dt?: string; // 날짜 필드는 필요에 따라 추가
   file_type?: string; // 파일 타입
-  score?: number; // 등등
-  // 나머지 필드...
+  category?: string; // 문서 카테고리
+  delete_Yn?: string; // 삭제 여부
 }
 
+export interface TrashDocument {
+  _id: string;
+  id?: string;
+  title?: string;
+  contents?: string;  
+  created_dt?: string;
+  file_type?: string;
+}
+
+// 문서 업로드 응답
 export interface UploadResponse {
   documentId: string;
   message: string;
 }
 
+// 문서 삭제 응답
 export interface DeleteResponse {
   success: boolean;
   message?: string;
 }
 
-export interface DocumentDetail {
-  id: string;
-  title: string;
-  date: string;
-  content: string;
-  author?: string;
-}
+
