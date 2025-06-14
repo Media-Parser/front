@@ -12,6 +12,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import DocumentGroupSection from "./components/DocumentGroupSection";
 import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import LoadingOrError from "../../components/Common/LoadingOrError";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -41,8 +42,9 @@ const DashboardPage = () => {
     if (file) await uploadFile(file);
   };
 
-  if (loading) return <div className={styles.loading}>불러오는 중...</div>;
-  if (error) return <div className={styles.error}>{error}</div>;
+  if (loading || error) {
+    return <LoadingOrError loading={loading} error={error} />;
+  }
 
   return (
     <Layout>

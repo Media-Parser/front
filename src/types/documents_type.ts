@@ -32,4 +32,8 @@ export interface DeleteResponse {
   message?: string;
 }
 
-
+export interface UserInfo {
+  user_name: string;
+  user_email: string;
+  provider: string;
+}

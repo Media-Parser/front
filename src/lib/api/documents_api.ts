@@ -39,3 +39,8 @@ export const deleteTrashDocumentApi = async (document_id: string) => {
 export const deleteAllTrashDocumentsApi = async () => {
   return await api.delete(`/trash/all`);
 };
+
+// 사용자 정보 조회
+export const getUserInfoApi = async (user_id: string) => {
+  return await api.get(`/auth/${user_id}`);
+};

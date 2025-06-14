@@ -14,6 +14,7 @@ const Sidebar = () => {
   ];
 
   const documentSubmenus = [
+    { label: "전체 문서", path: "/dashboard" },
     { label: "카테고리1", path: "/dashboard/category1" },
     { label: "카테고리2", path: "/dashboard/category2" },
   ];
@@ -28,6 +29,15 @@ const Sidebar = () => {
     path: string;
     hasDropdown?: boolean;
   }) => {
+    if (menu.label === "로그아웃") {
+      if (window.confirm("정말 로그아웃하시겠습니까?")) {
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("access_token");
+        navigate("/");
+      }
+      return;
+    }
+  
     if (menu.hasDropdown) {
       setIsDocDropdownOpen((prev) => !prev);
     } else {
@@ -51,7 +61,7 @@ const Sidebar = () => {
                 >
                   <span
                     className={styles.menuLabel}
-                    onClick={() => navigate(menu.path)}
+                    onClick={() => handleMenuClick(menu)}
                   >
                     {menu.label}
                   </span>
@@ -67,7 +77,6 @@ const Sidebar = () => {
                     </span>
                   )}
                 </div>
-                {/* Show submenu right below 문서 when dropdown is open */}
                 {menu.hasDropdown && isDocDropdownOpen && (
                   <ul className={styles.subMenu}>
                     {documentSubmenus.map((submenu) => (
@@ -76,7 +85,7 @@ const Sidebar = () => {
                         className={`${styles.subMenuItem} ${
                           isActive(submenu.path) ? styles.active : ""
                         }`}
-                        onClick={() => navigate(submenu.path)}
+                        onClick={() => handleMenuClick(submenu)}
                       >
                         {submenu.label}
                       </li>

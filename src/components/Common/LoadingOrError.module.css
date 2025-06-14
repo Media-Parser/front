@@ -1,0 +1,23 @@
+/* src/components/Common/LoadingOrError.module.css */
+
+.loading {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: #999;
+  text-align: center;
+  height: 100vh;
+}
+
+.error {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: red;
+  text-align: center;
+  height: 100vh;
+}

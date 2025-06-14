@@ -17,9 +17,12 @@ const SupportPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("폼 제출됨:", formData);
-    // TODO: 실제 문의사항 처리 로직 (API 호출 등)
-    alert("문의가 제출되었습니다.");
+    
+    const { name, email, inquiryType, message } = formData;
+    const subject = encodeURIComponent(`[문의] ${inquiryType} - ${name}`);
+    const body = encodeURIComponent(`보낸 사람: ${name} (${email})\n\n${message}`);
+    
+    window.location.href = `mailto:media-parser@gmail.com?subject=${subject}&body=${body}`;
   };
 
   return (

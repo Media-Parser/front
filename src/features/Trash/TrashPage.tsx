@@ -4,9 +4,10 @@ import styles from "./TrashPage.module.css";
 import Layout from "../../components/Layout/Layout";
 import DocumentGroupSection from "../Dashboard/components/DocumentGroupSection"; // 그룹 섹션이 있다면
 import { useTrashActions } from "../../hooks/useTrashActions";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
 import type { Document } from "../../types/documents_type";
+import LoadingOrError from "../../components/Common/LoadingOrError";
 
 const TrashPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +21,10 @@ const TrashPage = () => {
     deleteDocument,
     deleteAllDocuments,
   } = useTrashActions(user_id);
+
+  if (loading || error) {
+    return <LoadingOrError loading={loading} error={error} />;
+  }
 
   // 검색어 필터링
   const filteredDocs = trashDocs.filter((doc: Document) =>
@@ -57,15 +62,11 @@ const TrashPage = () => {
             className={styles.uploadButton}
             onClick={handleDeleteAll}
           >
-            <FaCloudUploadAlt className={styles.uploadIcon} />
+            <FaTrashAlt className={styles.uploadIcon} />
             전체 삭제
           </button>
         </div>
-        {loading ? (
-          <div className={styles.loading}>로딩 중...</div>
-        ) : error ? (
-          <div className={styles.error}>{error}</div>
-        ) : Object.keys(groupedDocs).length === 0 ? (
+        {Object.keys(groupedDocs).length === 0 ? (
           <div className={styles.noDocuments}>
             <span>삭제된 문서가 없습니다.</span>
           </div>
