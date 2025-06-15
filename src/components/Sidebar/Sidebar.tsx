@@ -87,7 +87,7 @@ const Sidebar = () => {
                       <li
                         key={submenu.label}
                         className={`${styles.subMenuItem} ${
-                          isActive(submenu.path) ? styles.active : ""
+                          isActive(submenu.path) ? styles.activemenu : ""
                         }`}
                         onClick={() => handleMenuClick(submenu)}
                       >

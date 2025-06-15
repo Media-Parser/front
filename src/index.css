@@ -2,14 +2,10 @@
 
 /* 🎨 전역 색상 변수 선언 */
 :root {
-  --color-bg: #f97a00;
-  --color-text: #000;
-  --color-subtext: #888888;
-  --color-border: #e0e0e0;
-  --color-primary: #2c2c2c;
-  --color-hover: #fb9e3a;
-  --color-scroll-thumb: #c1c1c1;
-  --color-scroll-track: #f0f0f0;
+  --color-bg: #f97a00; /* 대표 색 */
+  --color-text: #000; /* 기본 텍스트 색 */
+  --color-hover: #fb9e3a; /* 호버 색 */
+  --color-active: #f97a00; /* 활성화 색 */
 }
 
 * {
