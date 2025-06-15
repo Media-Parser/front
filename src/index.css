@@ -2,9 +2,9 @@
 
 /* 🎨 전역 색상 변수 선언 */
 :root {
-  --color-bg: #f97a00; /* 대표 색 */
+  --color-bg: #ffe57d; /* 대표 색 */
   --color-text: #000; /* 기본 텍스트 색 */
-  --color-hover: #fb9e3a; /* 호버 색 */
+  --color-hover: #ffeedb; /* 호버 색 */
   --color-active: #f97a00; /* 활성화 색 */
 }
 
