@@ -1,5 +1,17 @@
 /* index.css – 전역 스타일 초기화 및 기본 UI 스타일 */
 
+/* 🎨 전역 색상 변수 선언 */
+:root {
+  --color-bg: #f97a00;
+  --color-text: #000;
+  --color-subtext: #888888;
+  --color-border: #e0e0e0;
+  --color-primary: #2c2c2c;
+  --color-hover: #fb9e3a;
+  --color-scroll-thumb: #c1c1c1;
+  --color-scroll-track: #f0f0f0;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +24,7 @@ body {
   font-family: "Pretendard Variable", sans-serif;
   font-weight: 250;
   background-color: #fff;
-  color: #222;
+  color: #000;
   line-height: 1.6;
 }
 

@@ -14,11 +14,11 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
-  color: #2b2b2b; /* 진한 회색 */
+  color: #2b2b2b;
 }
 
 .button {
-  color: #333; /* 진회색 텍스트 */
+  color: #333;
   border-radius: 6px;
   padding: 6px 16px;
   font-size: 0.95rem;
@@ -28,7 +28,7 @@
 }
 
 .button:hover {
-  color: #fbe51bd9;
+  color: var(--color-bg);
   border-color: #aaa;
 }
 

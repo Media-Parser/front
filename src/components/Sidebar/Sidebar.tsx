@@ -14,7 +14,7 @@ const Sidebar = () => {
   ];
 
   const documentSubmenus = [
-    { label: "전체 문서", path: "/dashboard" },
+    { label: "카테고리 추가", path: "/dashboard" },
     { label: "카테고리1", path: "/dashboard/category1" },
     { label: "카테고리2", path: "/dashboard/category2" },
   ];
@@ -37,9 +37,13 @@ const Sidebar = () => {
       }
       return;
     }
-  
+
+    // '문서' 라벨 클릭 시 드롭다운 토글 없이 이동만
     if (menu.hasDropdown) {
-      setIsDocDropdownOpen((prev) => !prev);
+      if (menu.label === "문서") {
+        navigate(menu.path);
+      }
+      // 다른 드롭다운 메뉴가 있다면 여기서 토글 가능 (지금은 없으니 생략)
     } else {
       navigate(menu.path);
     }
