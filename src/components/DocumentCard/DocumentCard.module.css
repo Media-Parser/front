@@ -1,58 +1,95 @@
 .card {
-  /* 기존 스타일 유지 */
-  /* background: #fafafa;
+  max-width: 240px;
+  background-color: #fff;
+  border: 1px solid #e2e2e2;
   border-radius: 12px;
-  padding: 24px 18px 18px 18px;
-  box-shadow: 0 2px 12px #0001;
-  margin: 0 auto;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
-  min-width: 220px;
-  max-width: 330px; */
+  padding: 16px;
+  box-sizing: border-box;
+  position: relative;
 
-  padding: 18px 16px;
-  border-radius: 18px;
-  box-shadow: 0 4px 18px rgba(40,40,40,0.08);
-  background: #fff;
-  min-width: 0;
-  max-width: 100%;
-  /* width: 100%; 제거하거나 조정 */
-  /* 필요하다면 height도 auto로 */
-  transition: box-shadow 0.2s;
+  /* 부드러운 그림자 효과 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
 }
-
 
 .cardContent {
-  margin-bottom: 12px; /* 기존 20px → 조금 줄임 */
-}
-
-.cardActions {
-  margin-top: 12px;              /* 적절한 여백 */
   display: flex;
-  justify-content: center;       /* 가운데 정렬 */
-  gap: 12px;                     /* 버튼 간의 간격 추가 */
-  flex-wrap: wrap;               /* 버튼이 많아지면 줄바꿈 */
-  padding-top: 8px;
-  border-top: 1px solid #e0e0e0;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
-.cardButton {
-  padding: 6px 16px;             /* 버튼 크기 조정 */
-  font-size: 0.88em;             /* 살짝 작게 */
-  background: #f1f1f1;
-  color: #333;
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.previewText {
+  font-size: 0.9rem;
+  color: #666;
+  flex-grow: 1;
+  margin-bottom: 16px;
+  user-select: none;
+}
+
+.cardDate {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+  font-size: 0.8rem;
+  color: #999;
+  text-align: right;
+  user-select: none;
+}
+
+.tooltipWrapper {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 100;
+}
+
+.kebabButton {
+  background: transparent;
   border: none;
-  border-radius: 6px;
+  font-size: 1.5rem;
   cursor: pointer;
-  min-width: 80px;
-  text-align: center;
-  transition: background 0.2s;
+  color: #888;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.cardButton:hover {
-  background: #fde600cc;
-  color: #111;
+.kebabButton:hover {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.tooltipButton {
+  background-color: #f5f5f5;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.tooltipButton:hover {
+  background-color: #e0e0e0;
 }

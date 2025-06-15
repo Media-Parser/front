@@ -29,9 +29,15 @@ const DashboardPage = () => {
     refetch,
     deleteDocument,
     downloadDocument,
-    } = useDocumentActions();
+  } = useDocumentActions();
 
-  const groupedDocs = groupDocumentsByDate(documents);
+  // 검색어 필터링
+  const filteredDocs = documents.filter((doc) =>
+    doc.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 날짜별 그룹핑
+  const groupedDocs = groupDocumentsByDate(filteredDocs);
 
   // 파일 업로드 훅 (업로드 성공 시 목록 새로고침)
   const { uploadFile } = useFileUpload(refetch);
@@ -69,7 +75,7 @@ const DashboardPage = () => {
             className={styles.uploadButton}
             onClick={() => fileInputRef.current?.click()}
           >
-            <FaCloudUploadAlt className={styles.uploadIcon}/>
+            <FaCloudUploadAlt className={styles.uploadIcon} />
             파일 업로드
           </button>
         </div>
