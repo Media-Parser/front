@@ -1,11 +1,13 @@
-// src/hooks/useDocumentActions.ts
+// 📁 src/hooks/useDocumentActions.ts
+// 로그인된 사용자의 문서를 조회하고 삭제 및 다운로드 기능을 제공하는 커스텀 훅
+
 import { useEffect, useState, useCallback } from "react";
 import {
   deleteDocumentApi,
   getDocumentsApi,
   downloadDocumentApi,
-} from "../lib/api/documents_api";
-import type { Document } from "../types/documents_type";
+} from "../lib/api/documentsApi";
+import type { Document } from "../types/documentType";
 
 export const useDocumentActions = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -75,7 +77,7 @@ export const useDocumentActions = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-  
+
       // Content-Disposition에서 파일명 추출 (서버 우선)
       const disposition = res.headers["content-disposition"];
       let finalFilename = "";
@@ -94,7 +96,7 @@ export const useDocumentActions = () => {
       if (!finalFilename && doc) {
         finalFilename = `${doc.title}.${doc.file_type}`;
       }
-  
+
       link.setAttribute("download", finalFilename || "document");
       document.body.appendChild(link);
       link.click();
@@ -102,7 +104,6 @@ export const useDocumentActions = () => {
       window.URL.revokeObjectURL(url);
     });
   };
-  
 
   return {
     documents,

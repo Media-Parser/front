@@ -1,4 +1,5 @@
-// src/types/documents_type.ts
+// src/types/DocumentType.ts
+
 // 문서 타입 정의
 export interface Document {
   doc_id: string; // DB에서 온 실제 ObjectId
@@ -15,7 +16,7 @@ export interface TrashDocument {
   _id: string;
   id?: string;
   title?: string;
-  contents?: string;  
+  contents?: string;
   created_dt?: string;
   file_type?: string;
 }

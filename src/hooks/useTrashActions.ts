@@ -1,12 +1,12 @@
-// src/hooks/useTrashActions.ts
+// 📁 src/hooks/useTrashActions.ts
 import { useState, useEffect, useCallback } from "react";
 import {
   getTrashDocumentsApi,
   restoreDocumentApi,
   deleteTrashDocumentApi,
-  deleteAllTrashDocumentsApi
-} from "../lib/api/documents_api";
-import type { Document } from "../types/documents_type";
+  deleteAllTrashDocumentsApi,
+} from "../lib/api/documentsApi";
+import type { Document } from "../types/documentType";
 
 export const useTrashActions = (user_id: string) => {
   const [trashDocs, setTrashDocs] = useState<Document[]>([]);
@@ -38,7 +38,12 @@ export const useTrashActions = (user_id: string) => {
   };
 
   const deleteDocument = async (docId: string) => {
-    if (!window.confirm("이 문서를 삭제하시겠습니까?\n\n 삭제 시 복구할 수 없습니다.")) return;
+    if (
+      !window.confirm(
+        "이 문서를 삭제하시겠습니까?\n\n 삭제 시 복구할 수 없습니다."
+      )
+    )
+      return;
     try {
       await deleteTrashDocumentApi(docId);
       await fetchTrashDocuments();
@@ -49,7 +54,12 @@ export const useTrashActions = (user_id: string) => {
   };
 
   const deleteAllDocuments = async () => {
-    if (!window.confirm("휴지통의 모든 문서를 삭제하시겠습니까?\n\n 삭제 시 복구할 수 없습니다.")) return;
+    if (
+      !window.confirm(
+        "휴지통의 모든 문서를 삭제하시겠습니까?\n\n 삭제 시 복구할 수 없습니다."
+      )
+    )
+      return;
     try {
       await deleteAllTrashDocumentsApi();
       await fetchTrashDocuments();

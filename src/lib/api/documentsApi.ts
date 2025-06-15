@@ -1,14 +1,15 @@
-// src/lib/api/documents_api.ts
+// 📁 src/lib/api/DocumentsAPI.ts
+// ✅ 문서 관련 백엔드 API 호출을 담당하는 함수 모음
+
 import api from "./api";
-import type { Document } from "../../types/documents_type";
+import type { Document } from "../../types/documentType";
 
 // 유저별 문서 조회
 export const getDocumentsApi = (user_id: string) =>
   api.get<Document[]>(`/documents?user_id=${user_id}`);
 
 // 문서 삭제
-export const deleteDocumentApi = (id: string) =>
-  api.delete(`/documents/${id}`);
+export const deleteDocumentApi = (id: string) => api.delete(`/documents/${id}`);
 
 // 문서 업로드
 export const uploadDocumentApi = (formData: FormData) =>
