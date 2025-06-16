@@ -11,6 +11,7 @@ import SupportPage from "../features/Support/SupportPage";
 // import Homepage from "../features/Home/HomePage";
 // import Loginpage from "../features/Login/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
+import EditorPage from "../features/Editor/EditorPage";
 
 const AppRouter = () => {
   return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
           <Route path="/trash" element={<TrashPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/editor" element={<EditorPage />} />
         </Route>
         {/* <Route path="/" element={<HomePage />} /> */}
         {/* <Route path="/login" element={<LoginPage />} /> */}
