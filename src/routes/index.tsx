@@ -12,6 +12,7 @@ import SupportPage from "../features/Support/SupportPage";
 // import Loginpage from "../features/Login/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import EditorPage from "../features/Editor/EditorPage";
+import EditDoc from "../features/Editor/EditDoc/EditDoc";
 
 const AppRouter = () => {
   return (
@@ -24,7 +25,7 @@ const AppRouter = () => {
           <Route path="/trash" element={<TrashPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/support" element={<SupportPage />} />
-          <Route path="/editor" element={<EditorPage />} />
+          <Route path="/editor/:id" element={<EditorPage />} />
         </Route>
         {/* <Route path="/" element={<HomePage />} /> */}
         {/* <Route path="/login" element={<LoginPage />} /> */}
