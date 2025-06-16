@@ -1,11 +1,14 @@
-// src/hooks/useGroupedDocuments.ts
-//설명: 문서를 불러오고, 날짜별로 그룹화하며, 검색 필터링까지 수행하는 커스텀 훅
-//사용 위치: DashboardPage 뿐만 아니라, 문서 목록이 필요한 다른 페이지에서도 재사용 가능
+// 📁 src/hooks/useGroupedDocuments.ts
+// 설명: 문서를 불러오고, 날짜별로 그룹화하며, 검색 필터링까지 수행하는 커스텀 훅
+// 사용 위치: DashboardPage 뿐만 아니라, 문서 목록이 필요한 다른 페이지에서도 재사용 가능
 import { useMemo } from "react";
 import dayjs from "dayjs";
-import type { Document } from "../types/documents_type";
+import type { Document } from "../types/documentType";
 
-export const useGroupedDocuments = (searchTerm: string, documents: Document[]) => {
+export const useGroupedDocuments = (
+  searchTerm: string,
+  documents: Document[]
+) => {
   // useMemo로 불필요한 연산 방지
   const groupedDocs = useMemo(() => {
     // 검색어 필터
@@ -23,7 +26,9 @@ export const useGroupedDocuments = (searchTerm: string, documents: Document[]) =
 
     // 날짜 내림차순 정렬
     return Object.fromEntries(
-      Object.entries(grouped).sort((a, b) => (dayjs(b[0]).isAfter(dayjs(a[0])) ? 1 : -1))
+      Object.entries(grouped).sort((a, b) =>
+        dayjs(b[0]).isAfter(dayjs(a[0])) ? 1 : -1
+      )
     );
   }, [documents, searchTerm]);
 

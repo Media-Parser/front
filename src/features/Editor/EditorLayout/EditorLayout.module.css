@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  flex-direction: column; /* ⬅ 상단에 Header, 아래는 본문 */
+  height: 100vh;
+  max-width: 1200px; /* 원하는 전체 폭 */
+  margin: 0 auto; /* 중앙 정렬 */
+  width: 100%;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 0 2rem; /* 전체 양옆 여백 */
+  gap: 2rem; /* Sidebar와 Content 사이 간격 */
+}
+
+.content {
+  flex: 1;
+  padding-top: 1rem;
+  overflow-y: auto;
+}

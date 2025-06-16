@@ -1,4 +1,3 @@
-
 // src/routes/index.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingWrapper from "../features/Landing/LandingWrapper";
@@ -6,12 +5,13 @@ import OAuthCallback from "../features/Login/OAuthCallback";
 import DashBoardPage from "../features/Dashboard/DashboardPage";
 import TrashPage from "../features/Trash/TrashPage";
 import AccountPage from "../features/Account/AccountPage";
-import SupportPage from "../features/Support/SupportPage";  
+import SupportPage from "../features/Support/SupportPage";
 // import DetailPage from '../features/Detail/DetailPage';
 // import UploadPage from '../features/Upload/UploadPage';
 // import Homepage from "../features/Home/HomePage";
 // import Loginpage from "../features/Login/LoginPage";
-import ProtectedRoute from "./protectdRoute";
+import ProtectedRoute from "./ProtectedRoute";
+import EditorPage from "../features/Editor/EditorPage";
 
 const AppRouter = () => {
   return (
@@ -24,6 +24,7 @@ const AppRouter = () => {
           <Route path="/trash" element={<TrashPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/editor" element={<EditorPage />} />
         </Route>
         {/* <Route path="/" element={<HomePage />} /> */}
         {/* <Route path="/login" element={<LoginPage />} /> */}

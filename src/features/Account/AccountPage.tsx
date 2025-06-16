@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "./Account.module.css";
 import Layout from "../../components/Layout/Layout";
-import type { UserInfo } from "../../types/documents_type";
-import { getUserInfoApi } from "../../lib/api/documents_api";
+import type { UserInfo } from "../../types/documentType";
+import { getUserInfoApi } from "../../lib/api/documentsApi";
 
 const AccountPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);

@@ -1,6 +1,6 @@
 // src/lib/utils/groupDocumentsByDate.ts
 import dayjs from "dayjs";
-import type { Document } from "../../types/documents_type";
+import type { Document } from "../../types/documentType";
 
 export function groupDocumentsByDate(documents: Document[]) {
   const now = dayjs();

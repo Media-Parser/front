@@ -34,16 +34,16 @@
   border: none;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #fbe51bd9;
+  background-color: var(--color-bg);
   color: black;
 }
 
 .uploadButton:hover {
-  background-color: #f9d314;
+  background-color: var(--color-hover);
 }
 
 .uploadIcon {
-  margin-right: 8px;  /* 아이콘과 텍스트 사이 여백 */
+  margin-right: 8px; /* 아이콘과 텍스트 사이 여백 */
 }
 
 .documentSection h3 {

@@ -6,7 +6,7 @@ import DocumentGroupSection from "../Dashboard/components/DocumentGroupSection";
 import { useTrashActions } from "../../hooks/useTrashActions";
 import { FaTrashAlt } from "react-icons/fa";
 import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
-import type { Document } from "../../types/documents_type";
+import type { Document } from "../../types/documentType";
 import LoadingOrError from "../../components/Common/LoadingOrError";
 
 const TrashPage = () => {
@@ -58,10 +58,7 @@ const TrashPage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button
-            className={styles.uploadButton}
-            onClick={handleDeleteAll}
-          >
+          <button className={styles.uploadButton} onClick={handleDeleteAll}>
             <FaTrashAlt className={styles.uploadIcon} />
             전체 삭제
           </button>
