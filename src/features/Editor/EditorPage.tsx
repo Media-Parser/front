@@ -1,11 +1,22 @@
+// 📁 src/features/Editor/Editor/EditorPage.tsx
 import EditorLayout from "./EditorLayout/EditorLayout";
+import EditorSidebar from "./EditorSidebar/EditorSidebar";
+import styles from "./Editor.module.css";
+import Chatbot from "../Chatbot/Chatbot";
+import EditDoc from "./EditDoc/EditDoc";
 
 const EditorPage = () => {
   return (
-    <EditorLayout showHeader={true} showSidebar={false}>
-      <h2>문서 편집기</h2>
-      <p>여기에 문서 편집기 컴포넌트를 추가하세요.</p>
-    </EditorLayout>
+    <div>
+      <EditorSidebar />
+      <div className={styles.pageWrapper}>
+        <EditorLayout
+          left={<EditDoc />}
+          right={<Chatbot />}
+          showHeader={true}
+        />
+      </div>
+    </div>
   );
 };
 

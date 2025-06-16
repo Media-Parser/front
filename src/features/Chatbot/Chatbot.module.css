@@ -1,0 +1,68 @@
+.Wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 화면 전체 높이 */
+  max-height: 100vh;
+  background: white; /* 배경색은 필요에 따라 */
+}
+
+.chatMessages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.botMessage {
+  max-width: 60%;
+  background: #e0e0e0;
+  color: black;
+  padding: 0.8rem 1rem;
+  border-radius: 15px;
+  align-self: flex-start;
+  position: relative;
+}
+
+.userMessage {
+  max-width: 60%;
+  border: 2px solid var(--color-bg);
+  color: black;
+  padding: 0.8rem 1rem;
+  border-radius: 15px 15px 3px 15px; /* 오른쪽 끝 조금 뾰족하게 */
+  align-self: flex-end;
+  position: relative;
+  word-break: break-word;
+}
+
+.inputArea {
+  display: flex;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  background: white; /* 배경이 투명하면 스크롤 시 메시지가 보임 */
+  z-index: 10;
+}
+
+.chatInput {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.sendButton {
+  margin-left: 0.5rem;
+  color: var(--color-bg);
+  border: none;
+  padding: 0 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

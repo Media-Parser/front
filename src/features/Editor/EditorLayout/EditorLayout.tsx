@@ -1,25 +1,26 @@
+// 📁 src/features/Editor/EditorLayout/EditorLayout.tsx
 import type { ReactNode } from "react";
 import Header from "../../../components/Header/Header";
-import EditorSidebar from "../EditorSidebar/EditorSidebar";
 import styles from "./EditorLayout.module.css";
 
-interface LayoutProps {
-  children: ReactNode;
+interface EditorLayoutProps {
+  left: ReactNode;
+  right: ReactNode;
   showHeader?: boolean;
-  showSidebar?: boolean;
 }
 
 const EditorLayout = ({
-  children,
+  left,
+  right,
   showHeader = true,
-  showSidebar = true,
-}: LayoutProps) => {
+}: EditorLayoutProps) => {
   return (
     <div className={styles.wrapper}>
       {showHeader && <Header />}
-      <div className={styles.body}>
-        {showSidebar && <EditorSidebar />}
-        <main className={styles.content}>{children}</main>
+      <div className={styles.main}>
+        <div className={styles.left}>{left}</div>
+        <div className={styles.divider} />
+        <div className={styles.right}>{right}</div>
       </div>
     </div>
   );
