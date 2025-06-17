@@ -1,33 +1,46 @@
 import styles from "./Sidebar.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { HiFolderAdd } from "react-icons/hi";
+import { FaPen, FaRegTrashAlt } from "react-icons/fa";
+import { useCategories } from "../../hooks/useCategories";
 
-const Sidebar = () => {
+interface SidebarProps {
+  onRefetch?: () => void;
+}
+
+const Sidebar = ({ onRefetch }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isDocDropdownOpen, setIsDocDropdownOpen] = useState(false);
+  const {
+    categories,
+    addCategory,
+    deleteCategory,
+    updateCategory,
+    fetchCategories,
+  } = useCategories();
 
   const topMenus = [
     { label: "문서", path: "/dashboard", hasDropdown: true },
     { label: "휴지통", path: "/trash" },
     { label: "계정", path: "/account" },
   ];
-
-  const documentSubmenus = [
-    { label: "카테고리 추가", path: "/dashboard" },
-    { label: "카테고리1", path: "/dashboard/category1" },
-    { label: "카테고리2", path: "/dashboard/category2" },
-  ];
-
   const bottomMenus = [
     { label: "지원", path: "/support" },
     { label: "로그아웃", path: "/logout" },
   ];
 
-  const handleMenuClick = (menu: {
+  const isActive = (path: string) => location.pathname === path;
+  const isActiveCategory = (categoryPath: string) =>
+    decodeURIComponent(location.pathname) === categoryPath;
+
+  // 공통 메뉴 클릭
+  const handleMenuClick = async (menu: {
     label: string;
     path: string;
     hasDropdown?: boolean;
+    isAddCategory?: boolean;
   }) => {
     if (menu.label === "로그아웃") {
       if (window.confirm("정말 로그아웃하시겠습니까?")) {
@@ -37,19 +50,51 @@ const Sidebar = () => {
       }
       return;
     }
-
-    // '문서' 라벨 클릭 시 드롭다운 토글 없이 이동만
-    if (menu.hasDropdown) {
-      if (menu.label === "문서") {
-        navigate(menu.path);
-      }
-      // 다른 드롭다운 메뉴가 있다면 여기서 토글 가능 (지금은 없으니 생략)
+    if (menu.isAddCategory) {
+      await handleAddCategory();
+      return;
+    }
+    if (menu.hasDropdown && menu.label === "문서") {
+      navigate(menu.path);
     } else {
       navigate(menu.path);
     }
   };
 
-  const isActive = (path: string) => location.pathname === path;
+  // 카테고리 추가 - 이동 없음
+  const handleAddCategory = async () => {
+    const name = prompt("새 카테고리 이름을 입력하세요.");
+    if (!name) return;
+    if (categories.some((c) => c.label === name)) {
+      alert("이미 존재하는 카테고리입니다.");
+      return;
+    }
+    await addCategory(name);
+    await fetchCategories(); // 목록만 최신화
+    onRefetch?.();
+  };
+
+  // 카테고리 수정 - 이동 없음
+  const handleEditCategory = async (category: any) => {
+    const newLabel = prompt("새 카테고리 이름을 입력하세요.", category.label);
+    if (newLabel && newLabel !== category.label) {
+      await updateCategory(category.category_id, newLabel);
+      await fetchCategories(); // 목록만 최신화
+      onRefetch?.();
+    }
+  };
+
+  // 카테고리 삭제 - 삭제 후 대시보드 이동은 그대로
+  const handleDeleteCategory = async (category: any) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      await deleteCategory(category.category_id);
+      await fetchCategories();
+      onRefetch?.();
+      if (location.pathname === category.path) {
+        navigate("/dashboard", { replace: true });
+      }
+    }
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -83,15 +128,57 @@ const Sidebar = () => {
                 </div>
                 {menu.hasDropdown && isDocDropdownOpen && (
                   <ul className={styles.subMenu}>
-                    {documentSubmenus.map((submenu) => (
+                    <li
+                      key="add-category"
+                      className={`${styles.subMenuItem} ${styles.addCategoryItem}`}
+                      onClick={handleAddCategory}
+                    >
+                      <HiFolderAdd className={styles.icon} />
+                      <span className={styles.addCategoryLabel}>
+                        새 카테고리
+                      </span>
+                    </li>
+                    {categories.map((category) => (
                       <li
-                        key={submenu.label}
+                        key={category.category_id}
                         className={`${styles.subMenuItem} ${
-                          isActive(submenu.path) ? styles.activemenu : ""
+                          isActiveCategory(category.path)
+                            ? styles.activemenu
+                            : ""
                         }`}
-                        onClick={() => handleMenuClick(submenu)}
+                        onClick={() => {
+                          if (category.path) {
+                            let slug = category.path.replace(
+                              /^\/dashboard\//,
+                              ""
+                            );
+                            navigate(`/dashboard/${slug}`, { replace: true });
+                          }
+                        }}
                       >
-                        {submenu.label}
+                        <span className={styles.categoryLabel}>
+                          {category.label}
+                        </span>
+                        <div className={styles.categoryActions}>
+                          <button
+                            className={styles.categoryBtn}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditCategory(category);
+                            }}
+                          >
+                            <FaPen />
+                          </button>
+                          <button
+                            className={styles.categoryBtn}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteCategory(category);
+                            }}
+                          >
+                            <FaRegTrashAlt />
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>

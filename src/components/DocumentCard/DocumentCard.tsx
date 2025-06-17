@@ -1,9 +1,10 @@
-// src/features/Dashboard/components/DocumentCard.tsx
+// src/components/DocumentCard.tsx
 import React, { useState } from "react";
 import styles from "./DocumentCard.module.css";
 import dayjs from "dayjs";
 import { useLocation } from "react-router-dom";
 import Tooltip from "../../components/Tooltip/Tooltip";
+import { useNavigate } from "react-router-dom";
 
 interface DocumentCardProps {
   title: string;
@@ -16,6 +17,7 @@ interface DocumentCardProps {
   onDelete?: () => void;
   onDownload?: () => void;
   onRightClick?: () => void;
+  id?: string; // 문서 ID 추가
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({
@@ -29,8 +31,10 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
   onDelete,
   onDownload,
   onRightClick,
+  id = "", // 기본값으로 빈 문자열 설정
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isTrashPage = location.pathname === "/trash";
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -54,7 +58,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
       className={styles.card}
       role="button"
       tabIndex={0}
-      onClick={onClick}
+      onClick={() => navigate(`/editor/${id}`)}
       onKeyPress={(e) => {
         if (e.key === "Enter" || e.key === " ") onClick?.();
       }}

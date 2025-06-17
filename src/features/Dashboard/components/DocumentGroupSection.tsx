@@ -46,12 +46,12 @@ const DocumentGroupSection = ({
       <div className={styles.cardGrid}>
         {previewDocs.map((doc) => (
           <DocumentCard
-            key={doc.id ?? doc._id}
+          key={doc.doc_id}
             {...doc}
-            onDelete={() => onDelete?.(doc.id ?? doc._id)}
-            onDownload={() => onDownload?.(doc.id ?? doc._id)}
-            onRestore={() => onRestore?.(doc.id ?? doc._id)}
-            onPermanentDelete={() => onPermanentDelete?.(doc.id ?? doc._id)}
+            onDelete={() => onDelete?.(doc.doc_id)}
+            onDownload={() => onDownload?.(doc.doc_id)}
+            onRestore={() => onRestore?.(doc.doc_id)}
+            onPermanentDelete={() => onPermanentDelete?.(doc.doc_id)}
             isTrashPage={isTrashPage}
           />
         ))}

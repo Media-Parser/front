@@ -7,18 +7,20 @@ interface LayoutProps {
   children: ReactNode;
   showHeader?: boolean;
   showSidebar?: boolean;
+  sidebar?: ReactNode;
 }
 
 const Layout = ({
   children,
   showHeader = true,
   showSidebar = true,
+  sidebar,
 }: LayoutProps) => {
   return (
     <div className={styles.wrapper}>
       {showHeader && <Header />}
       <div className={styles.body}>
-        {showSidebar && <Sidebar />}
+        {showSidebar && (sidebar ?? <Sidebar />)}
         <main className={styles.content}>{children}</main>
       </div>
     </div>

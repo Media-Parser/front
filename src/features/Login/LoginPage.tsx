@@ -4,6 +4,9 @@ import styles from "../Login/Login.module.css";
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
+// localStorage.removeItem("user_id");
+// localStorage.removeItem("access_token");
+
 const LoginPage = () => {
   return (
     <div className={styles.buttonBox}>
