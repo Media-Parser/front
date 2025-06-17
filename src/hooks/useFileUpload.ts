@@ -3,9 +3,14 @@
 // 사용 위치: 파일 업로드 기능이 필요한 컴포넌트
 import api from "../lib/api/api";
 
-// 파일 업로드 커스텀 훅
+type UploadArgs = {
+  file: File;
+  userId: string;
+  categoryId?: string | null;
+};
+
 export const useFileUpload = (onSuccess: () => void) => {
-  const uploadFile = async (file: File) => {
+  const uploadFile = async ({ file, userId, categoryId }: UploadArgs) => {
     const allowedExtensions = ["hwp", "hwpx"];
     const fileExtension = file.name.split(".").pop()?.toLowerCase();
 
@@ -14,19 +19,15 @@ export const useFileUpload = (onSuccess: () => void) => {
       return;
     }
 
-    // 확장자별 API 경로 분기
-    let uploadUrl = "";
-    if (fileExtension === "hwp") {
-      uploadUrl = "/documents/upload/hwp";
-    } else if (fileExtension === "hwpx") {
-      uploadUrl = "/documents/upload/hwpx";
-    }
-
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("user_id", userId);
+    if (categoryId) formData.append("category_id", categoryId);
 
-    const user_id = localStorage.getItem("user_id") ?? "";
-    formData.append("user_id", user_id);
+    const uploadUrl =
+      fileExtension === "hwp"
+        ? "/documents/upload/hwp"
+        : "/documents/upload/hwpx";
 
     try {
       await api.post(uploadUrl, formData, {
@@ -42,3 +43,4 @@ export const useFileUpload = (onSuccess: () => void) => {
 
   return { uploadFile };
 };
+

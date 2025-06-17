@@ -45,3 +45,23 @@ export const deleteAllTrashDocumentsApi = async () => {
 export const getUserInfoApi = async (user_id: string) => {
   return await api.get(`/users/${user_id}`);
 };
+
+// 카테고리 조회
+export const getCategoriesApi = async (user_id: string) => {
+  return await api.get(`/categories?user_id=${user_id}`);
+};
+
+// 카테고리 추가
+export const addCategoryApi = async (user_id: string, label: string) => {
+  return await api.post(`/categories`, { user_id, label });
+};
+
+// 카테고리 삭제
+export const deleteCategoryApi = async (category_id: string) => {
+  return await api.delete(`/categories/${category_id}`);
+};
+
+// 카테고리 수정
+export const updateCategoryApi = async (category_id: string, label: string) => {
+  return await api.put(`/categories/${category_id}`, { label });
+};
