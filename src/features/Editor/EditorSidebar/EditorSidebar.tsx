@@ -1,3 +1,4 @@
+// 📁 src/features/Editor/EditorSidebar/EditorSidebar.tsx
 import { useState } from "react";
 import styles from "./EditorSidebar.module.css";
 import {
@@ -10,12 +11,27 @@ import {
   LogOut,
 } from "lucide-react";
 
-const EditorSidebar = () => {
+interface EditorSidebarProps {
+  onSave?: () => Promise<void>;
+}
+
+const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const toggleSidebar = () => setIsExpanded((prev) => !prev);
 
-  const onSave = () => {
-    console.log("저장 클릭됨");
+  const handleSave = async () => {
+    if (!onSave || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      await onSave();
+    } catch (error) {
+      console.error("저장 오류:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -32,9 +48,12 @@ const EditorSidebar = () => {
           <Home />
           {isExpanded && <span>홈</span>}
         </div>
-        <div className={styles.menuItem} onClick={onSave}>
+        <div
+          className={`${styles.menuItem} ${isSaving ? styles.saving : ""}`}
+          onClick={handleSave}
+        >
           <Save />
-          {isExpanded && <span>저장</span>}
+          {isExpanded && <span>{isSaving ? "저장 중..." : "저장"}</span>}
         </div>
         <div className={styles.menuItem}>
           <Settings />

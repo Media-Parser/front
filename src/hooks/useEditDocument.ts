@@ -30,31 +30,31 @@ export const useEditDocument = (id: string) => {
     }
   }, [id]);
 
-  // 수정 함수 (최종 저장 시점에 사용)
-  const update = useCallback(
-    async (updatedData: Partial<Document>) => {
-      if (!id) {
-        setError("문서 ID가 없습니다.");
-        return;
-      }
-      try {
-        // TODO: updateDocumentApi API 완성되면 사용
-        // const updated = await updateDocumentApi(id, updatedData);
-        // setDocument(updated);
-        // setError(null);
-        // return updated;
+  // // 수정 함수 (최종 저장 시점에 사용)
+  // const update = useCallback(
+  //   async (updatedData: Partial<Document>) => {
+  //     if (!id) {
+  //       setError("문서 ID가 없습니다.");
+  //       return;
+  //     }
+  //     try {
+  //       // TODO: updateDocumentApi API 완성되면 사용
+  //       // const updated = await updateDocumentApi(id, updatedData);
+  //       // setDocument(updated);
+  //       // setError(null);
+  //       // return updated;
 
-        // 임시로 setDocument만 업데이트
-        setDocument((prev) => (prev ? { ...prev, ...updatedData } : null));
-        setError(null);
-        return null;
-      } catch (err: any) {
-        setError(err.message || "문서 수정 오류");
-        throw err;
-      }
-    },
-    [id]
-  );
+  //       // 임시로 setDocument만 업데이트
+  //       setDocument((prev) => (prev ? { ...prev, ...updatedData } : null));
+  //       setError(null);
+  //       return null;
+  //     } catch (err: any) {
+  //       setError(err.message || "문서 수정 오류");
+  //       throw err;
+  //     }
+  //   },
+  //   [id]
+  // );
 
   // 임시저장 API 호출 (POST 또는 PUT 등 서버 API 맞춰서 수정)
   const autosaveApiCall = useCallback(
@@ -91,7 +91,7 @@ export const useEditDocument = (id: string) => {
     loading,
     error,
     fetchDocument: fetch,
-    updateDocument: update,
+    //updateDocument: update,
     autosave,
     setDocument,
   };
