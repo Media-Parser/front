@@ -43,7 +43,7 @@ const DashboardPage: React.FC = () => {
 
   // ✅ 항상 loaded 체크 후 비교!
   const currentCategory = useMemo(() => {
-    if (!categoryPath) return { category_id: "", label: "모든 문서" };
+    if (!categoryPath) return { category_id: "", label: "문서" };
     const matched = categories.find((c) => {
       let slug = c.path?.replace(/^\/dashboard\//, "");
       return slug === categoryPath;
