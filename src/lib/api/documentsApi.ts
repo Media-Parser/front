@@ -12,9 +12,17 @@ export const getDocumentsApi = (user_id: string) =>
 export const deleteDocumentApi = (id: string) => api.delete(`/documents/${id}`);
 
 // 문서 내용 조회 (id 받아서 문서 데이터 반환)
-export const fetchDocument = async (id: string): Promise<Document> => {
+export const readDocument = async (id: string): Promise<Document> => {
   const res = await api.get<Document>(`/documents/${id}`);
   return res.data;
+};
+
+// 문서 수정 (임시저장)
+export const autosaveDocumentApi = async (
+  id: string,
+  data: Partial<Document>
+) => {
+  return axios.put(`/documents/${id}/autosave`, data);
 };
 
 // 문서 업로드

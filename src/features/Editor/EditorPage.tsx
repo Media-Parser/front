@@ -1,4 +1,4 @@
-// 📁 src/features/Editor/Editor/EditorPage.tsx
+// 📁 src/features/Editor/EditorPage.tsx
 import EditorLayout from "./EditorLayout/EditorLayout";
 import EditorSidebar from "./EditorSidebar/EditorSidebar";
 import styles from "./Editor.module.css";
