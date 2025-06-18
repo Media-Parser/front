@@ -1,6 +1,7 @@
 // 📁 src/lib/api/documentsApi.ts
 // ✅ 문서 관련 백엔드 API 호출을 담당하는 함수 모음
 
+import axios from "axios";
 import api from "./api";
 import type { Document } from "../../types/documentType";
 
@@ -11,7 +12,7 @@ export const getDocumentsApi = (user_id: string) =>
 // 문서 삭제
 export const deleteDocumentApi = (id: string) => api.delete(`/documents/${id}`);
 
-// 문서 내용 조회 (id 받아서 문서 데이터 반환)
+// 문서 읽기 (id 받아서 문서 데이터 반환)
 export const readDocument = async (id: string): Promise<Document> => {
   const res = await api.get<Document>(`/documents/${id}`);
   return res.data;
@@ -22,7 +23,7 @@ export const autosaveDocumentApi = async (
   id: string,
   data: Partial<Document>
 ) => {
-  return axios.put(`/documents/${id}/autosave`, data);
+  return api.patch(`/documents/${id}/`, data); // axios → api
 };
 
 // 문서 업로드

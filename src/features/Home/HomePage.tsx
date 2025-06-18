@@ -12,6 +12,9 @@ const Homepage = () => {
   const [showCursor, setShowCursor] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("access_token");
+
   useEffect(() => {
     let i = 0;
     const interval = setInterval(() => {
@@ -45,7 +48,10 @@ const Homepage = () => {
         {displayedText}
         <span className={styles.cursor}>{showCursor ? "|" : " "}</span>
       </p>
-      <button className={styles.button} onClick={handleStart}>
+      <button
+        className={`${styles.button} ${isFadingOut ? styles.fadeOut : ""}`}
+        onClick={handleStart}
+      >
         시작하기
       </button>
     </div>
