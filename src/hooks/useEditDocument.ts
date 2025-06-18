@@ -59,6 +59,7 @@ export const useEditDocument = (id: string) => {
   // 임시저장 API 호출 (POST 또는 PUT 등 서버 API 맞춰서 수정)
   const autosaveApiCall = useCallback(
     async (data: Partial<Document>) => {
+      console.log("autosaveApiCall 호출, data:", data);
       if (!id) return;
       try {
         await autosaveDocumentApi(id, data);
@@ -73,7 +74,7 @@ export const useEditDocument = (id: string) => {
   const debouncedAutosave = useRef(
     debounce((data: Partial<Document>) => {
       autosaveApiCall(data);
-    }, 2000)
+    }, 30000)
   ).current;
 
   // 임시저장 트리거 (외부에서 호출)
@@ -94,5 +95,6 @@ export const useEditDocument = (id: string) => {
     //updateDocument: update,
     autosave,
     setDocument,
+    autosaveApiCall,
   };
 };

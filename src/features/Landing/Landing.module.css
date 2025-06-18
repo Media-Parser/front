@@ -1,28 +1,33 @@
 /* 📁 src/features/Landing/Landing.module.css */
-
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 90vh;
-  padding: 2rem;
-  background-color: #ffffff;
-  box-sizing: border-box;
   position: relative;
-  overflow-y: auto;
-  overflow-x: visible;
+  height: 90vh;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow: hidden; /* 스크롤바 제거 */
 }
 
 .logoContainer {
-  position: absolute;
-  top: 15rem; /* 위에서 간격 */
+  position: fixed; /* 또는 absolute */
+  top: 40%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
+  width: 160px;
+  max-width: 100%;
+}
+
+.contentcontainer {
+  position: relative; /* 자연스러운 문서 흐름 유지 */
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: calc(40vh + 10px); /* 로고 중앙부터 100px 아래에 위치 */
   display: flex;
-  justify-content: center;
-  flex-shrink: 0;
-  z-index: 10;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  min-height: 400px;
 }
 
 .logoImage {
@@ -31,23 +36,15 @@
   object-fit: contain;
 }
 
-.contentcontainer {
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 8rem;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  overflow-x: visible;
-  overflow-y: visible;
-}
-
 /* 경로가 바뀌면 이 클래스가 붙어서 자연스럽게 사라짐 */
 .fadeOut {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+/* 모바일 */
+@media (max-height: 600px) {
+  .contentcontainer {
+    max-height: calc(40vh - 80px);
+  }
 }
