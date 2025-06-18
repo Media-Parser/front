@@ -1,6 +1,6 @@
 import styles from "./Sidebar.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HiFolderAdd } from "react-icons/hi";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { useCategories } from "../../hooks/useCategories";
@@ -12,7 +12,17 @@ interface SidebarProps {
 const Sidebar = ({ onRefetch }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isDocDropdownOpen, setIsDocDropdownOpen] = useState(false);
+
+  const [isDocDropdownOpen, setIsDocDropdownOpen] = useState(false); // 초기 false
+
+  useEffect(() => {
+    // /dashboard/로 시작하지만 정확히 /dashboard는 아님
+    const isInCategory =
+      location.pathname.startsWith("/dashboard/") &&
+      location.pathname !== "/dashboard";
+    setIsDocDropdownOpen(isInCategory);
+  }, [location.pathname]);
+
   const {
     categories,
     addCategory,
@@ -26,6 +36,7 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
     { label: "휴지통", path: "/trash" },
     { label: "계정", path: "/account" },
   ];
+
   const bottomMenus = [
     { label: "지원", path: "/support" },
     { label: "로그아웃", path: "/logout" },
@@ -35,7 +46,6 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
   const isActiveCategory = (categoryPath: string) =>
     decodeURIComponent(location.pathname) === categoryPath;
 
-  // 공통 메뉴 클릭
   const handleMenuClick = async (menu: {
     label: string;
     path: string;
@@ -50,18 +60,20 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
       }
       return;
     }
+
     if (menu.isAddCategory) {
       await handleAddCategory();
       return;
     }
-    if (menu.hasDropdown && menu.label === "문서") {
-      navigate(menu.path);
-    } else {
-      navigate(menu.path);
+
+    if (menu.label === "문서") {
+      navigate("/dashboard"); // 드롭다운 토글 안 함
+      return;
     }
+
+    navigate(menu.path);
   };
 
-  // 카테고리 추가 - 이동 없음
   const handleAddCategory = async () => {
     const name = prompt("새 카테고리 이름을 입력하세요.");
     if (!name) return;
@@ -70,21 +82,19 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
       return;
     }
     await addCategory(name);
-    await fetchCategories(); // 목록만 최신화
+    await fetchCategories();
     onRefetch?.();
   };
 
-  // 카테고리 수정 - 이동 없음
   const handleEditCategory = async (category: any) => {
     const newLabel = prompt("새 카테고리 이름을 입력하세요.", category.label);
     if (newLabel && newLabel !== category.label) {
       await updateCategory(category.category_id, newLabel);
-      await fetchCategories(); // 목록만 최신화
+      await fetchCategories();
       onRefetch?.();
     }
   };
 
-  // 카테고리 삭제 - 삭제 후 대시보드 이동은 그대로
   const handleDeleteCategory = async (category: any) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       await deleteCategory(category.category_id);
@@ -105,7 +115,10 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
               <li key={menu.label}>
                 <div
                   className={`${styles.menuItem} ${
-                    isActive(menu.path) ? styles.active : ""
+                    (menu.label === "문서" && isDocDropdownOpen) ||
+                    isActive(menu.path)
+                      ? styles.active
+                      : ""
                   }`}
                 >
                   <span
@@ -118,7 +131,7 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
                     <span
                       className={styles.dropdownArrow}
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // 클릭 이벤트 전파 막기
                         setIsDocDropdownOpen((prev) => !prev);
                       }}
                     >
@@ -148,7 +161,7 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
                         }`}
                         onClick={() => {
                           if (category.path) {
-                            let slug = category.path.replace(
+                            const slug = category.path.replace(
                               /^\/dashboard\//,
                               ""
                             );
@@ -187,9 +200,9 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
             ))}
           </ul>
         </nav>
-        <div className={styles.separator}></div>
       </div>
       <div className={styles.bottomNav}>
+        <div className={styles.separator}></div>
         <nav>
           <ul>
             {bottomMenus.map((menu) => (

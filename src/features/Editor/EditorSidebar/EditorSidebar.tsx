@@ -71,7 +71,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
     { icon: <Home />, label: "홈", path: "/dashboard" },
     { icon: <Save />, label: "저장", action: handleSave },
     { icon: <Trash2 />, label: "삭제", action: handleDelete },
-    { icon: <Download />, label: ".hwpx 다운", action: handleDownload },
+    { icon: <Download />, label: "파일 다운", action: handleDownload },
     { icon: <LogOut />, label: "로그아웃", action: handleLogout },
   ];
 
