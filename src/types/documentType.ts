@@ -23,6 +23,23 @@ export interface Category {
   updated_dt?: string;
 }
 
+// DocumentCardProps
+export interface DocumentCardProps {
+  title: string;
+  date: string;
+  doc_id: string;
+  category_id: string;
+  onRestore?: () => void;
+  onPermanentDelete?: () => void;
+  download?: boolean;
+  remove?: boolean;
+  onClick?: () => void;
+  onDelete?: () => void;
+  onDownload?: () => void;
+  onMoved?: () => void;
+  onRightClick?: () => void;
+}
+
 // 문서 업로드 응답
 export interface UploadResponse {
   documentId: string;
