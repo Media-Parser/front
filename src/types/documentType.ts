@@ -1,5 +1,4 @@
 // src/types/DocumentType.ts
-
 // 문서 타입 정의
 export interface Document {
   doc_id: string; // DB에서 온 실제 ObjectId
@@ -22,6 +21,23 @@ export interface Category {
   user_id: string;
   created_dt?: string;
   updated_dt?: string;
+}
+
+// DocumentCardProps
+export interface DocumentCardProps {
+  title: string;
+  date: string;
+  doc_id: string;
+  category_id: string;
+  onRestore?: () => void;
+  onPermanentDelete?: () => void;
+  download?: boolean;
+  remove?: boolean;
+  onClick?: () => void;
+  onDelete?: () => void;
+  onDownload?: () => void;
+  onMoved?: () => void;
+  onRightClick?: () => void;
 }
 
 // 문서 업로드 응답

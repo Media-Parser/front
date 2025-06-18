@@ -11,6 +11,7 @@ interface DocumentGroupSectionProps {
   onRestore?: (id: string) => void;
   onPermanentDelete?: (id: string) => void;
   isTrashPage?: boolean;
+  onMoved?: () => void;
 }
 
 const PREVIEW_COUNT = 3;
@@ -23,6 +24,7 @@ const DocumentGroupSection = ({
   onRestore,
   onPermanentDelete,
   isTrashPage,
+  onMoved,
 }: DocumentGroupSectionProps) => {
   const [showAll, setShowAll] = useState(false);
 
@@ -53,6 +55,7 @@ const DocumentGroupSection = ({
             onRestore={() => onRestore?.(doc.doc_id)}
             onPermanentDelete={() => onPermanentDelete?.(doc.doc_id)}
             isTrashPage={isTrashPage}
+            onMoved={onMoved}
           />
         ))}
       </div>

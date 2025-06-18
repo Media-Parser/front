@@ -1,4 +1,4 @@
-// 📁 src/lib/api/DocumentsAPI.ts
+// 📁 src/lib/api/documentsApi.ts
 // ✅ 문서 관련 백엔드 API 호출을 담당하는 함수 모음
 
 import api from "./api";
@@ -6,10 +6,24 @@ import type { Document } from "../../types/documentType";
 
 // 유저별 문서 조회
 export const getDocumentsApi = (user_id: string) =>
-  api.get<Document[]>(`/documents?user_id=${user_id}`);
+  api.get<Document[]>(`/documents/?user_id=${user_id}`);
 
 // 문서 삭제
 export const deleteDocumentApi = (id: string) => api.delete(`/documents/${id}`);
+
+// 문서 내용 조회 (id 받아서 문서 데이터 반환)
+export const readDocument = async (id: string): Promise<Document> => {
+  const res = await api.get<Document>(`/documents/${id}`);
+  return res.data;
+};
+
+// 문서 수정 (임시저장)
+export const autosaveDocumentApi = async (
+  id: string,
+  data: Partial<Document>
+) => {
+  return axios.put(`/documents/${id}/autosave`, data);
+};
 
 // 문서 업로드
 export const uploadDocumentApi = (formData: FormData) =>
@@ -48,7 +62,7 @@ export const getUserInfoApi = async (user_id: string) => {
 
 // 카테고리 조회
 export const getCategoriesApi = async (user_id: string) => {
-  return await api.get(`/categories?user_id=${user_id}`);
+  return await api.get(`/categories/?user_id=${user_id}`);
 };
 
 // 카테고리 추가
@@ -64,4 +78,9 @@ export const deleteCategoryApi = async (category_id: string) => {
 // 카테고리 수정
 export const updateCategoryApi = async (category_id: string, label: string) => {
   return await api.put(`/categories/${category_id}`, { label });
+};
+
+// 카테고리 이동
+export const moveDocumentApi = (doc_id: string, category_id: string) => {
+  return api.post(`/categories/move/${doc_id}`, { category_id });
 };

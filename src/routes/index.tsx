@@ -21,7 +21,8 @@ const AppRouter = () => {
           <Route path="/trash" element={<TrashPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/support" element={<SupportPage />} />
-          <Route path="/editor" element={<EditorPage />} />
+          <Route path="/editor/:id" element={<EditorPage />} />
+          {/* <Route path="/editor" element={<EditorPage />} /> */}
         </Route>
         <Route path="/oauth/callback" element={<OAuthCallback />} />
       </Routes>

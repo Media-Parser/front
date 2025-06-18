@@ -36,22 +36,13 @@ const DashboardPage: React.FC = () => {
     downloadDocument,
   } = useDocumentActions();
 
-  useEffect(() => {
-    console.log("🔵 [DashboardPage] categoryPath param:", categoryPath);
-    console.log("🔵 [DashboardPage] categories:", categories.map(c => c.path));
-  }, [categoryPath, categories]);
-
   // ✅ 항상 loaded 체크 후 비교!
   const currentCategory = useMemo(() => {
-    if (!categoryPath) return { category_id: "", label: "모든 문서" };
+    if (!categoryPath) return { category_id: "", label: "문서" };
     const matched = categories.find((c) => {
       let slug = c.path?.replace(/^\/dashboard\//, "");
       return slug === categoryPath;
     });
-    console.log(
-      "🟣 [DashboardPage] currentCategory 매칭결과:", matched,
-      "찾는 slug:", categoryPath
-    );
     return matched;
   }, [categories, categoryPath]);
 
@@ -143,6 +134,7 @@ const DashboardPage: React.FC = () => {
               documents={docs}
               onDelete={deleteDocument}
               onDownload={downloadDocument}
+              onMoved={refetch}
             />
           ))
         )}
