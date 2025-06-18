@@ -1,42 +1,38 @@
 // src/components/DocumentCard.tsx
-import React, { useState } from "react";
+
+import React, { useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import styles from "./DocumentCard.module.css";
 import dayjs from "dayjs";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "../../components/Tooltip/Tooltip";
-import { useNavigate } from "react-router-dom";
+import MoveCategoryModal from "../../features/Dashboard/components/MoveCategoryModal";
+import type { DocumentCardProps } from "../../types/documentType";
 
-interface DocumentCardProps {
-  title: string;
-  date: string;
-  onRestore?: () => void;
-  onPermanentDelete?: () => void;
-  download?: boolean;
-  remove?: boolean;
-  onClick?: () => void;
-  onDelete?: () => void;
-  onDownload?: () => void;
-  onRightClick?: () => void;
-  id?: string; // 문서 ID 추가
-}
-
-const DocumentCard: React.FC<DocumentCardProps> = ({
-  title,
-  date,
-  onRestore,
-  onPermanentDelete,
-  download,
-  remove,
-  onClick,
-  onDelete,
-  onDownload,
-  onRightClick,
-  id = "", // 기본값으로 빈 문자열 설정
-}) => {
+const DocumentCard: React.FC<DocumentCardProps> = (props) => {
+  const { title, date, onRestore, onPermanentDelete, download, remove, onDelete, onDownload, onRightClick, doc_id = "", category_id = "", onMoved } = props;
   const location = useLocation();
   const navigate = useNavigate();
   const isTrashPage = location.pathname === "/trash";
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showMoveModal, setShowMoveModal] = useState(false);
+  const kebabButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Tooltip 위치를 CSS 변수로 전달
+  const [tooltipVars, setTooltipVars] = useState({
+    "--tooltip-top": "0px",
+    "--tooltip-left": "0px"
+  } as { [key: string]: string });
+
+  useEffect(() => {
+    if (showTooltip && kebabButtonRef.current) {
+      const rect = kebabButtonRef.current.getBoundingClientRect();
+      setTooltipVars({
+        "--tooltip-top": `${rect.top}px`,    // 버튼의 top에 맞춤
+        "--tooltip-left": `${rect.right + 4}px`, // 버튼 오른쪽 4px에 맞춤
+      });
+    }
+  }, [showTooltip]);
 
   const handleRestoreOrDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -58,68 +54,98 @@ const DocumentCard: React.FC<DocumentCardProps> = ({
       className={styles.card}
       role="button"
       tabIndex={0}
-      onClick={() => navigate(`/editor/${id}`)}
-      onKeyPress={(e) => {
-        if (e.key === "Enter" || e.key === " ") onClick?.();
+      onClick={e => {
+        if (showTooltip) {
+          e.stopPropagation();
+          setShowTooltip(false);
+          return;
+        }
+        navigate(`/editor/${doc_id}`);
       }}
     >
-      {/* 케밥 버튼 및 툴팁 */}
-      <div
-        className={styles.tooltipWrapper}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <button
-          className={styles.kebabButton}
-          aria-label="옵션 열기"
-          onClick={(e) => e.stopPropagation()}
-        >
-          ︙
-        </button>
-
-        {showTooltip && (
-          <Tooltip visible={showTooltip}>
-            <button className={styles.tooltipButton} onClick={handleRightClick}>
-              상세정보
-            </button>
-            <button
-              className={styles.tooltipButton}
-              onClick={(e) => {
+      {/* Tooltip/Overlay를 Portal로 함께 렌더링 */}
+      {showTooltip &&
+        createPortal(
+          <>
+            <div
+              className={styles.tooltipOverlay}
+              onClick={e => {
                 e.stopPropagation();
-                onClick?.();
+                setShowTooltip(false);
+              }}
+            />
+            <div
+              className={styles.tooltipMenuWrapper}
+              style={tooltipVars}
+            >
+              <Tooltip visible={showTooltip}>
+                <button
+                  className={styles.tooltipButton}
+                  onClick={e => { e.stopPropagation(); handleRightClick(e); }}
+                >
+                  상세정보
+                </button>
+                <button
+                  className={styles.tooltipButton}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setShowMoveModal(true);
+                  }}
+                >
+                  문서이동
+                </button>
+                {showMoveModal &&
+                  createPortal(
+                    <MoveCategoryModal
+                    docId={doc_id ?? ""}
+                    originCategoryId={category_id ?? ""}
+                    onClose={() => setShowMoveModal(false)}
+                    onMoved={onMoved} // 문서 리스트 새로고침 함수
+                    />,
+                    document.body
+                  )}
+                {(download || isTrashPage) && (
+                  <button
+                    className={`${styles.tooltipButton} ${
+                      isTrashPage ? styles.restoreButton : styles.downloadButton
+                    }`}
+                    onClick={e => { e.stopPropagation(); handleRestoreOrDownload(e); }}
+                  >
+                    {isTrashPage ? "복구" : "다운로드"}
+                  </button>
+                )}
+                {(remove || isTrashPage) && (
+                  <button
+                    className={`${styles.tooltipButton} ${styles.deleteButton}`}
+                    onClick={e => { e.stopPropagation(); handlePermanentDelete(e); }}
+                  >
+                    삭제
+                  </button>
+                )}
+              </Tooltip>
+            </div>
+          </>,
+          document.body
+        )}
+      <div className={styles.cardContent}>
+        <div className={styles.cardHeader}>
+          <h3 className={styles.cardTitle} title={title}>
+            {title.length > 25 ? title.slice(0, 25) + "..." : title}
+          </h3>
+          <div className={styles.tooltipWrapper}>
+            <button
+              className={styles.kebabButton}
+              aria-label="옵션 열기"
+              ref={kebabButtonRef}
+              onClick={e => {
+                e.stopPropagation();
+                setShowTooltip(!showTooltip);
               }}
             >
-              문서이동
+              ︙
             </button>
-
-            {(download || isTrashPage) && (
-              <button
-                className={`${styles.tooltipButton} ${
-                  isTrashPage ? styles.restoreButton : styles.downloadButton
-                }`}
-                onClick={handleRestoreOrDownload}
-              >
-                {isTrashPage ? "복구" : "다운로드"}
-              </button>
-            )}
-
-            {(remove || isTrashPage) && (
-              <button
-                className={`${styles.tooltipButton} ${styles.deleteButton}`}
-                onClick={handlePermanentDelete}
-              >
-                삭제
-              </button>
-            )}
-          </Tooltip>
-        )}
-      </div>
-
-      {/* 카드 콘텐츠 */}
-      <div className={styles.cardContent}>
-        <h3 className={styles.cardTitle} title={title}>
-          {title.length > 25 ? title.slice(0, 25) + "..." : title}
-        </h3>
+          </div>
+        </div>
         <p className={styles.previewText}>내용 미리보기</p>
         <div className={styles.cardDate}>
           {dayjs(date).format("YYYY-MM-DD")}

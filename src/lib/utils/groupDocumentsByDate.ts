@@ -4,10 +4,7 @@ import type { Document } from "../../types/documentType";
 
 export function groupDocumentsByDate(documents: Document[]) {
   const now = dayjs();
-  const groupMap = new Map<
-    string,
-    { documents: Document[]; sortDate: dayjs.Dayjs }
-  >();
+  const groupMap = new Map<string, { documents: Document[]; sortDate: dayjs.Dayjs }>();
 
   documents.forEach((doc) => {
     const date = dayjs(doc.created_dt);
