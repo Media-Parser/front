@@ -94,9 +94,7 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <Layout sidebar={
-      <Sidebar onRefetch={handleCategoryUpdate} />
-    }>
+    <Layout sidebar={<Sidebar onRefetch={handleCategoryUpdate} />}>
       <div className={styles.mainArea}>
         <div className={styles.mainAreaHeader}>
           <h2>{currentCategory?.label || "문서"}</h2>
