@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import styles from "./EditorSidebar.module.css";
 import { Menu, Home, Trash2, Download, Save, LogOut } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
-import { useEditDocument } from "../../../hooks/useEditDocument";
 import { useParams } from "react-router-dom";
+
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
 }
@@ -20,24 +20,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const [isSaving, setIsSaving] = useState(false);
   const { deleteDocument, downloadDocument } = useDocumentActions();
-  const { document, autosaveApiCall } = useEditDocument(id);
   const navigate = useNavigate();
-
-  const handleSave = async () => {
-    console.log("handleSave 실행");
-    if (!document) return;
-    setIsSaving(true);
-    try {
-      await autosaveApiCall({
-        ...document,
-      });
-      alert("저장을 완료했습니다.");
-    } catch (err) {
-      alert("저장 중 오류가 발생했습니다.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleDelete = async () => {
     await deleteDocument(id);
@@ -47,6 +30,22 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleDownload = async () => {
     await downloadDocument(id);
+  };
+
+  const handleSave = async () => {
+    if (!onSave) return;
+
+    setIsSaving(true);
+    try {
+      await onSave();
+      // Optional: Show success message
+      // alert("저장을 완료했습니다.");
+    } catch (error) {
+      console.error("Save error:", error);
+      alert("저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleLogout = () => {
