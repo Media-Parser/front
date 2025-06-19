@@ -27,11 +27,12 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isTrashPage = location.pathname === "/trash";
+
   const [showTooltip, setShowTooltip] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const kebabButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Tooltip 위치를 CSS 변수로 전달
+  // Tooltip 위치를 동적으로 계산하여 CSS 변수로 설정
   const [tooltipVars, setTooltipVars] = useState({
     "--tooltip-top": "0px",
     "--tooltip-left": "0px",
@@ -41,22 +42,25 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
     if (showTooltip && kebabButtonRef.current) {
       const rect = kebabButtonRef.current.getBoundingClientRect();
       setTooltipVars({
-        "--tooltip-top": `${rect.top}px`, // 버튼의 top에 맞춤
-        "--tooltip-left": `${rect.right + 4}px`, // 버튼 오른쪽 4px에 맞춤
+        "--tooltip-top": `${rect.top}px`,
+        "--tooltip-left": `${rect.right + 4}px`,
       });
     }
   }, [showTooltip]);
 
+  // 휴지통 페이지일 때 복구, 아니면 다운로드 동작 실행
   const handleRestoreOrDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     isTrashPage ? onRestore?.() : onDownload?.();
   };
 
+  // 휴지통 페이지일 때 영구 삭제, 아니면 일반 삭제 동작 실행
   const handlePermanentDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     isTrashPage ? onPermanentDelete?.() : onDelete?.();
   };
 
+  // 오른쪽 클릭 시 호출되는 콜백
   const handleRightClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onRightClick?.();
@@ -76,7 +80,7 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
         navigate(`/editor/${doc_id}`);
       }}
     >
-      {/* Tooltip/Overlay를 Portal로 함께 렌더링 */}
+      {/* Tooltip 및 모달을 Portal로 렌더링 */}
       {showTooltip &&
         createPortal(
           <>
@@ -113,7 +117,7 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
                       docId={doc_id ?? ""}
                       originCategoryId={category_id ?? ""}
                       onClose={() => setShowMoveModal(false)}
-                      onMoved={onMoved} // 문서 리스트 새로고침 함수
+                      onMoved={onMoved}
                     />,
                     document.body
                   )}

@@ -1,6 +1,4 @@
 /* src/features/Trash/TrashPage.module.css */
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
-
 .mainArea {
   flex-grow: 1;
   padding: 25px;
@@ -43,7 +41,7 @@
 }
 
 .uploadIcon {
-  margin-right: 8px;  /* 아이콘과 텍스트 사이 여백 */
+  margin-right: 8px; /* 아이콘과 텍스트 사이 여백 */
 }
 
 .documentSection h3 {

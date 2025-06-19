@@ -79,6 +79,9 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
 
   return (
     <div className={styles.container}>
+      {isCurrentlySaving && <div className={styles.toast}>저장 중...</div>}
+      {isSaved && <div className={styles.toast}>저장 완료!</div>}
+
       <input
         type="text"
         className={styles.titleInput}
@@ -92,10 +95,6 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
         onChange={handleContentsChange}
         placeholder="내용을 입력하세요"
       />
-      {isCurrentlySaving && (
-        <div className={styles.savingIndicator}>저장 중...</div>
-      )}
-      {isSaved && <div className={styles.savedIndicator}>저장 완료!</div>}
     </div>
   );
 };

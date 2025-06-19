@@ -58,7 +58,7 @@ textarea {
   width: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #c1c1c1;
+  background-color: var(--color-bg);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-track {

@@ -1,4 +1,4 @@
-// useEditDocument.ts
+// 📁 src/hooks/useEditDocument.ts
 import { useState, useEffect, useCallback, useRef } from "react";
 import { readDocument, autosaveDocumentApi } from "../lib/api/documentsApi";
 import type { Document } from "../types/documentType";
