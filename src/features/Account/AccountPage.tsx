@@ -42,6 +42,19 @@ const AccountPage: React.FC = () => {
             <span className={styles.value}>{userInfo?.provider ?? "-"}</span>
           </div>
         </div>
+        <div className={styles.deleteAccount}>
+          <button
+            className={styles.deleteButton}
+            onClick={() => {
+              if (window.confirm("정말로 계정을 삭제하시겠습니까?")) {
+                // 계정 삭제 로직을 여기에 추가
+                console.log("계정 삭제 요청");
+              }
+            }}
+          >
+            계정 삭제
+          </button>
+        </div>
       </div>
     </Layout>
   );
