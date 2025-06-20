@@ -85,6 +85,8 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
                 >
                   상세정보
                 </button>
+                {!isTrashPage && (
+                  <>
                 <button
                   className={styles.tooltipButton}
                   onClick={e => {
@@ -103,6 +105,8 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
                     onMoved={onMoved} // 문서 리스트 새로고침 함수
                     />,
                     document.body
+                  )}
+                  </>
                   )}
                 {(download || isTrashPage) && (
                   <button

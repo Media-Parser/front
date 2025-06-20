@@ -71,7 +71,10 @@ const Chatbot = () => {
 
     try {
       const { data } = await axios.post<ApiResponse>(
+        //ip주소
         "http://192.168.45.53:8001/chat/send",
+        //ec2
+        // "http://52.15.42.56:8000/chat/send",
         requestBody,
         {
           headers: {

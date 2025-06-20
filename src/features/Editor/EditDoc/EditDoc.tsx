@@ -44,8 +44,8 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
 
   useEffect(() => {
     if (document) {
-      setTitle(document.title);
-      setContents(document.contents);
+      setTitle(document.title || "");
+      setContents(document.contents || "");
     }
   }, [document]);
 
