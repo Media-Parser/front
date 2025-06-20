@@ -10,40 +10,57 @@ import MoveCategoryModal from "../../features/Dashboard/components/MoveCategoryM
 import type { DocumentCardProps } from "../../types/documentType";
 
 const DocumentCard: React.FC<DocumentCardProps> = (props) => {
-  const { title, date, onRestore, onPermanentDelete, download, remove, onDelete, onDownload, onRightClick, doc_id = "", category_id = "", onMoved } = props;
+  const {
+    title,
+    date,
+    onRestore,
+    onPermanentDelete,
+    download,
+    remove,
+    onDelete,
+    onDownload,
+    onRightClick,
+    doc_id = "",
+    category_id = "",
+    onMoved,
+  } = props;
   const location = useLocation();
   const navigate = useNavigate();
   const isTrashPage = location.pathname === "/trash";
+
   const [showTooltip, setShowTooltip] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const kebabButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Tooltip 위치를 CSS 변수로 전달
+  // Tooltip 위치를 동적으로 계산하여 CSS 변수로 설정
   const [tooltipVars, setTooltipVars] = useState({
     "--tooltip-top": "0px",
-    "--tooltip-left": "0px"
+    "--tooltip-left": "0px",
   } as { [key: string]: string });
 
   useEffect(() => {
     if (showTooltip && kebabButtonRef.current) {
       const rect = kebabButtonRef.current.getBoundingClientRect();
       setTooltipVars({
-        "--tooltip-top": `${rect.top}px`,    // 버튼의 top에 맞춤
-        "--tooltip-left": `${rect.right + 4}px`, // 버튼 오른쪽 4px에 맞춤
+        "--tooltip-top": `${rect.top}px`,
+        "--tooltip-left": `${rect.right + 4}px`,
       });
     }
   }, [showTooltip]);
 
+  // 휴지통 페이지일 때 복구, 아니면 다운로드 동작 실행
   const handleRestoreOrDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     isTrashPage ? onRestore?.() : onDownload?.();
   };
 
+  // 휴지통 페이지일 때 영구 삭제, 아니면 일반 삭제 동작 실행
   const handlePermanentDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     isTrashPage ? onPermanentDelete?.() : onDelete?.();
   };
 
+  // 오른쪽 클릭 시 호출되는 콜백
   const handleRightClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onRightClick?.();
@@ -54,7 +71,7 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
       className={styles.card}
       role="button"
       tabIndex={0}
-      onClick={e => {
+      onClick={(e) => {
         if (showTooltip) {
           e.stopPropagation();
           setShowTooltip(false);
@@ -63,53 +80,60 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
         navigate(`/editor/${doc_id}`);
       }}
     >
-      {/* Tooltip/Overlay를 Portal로 함께 렌더링 */}
+      {/* Tooltip 및 모달을 Portal로 렌더링 */}
       {showTooltip &&
         createPortal(
           <>
             <div
               className={styles.tooltipOverlay}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 setShowTooltip(false);
               }}
             />
-            <div
-              className={styles.tooltipMenuWrapper}
-              style={tooltipVars}
-            >
+            <div className={styles.tooltipMenuWrapper} style={tooltipVars}>
               <Tooltip visible={showTooltip}>
                 <button
                   className={styles.tooltipButton}
-                  onClick={e => { e.stopPropagation(); handleRightClick(e); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRightClick(e);
+                  }}
                 >
-                  상세정보
+                  제목 변경
                 </button>
+                {!isTrashPage && (
+                  <>
                 <button
                   className={styles.tooltipButton}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     setShowMoveModal(true);
                   }}
                 >
-                  문서이동
+                  문서 이동
                 </button>
                 {showMoveModal &&
                   createPortal(
                     <MoveCategoryModal
-                    docId={doc_id ?? ""}
-                    originCategoryId={category_id ?? ""}
-                    onClose={() => setShowMoveModal(false)}
-                    onMoved={onMoved} // 문서 리스트 새로고침 함수
+                      docId={doc_id ?? ""}
+                      originCategoryId={category_id ?? ""}
+                      onClose={() => setShowMoveModal(false)}
+                      onMoved={onMoved}
                     />,
                     document.body
+                  )}
+                  </>
                   )}
                 {(download || isTrashPage) && (
                   <button
                     className={`${styles.tooltipButton} ${
                       isTrashPage ? styles.restoreButton : styles.downloadButton
                     }`}
-                    onClick={e => { e.stopPropagation(); handleRestoreOrDownload(e); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRestoreOrDownload(e);
+                    }}
                   >
                     {isTrashPage ? "복구" : "다운로드"}
                   </button>
@@ -117,7 +141,10 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
                 {(remove || isTrashPage) && (
                   <button
                     className={`${styles.tooltipButton} ${styles.deleteButton}`}
-                    onClick={e => { e.stopPropagation(); handlePermanentDelete(e); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePermanentDelete(e);
+                    }}
                   >
                     삭제
                   </button>
@@ -137,7 +164,7 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
               className={styles.kebabButton}
               aria-label="옵션 열기"
               ref={kebabButtonRef}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 setShowTooltip(!showTooltip);
               }}

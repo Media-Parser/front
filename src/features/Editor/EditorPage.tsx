@@ -5,8 +5,10 @@ import styles from "./Editor.module.css";
 import Chatbot from "../Chatbot/Chatbot";
 import EditDoc from "./EditDoc/EditDoc";
 import { useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
 
 const EditorPage = () => {
+  const { id: docId } = useParams<{ id: string }>();
   const [saveFunction, setSaveFunction] = useState<
     (() => Promise<void>) | null
   >(null);
@@ -27,7 +29,7 @@ const EditorPage = () => {
       <div className={styles.pageWrapper}>
         <EditorLayout
           left={<EditDoc onSaveReady={handleSaveReady} />}
-          right={<Chatbot />}
+          right={<Chatbot docId={docId ?? ""} />}
           showHeader={true}
         />
       </div>
