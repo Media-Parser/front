@@ -13,56 +13,61 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     return <div className={styles.message}>문서 ID가 없습니다.</div>;
   }
 
-  const { document, loading, error, autosave, autosaveApiCall } =
-    useEditDocument(id);
+  const {
+    document,
+    loading,
+    error,
+    autosave,
+    saveDocument,
+    isSaving: hookIsSaving,
+  } = useEditDocument(id);
+
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
+  const [localIsSaving, setLocalIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
+  // 저장 함수를 부모 컴포넌트에 전달
   useEffect(() => {
     if (onSaveReady && document) {
       onSaveReady(async () => {
-        setIsSaving(true); // 저장 시작 시 "저장 중..."
+        setLocalIsSaving(true);
         setIsSaved(false);
         try {
-          await autosaveApiCall({
-            ...document,
-            title,
-            contents,
-          });
-          setIsSaving(false); // 저장 중 표시 끔
-          setIsSaved(true); // 저장 완료 표시 켬
-          setTimeout(() => setIsSaved(false), 3000); // 3초 후 저장 완료 메시지 제거
+          // 현재 상태로 문서 업데이트
+          await saveDocument();
+          setIsSaved(true);
+          setTimeout(() => setIsSaved(false), 3000);
         } catch (err) {
-          setIsSaving(false);
+          console.error("Save error:", err);
           alert("저장 중 오류가 발생했습니다.");
+        } finally {
+          setLocalIsSaving(false);
         }
       });
     }
-  }, [onSaveReady, document, title, contents, autosaveApiCall]);
+  }, [onSaveReady, document, saveDocument]);
 
+  // 문서 로드 시 초기값 설정
   useEffect(() => {
     if (document) {
-      setTitle(document.title);
-      setContents(document.contents);
+      setTitle(document.title || "");
+      setContents(document.contents || "");
     }
   }, [document]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    setIsSaving(true);
+    // 자동저장 트리거
     autosave({ title: newTitle });
-    setTimeout(() => setIsSaving(false), 30000);
   };
 
   const handleContentsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContents = e.target.value;
     setContents(newContents);
-    setIsSaving(true);
+    // 자동저장 트리거
     autosave({ contents: newContents });
-    setTimeout(() => setIsSaving(false), 30000);
   };
 
   if (loading) return <div className={styles.message}>로딩 중...</div>;
@@ -70,8 +75,13 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
   if (!document)
     return <div className={styles.message}>문서가 존재하지 않습니다.</div>;
 
+  const isCurrentlySaving = hookIsSaving || localIsSaving;
+
   return (
     <div className={styles.container}>
+      {isCurrentlySaving && <div className={styles.toast}>저장 중...</div>}
+      {isSaved && <div className={styles.toast}>저장 완료!</div>}
+
       <input
         type="text"
         className={styles.titleInput}
@@ -85,7 +95,6 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
         onChange={handleContentsChange}
         placeholder="내용을 입력하세요"
       />
-      {isSaving && <div className={styles.savingIndicator}>저장 중...</div>}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 // 📁 src/lib/api/documentsApi.ts
 // ✅ 문서 관련 백엔드 API 호출을 담당하는 함수 모음
 
-import axios from "axios";
 import api from "./api";
 import type { Document } from "../../types/documentType";
 

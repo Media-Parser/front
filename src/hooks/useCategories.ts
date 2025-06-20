@@ -1,4 +1,4 @@
-// src/hooks/useCategories.ts
+// 📁 src/hooks/useCategories.ts
 import { useEffect, useState } from "react";
 import type { Category } from "../types/documentType";
 import {
@@ -61,7 +61,10 @@ export const useCategories = () => {
       setCategories(data); // 상태 동기화
       // ⭐ 바로 여기서 data에서 반환
       const updated = data.find((c) => c.category_id === category_id) ?? null;
-      console.log("🟢 [useCategories] after updateCategory - updated:", updated);
+      console.log(
+        "🟢 [useCategories] after updateCategory - updated:",
+        updated
+      );
       return updated;
     } catch (error) {
       console.error("카테고리 수정 실패", error);

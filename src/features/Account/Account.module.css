@@ -1,10 +1,10 @@
 /* 📁 src/features/Account/Account.module.css */
 
 .mainAreaHeader h2 {
-    font-size: 1.8em;
-    color: black;
-    margin: 0;
-  }
+  font-size: 1.8em;
+  color: black;
+  margin: 0;
+}
 
 .infoRow {
   display: flex;
@@ -21,4 +21,21 @@
 .value {
   flex: 1;
   text-align: left;
+}
+
+.deleteAccount {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+}
+
+.deleteButton {
+  background-color: var(--color-gray);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: var(--color-hover);
 }

@@ -40,18 +40,6 @@ export interface DocumentCardProps {
   onRightClick?: () => void;
 }
 
-// 문서 업로드 응답
-export interface UploadResponse {
-  documentId: string;
-  message: string;
-}
-
-// 문서 삭제 응답
-export interface DeleteResponse {
-  success: boolean;
-  message?: string;
-}
-
 export interface UserInfo {
   user_id: string;
   user_name: string;
