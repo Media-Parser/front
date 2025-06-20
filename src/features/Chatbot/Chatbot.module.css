@@ -33,7 +33,7 @@
   font-size: 0.8rem;
   max-width: 60%;
   border: 2px solid var(--color-bg);
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 0.8rem;
   border-radius: 15px 15px 3px 15px;
   align-self: flex-end;
   position: relative;

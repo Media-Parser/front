@@ -5,17 +5,19 @@ import axios from "axios";
 import useAuthStore from "../../store/useAuthStore";
 
 interface ApiResponse {
-  result: {
-    chatbot_response: string;
-    article_content?: string;
-    confidence_score?: number;
-    key_points?: string[];
-    timestamp: string;
-    session_id?: string;
-  };
+  chatbot_response: string;
+  article_content?: string;
+  confidence_score?: number;
+  key_points?: string[];
+  timestamp: string;
+  session_id?: string;
 }
 
-const Chatbot = () => {
+interface ChatbotProps {
+  docId: string;
+}
+
+const Chatbot = ({ docId }: ChatbotProps) => {
   const token = useAuthStore((state) => state.token);
   const fullMessage = "안녕하세요! 무엇을 도와드릴까요?";
   const [displayedMessage, setDisplayedMessage] = useState("");
@@ -59,19 +61,17 @@ const Chatbot = () => {
     setLoading(true);
 
     setChatLog((prev) => [...prev, { type: "user", text: message }]);
-    console.log("API 요청 보내기 직전:", message);
 
     const requestBody = {
-      doc_id: "example_doc_id",
+      doc_id: docId,
       message,
-      content: "",
       contain: false,
       session_id: sessionId ?? undefined,
     };
 
     try {
       const { data } = await axios.post<ApiResponse>(
-        "http://192.168.45.53:8001/chat/send",
+        "http://52.15.42.56:8081/chat/send",
         requestBody,
         {
           headers: {
@@ -79,13 +79,15 @@ const Chatbot = () => {
           },
         }
       );
-      console.log("API 응답 받음:", data);
-
-      const { chatbot_response, session_id } = data.result;
+      console.log("✅ API 응답 데이터:", data);
+      const { chatbot_response, article_content, session_id } = data;
 
       if (session_id) setSessionId(session_id);
 
-      setChatLog((prev) => [...prev, { type: "bot", text: chatbot_response }]);
+      setChatLog((prev) => [
+        ...prev,
+        { type: "bot", text: article_content || chatbot_response },
+      ]);
       setUserInput("");
       setShowOptions(true);
     } catch (error) {
