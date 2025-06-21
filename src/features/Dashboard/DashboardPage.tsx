@@ -15,6 +15,7 @@ import LoadingOrError from "../../components/Common/LoadingOrError";
 import { useCategories } from "../../hooks/useCategories";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
+import useAuthStore from "../../store/useAuthStore";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -26,6 +27,7 @@ const DashboardPage: React.FC = () => {
   const { categoryPath } = useParams();
   const { categories, loaded, fetchCategories } = useCategories();
   const navigate = useNavigate();
+  const userId = useAuthStore((state) => state.userId) ?? "";
 
   const {
     documents,
@@ -66,7 +68,6 @@ const DashboardPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const userId = localStorage.getItem("user_id") ?? "";
     await uploadFile({ file, userId, categoryId });
   };
 

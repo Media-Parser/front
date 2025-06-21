@@ -3,23 +3,42 @@ import styles from "./Account.module.css";
 import Layout from "../../components/Layout/Layout";
 import type { UserInfo } from "../../types/documentType";
 import { getUserInfoApi } from "../../lib/api/documentsApi";
+import { deleteUserApi } from "../../lib/api/documentsApi"; 
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "../../store/useAuthStore";
 
 const AccountPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const user_id = localStorage.getItem("user_id");
+  const navigate = useNavigate();
+  const userId = useAuthStore((state) => state.userId);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (!user_id) return;
+      if (!userId) return;
       try {
-        const res = await getUserInfoApi(user_id); // ✅ user_id는 string으로 확정됨
+        const res = await getUserInfoApi(userId);
         setUserInfo(res.data as UserInfo);
       } catch (error) {
         console.error("사용자 정보를 불러오는 데 실패했습니다.", error);
       }
     };
     fetchUserInfo();
-  }, [user_id]);
+  }, [userId]);
+
+  const handleDeleteAccount = async () => {
+    if (!userId) return;
+    if (!window.confirm("정말로 회원탈퇴하시겠습니까?")) return;
+    try {
+      await deleteUserApi(userId);
+      alert("회원탈퇴가 성공적으로 완료되었습니다.");
+      clearAuth();
+      navigate("/login");
+    } catch (error) {
+      alert("회원탈퇴에 실패했습니다. 다시 시도해 주세요.");
+      console.error("회원탈퇴 실패:", error);
+    }
+  };
 
   return (
     <Layout>
@@ -45,14 +64,9 @@ const AccountPage: React.FC = () => {
         <div className={styles.deleteAccount}>
           <button
             className={styles.deleteButton}
-            onClick={() => {
-              if (window.confirm("정말로 계정을 삭제하시겠습니까?")) {
-                // 계정 삭제 로직을 여기에 추가
-                console.log("계정 삭제 요청");
-              }
-            }}
+            onClick={handleDeleteAccount}
           >
-            계정 삭제
+            회원 탈퇴
           </button>
         </div>
       </div>

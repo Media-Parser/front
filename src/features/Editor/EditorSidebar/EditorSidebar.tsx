@@ -5,6 +5,7 @@ import styles from "./EditorSidebar.module.css";
 import { Menu, Home, Trash2, Download, Save, LogOut } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
+import useAuthStore from "../../../store/useAuthStore";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
@@ -21,6 +22,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const { deleteDocument, downloadDocument } = useDocumentActions();
   const navigate = useNavigate();
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
   const handleDelete = async () => {
     await deleteDocument(id);
@@ -50,9 +52,8 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleLogout = () => {
     if (window.confirm("정말 로그아웃하시겠습니까?")) {
-      localStorage.removeItem("user_id");
-      localStorage.removeItem("access_token");
       alert("로그아웃을 완료했습니다.");
+      clearAuth();
       navigate("/");
     }
   };

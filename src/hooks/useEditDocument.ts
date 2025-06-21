@@ -3,8 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { readDocument, autosaveDocumentApi } from "../lib/api/documentsApi";
 import type { Document } from "../types/documentType";
 import debounce from "lodash.debounce";
-
-const LOCAL_KEY_PREFIX = "tempdoc:";
+import { LOCAL_KEY_PREFIX } from "../constants/storage";
 
 export const useEditDocument = (id: string) => {
   const [document, setDocument] = useState<Document | null>(null);

@@ -84,3 +84,8 @@ export const updateCategoryApi = async (category_id: string, label: string) => {
 export const moveDocumentApi = (doc_id: string, category_id: string) => {
   return api.post(`/categories/move/${doc_id}`, { category_id });
 };
+
+// 계정 삭제 API (user_id 기준)
+export const deleteUserApi = async (user_id: string) => {
+  return await api.delete(`/users/${user_id}`);
+};

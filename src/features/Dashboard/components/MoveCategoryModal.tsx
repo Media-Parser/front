@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getCategoriesApi, moveDocumentApi } from "../../../lib/api/documentsApi";
 import type { Category } from "../../../types/documentType";
 import styles from "./MoveCategoryModal.module.css";
+import useAuthStore from "../../../store/useAuthStore";
 
 interface MoveCategoryModalProps {
   docId: string;
@@ -20,6 +21,7 @@ const MoveCategoryModal = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(originCategoryId);
   const [loading, setLoading] = useState(false);
+  const userId = useAuthStore((state) => state.userId);
 
   // 1. body 스크롤 잠금
   useEffect(() => {
@@ -29,7 +31,8 @@ const MoveCategoryModal = ({
   }, []);
 
   useEffect(() => {
-    getCategoriesApi(localStorage.getItem("user_id")!).then((res) => {
+    if (!userId) return;
+    getCategoriesApi(userId).then((res) => {
       setCategories(res.data as Category[]);
     });
   }, []);
