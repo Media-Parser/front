@@ -28,6 +28,7 @@ const DashboardPage: React.FC = () => {
   const { categories, loaded, fetchCategories } = useCategories();
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.userId) ?? "";
+  const { uploadFile } = useFileUpload((docId) => navigate(`/editor/${docId}`));
 
   const {
     documents,
@@ -54,8 +55,6 @@ const DashboardPage: React.FC = () => {
     refetch();
   }, [categoryId]);
 
-  const { uploadFile } = useFileUpload(refetch);
-
   const filteredDocs = documents
     .filter((doc) => doc.category_id === categoryId)
     .filter((doc) =>
@@ -67,7 +66,6 @@ const DashboardPage: React.FC = () => {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     await uploadFile({ file, userId, categoryId });
   };
 

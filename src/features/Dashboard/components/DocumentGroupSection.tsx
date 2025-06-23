@@ -2,6 +2,8 @@
 import { useState } from "react";
 import DocumentCard from "../../../components/DocumentCard/DocumentCard";
 import styles from "./DocumentGroupSection.module.css";
+import DocumentTitleModal from "../../../components/Modal/DocumentTitleModal";
+import { updateDocumentTitleApi } from "../../../lib/api/documentsApi";
 
 interface DocumentGroupSectionProps {
   groupLabel: string;
@@ -27,8 +29,9 @@ const DocumentGroupSection = ({
   onMoved,
 }: DocumentGroupSectionProps) => {
   const [showAll, setShowAll] = useState(false);
-
   const previewDocs = showAll ? documents : documents.slice(0, PREVIEW_COUNT);
+
+  const [modalDocId, setModalDocId] = useState<string | null>(null);
 
   return (
     <section className={styles.section}>
@@ -48,7 +51,7 @@ const DocumentGroupSection = ({
       <div className={styles.cardGrid}>
         {previewDocs.map((doc) => (
           <DocumentCard
-          key={doc.doc_id}
+            key={doc.doc_id}
             {...doc}
             onDelete={() => onDelete?.(doc.doc_id)}
             onDownload={() => onDownload?.(doc.doc_id)}
@@ -56,9 +59,24 @@ const DocumentGroupSection = ({
             onPermanentDelete={() => onPermanentDelete?.(doc.doc_id)}
             isTrashPage={isTrashPage}
             onMoved={onMoved}
+            onTitleEdit={() => setModalDocId(doc.doc_id)}
           />
         ))}
       </div>
+      {modalDocId && (
+        <DocumentTitleModal
+          currentTitle={
+            documents.find((d) => d.doc_id === modalDocId)?.title || ""
+          }
+          docId={modalDocId}
+          onSave={async (newTitle: string) => {
+            await updateDocumentTitleApi(modalDocId, newTitle);
+            setModalDocId(null);
+            onMoved?.();
+          }}
+          onClose={() => setModalDocId(null)}
+        />
+      )}
     </section>
   );
 };

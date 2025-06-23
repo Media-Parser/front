@@ -1,47 +1,43 @@
+/* 기본 스타일 */
 .sidebar {
   position: fixed;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  height: auto;
-  width: 56px;
   background-color: var(--color-bg);
   z-index: 1000;
   transition: width 0.3s ease, background-color 0.3s ease;
   overflow: hidden;
   border-radius: 0 10px 10px 0;
   padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  height: auto;
 }
 
-.expanded {
-  width: 150px;
-}
-
+/* 닫혔을 때 */
 .collapsed {
   width: 56px;
-}
-
-.toggleButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 12px;
-  color: inherit;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
 }
 
-.toggleButton:hover {
-  background-color: var(--color-hover);
+/* 열렸을 때 */
+.expanded {
+  width: 150px;
+  align-items: flex-start;
 }
 
+/* 메뉴 */
 .menu {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 16px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.collapsed .menu {
+  align-items: center;
 }
 
 .menuItem {
@@ -52,6 +48,7 @@
   cursor: pointer;
   border-radius: 6px;
   transition: background-color 0.2s;
+  width: 100%;
 }
 
 .menuItem:hover {

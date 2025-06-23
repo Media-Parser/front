@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // 테스트 시
-const AUTO_LOGOUT_TIME = 1000 * 10; // 10초
-const WARNING_BEFORE = 1000 * 5;    // 5초 전
+// const AUTO_LOGOUT_TIME = 1000 * 10; // 10초
+// const WARNING_BEFORE = 1000 * 5;    // 5초 전
 
-// const AUTO_LOGOUT_TIME = 1000 * 60 * 30; // 30분
-// const WARNING_BEFORE = 1000 * 30;        // 30초 전
+const AUTO_LOGOUT_TIME = 1000 * 60 * 30; // 30분
+const WARNING_BEFORE = 1000 * 30;        // 30초 전
 
 
 export default function useAutoLogout() {

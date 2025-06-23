@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: 1rem;
   height: 100%;
+  min-height: 0;         /* 추가! (부모에서 줄어드는 것 허용) */
 }
 
 .titleInput {
@@ -23,7 +24,7 @@
 .contentsInput {
   all: unset;
   width: 100%;
-  min-height: 500px;
+  flex: 1 1 0; 
   font: inherit;
   color: inherit;
   background: none;
@@ -32,6 +33,7 @@
   padding: 1rem;
   box-sizing: border-box;
   line-height: 1.5;
+  margin-bottom: 1rem;
 }
 
 .message {
@@ -72,5 +74,30 @@
   100% {
     opacity: 0;
     transform: translateY(-10px);
+  }
+}
+
+.restoreModal {
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(30,30,30,0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+.modalContent {
+  background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+  padding: 2rem 3rem; text-align: center;
+}
+.modalContent button { margin: 1rem; font-size: 1.1rem; }
+
+.spinner {
+  animation: spin 1s linear infinite;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }
