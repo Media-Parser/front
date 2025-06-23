@@ -135,6 +135,19 @@ const DocumentCard: React.FC<
       document.body
     );
 
+// Tooltip 위치 계산 (툴팁이 열릴 때만 즉시 계산)
+const handleKebabClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  if (!showTooltip && kebabButtonRef.current) {
+    const rect = kebabButtonRef.current.getBoundingClientRect();
+    setTooltipVars({
+      "--tooltip-top": `${rect.top}px`,
+      "--tooltip-left": `${rect.right + 4}px`,
+    });
+  }
+  setShowTooltip(!showTooltip);
+};
+
   return (
     <div
       className={styles.card}
@@ -161,17 +174,14 @@ const DocumentCard: React.FC<
             {title.length > 25 ? title.slice(0, 25) + "..." : title}
           </h3>
           <div className={styles.tooltipWrapper}>
-            <button
-              className={styles.kebabButton}
-              aria-label="옵션 열기"
-              ref={kebabButtonRef}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowTooltip(!showTooltip);
-              }}
-            >
-              ︙
-            </button>
+          <button
+            className={styles.kebabButton}
+            aria-label="옵션 열기"
+            ref={kebabButtonRef}
+            onClick={handleKebabClick}
+          >
+            ︙
+          </button>
           </div>
         </div>
         <div className={styles.previewTextWrapper}>
