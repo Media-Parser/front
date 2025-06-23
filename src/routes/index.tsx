@@ -1,6 +1,6 @@
 // 📁 src/routes/index.tsx
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {Routes, Route } from "react-router-dom";
 import LandingWrapper from "../features/Landing/LandingWrapper";
 import OAuthCallback from "../features/Login/OAuthCallback";
 import TrashPage from "../features/Trash/TrashPage";
@@ -12,7 +12,6 @@ import DashboardPage from "../features/Dashboard/DashboardPage";
 
 const AppRouter = () => {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingWrapper />} />
         <Route path="/login" element={<LandingWrapper />} />
@@ -26,7 +25,6 @@ const AppRouter = () => {
         </Route>
         <Route path="/oauth/callback" element={<OAuthCallback />} />
       </Routes>
-    </BrowserRouter>
   );
 };
 

@@ -1,17 +1,19 @@
-// src/components/DocumentCard.tsx
-
+// src/components/DocumentCard/DocumentCard.tsx
 import React, { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./DocumentCard.module.css";
 import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "../../components/Tooltip/Tooltip";
-import MoveCategoryModal from "../../features/Dashboard/components/MoveCategoryModal";
+import MoveCategoryModal from "../Modal/MoveCategoryModal";
 import type { DocumentCardProps } from "../../types/documentType";
 
-const DocumentCard: React.FC<DocumentCardProps> = (props) => {
+const DocumentCard: React.FC<
+  DocumentCardProps & { onTitleEdit: () => void }
+> = (props) => {
   const {
     title,
+    contents = "",
     date,
     onRestore,
     onPermanentDelete,
@@ -19,11 +21,12 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
     remove,
     onDelete,
     onDownload,
-    onRightClick,
     doc_id = "",
     category_id = "",
     onMoved,
+    onTitleEdit,
   } = props;
+
   const location = useLocation();
   const navigate = useNavigate();
   const isTrashPage = location.pathname === "/trash";
@@ -32,11 +35,15 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
   const [showMoveModal, setShowMoveModal] = useState(false);
   const kebabButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Tooltip 위치를 동적으로 계산하여 CSS 변수로 설정
-  const [tooltipVars, setTooltipVars] = useState({
+  // 미리보기 툴팁용 상태/좌표
+  const [isHoveringPreview, setIsHoveringPreview] = useState(false);
+  const previewRef = useRef<HTMLParagraphElement>(null);
+
+  // Tooltip 위치 계산
+  const [tooltipVars, setTooltipVars] = useState<{ [key: string]: string }>({
     "--tooltip-top": "0px",
     "--tooltip-left": "0px",
-  } as { [key: string]: string });
+  });
 
   useEffect(() => {
     if (showTooltip && kebabButtonRef.current) {
@@ -48,23 +55,98 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
     }
   }, [showTooltip]);
 
-  // 휴지통 페이지일 때 복구, 아니면 다운로드 동작 실행
-  const handleRestoreOrDownload = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    isTrashPage ? onRestore?.() : onDownload?.();
-  };
+  // Tooltip Portal
+  const tooltipPortal = showTooltip
+    ? createPortal(
+        <div>
+          <div
+            className={styles.tooltipOverlay}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTooltip(false);
+            }}
+          />
+          <div className={styles.tooltipMenuWrapper} style={tooltipVars}>
+            <Tooltip visible={showTooltip}>
+              {!isTrashPage && (
+                <>
+                  <button
+                    className={styles.tooltipButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowTooltip(false);
+                      setTimeout(onTitleEdit, 0);
+                    }}
+                  >
+                    제목 변경
+                  </button>
+                  <button
+                    className={styles.tooltipButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowMoveModal(true);
+                    }}
+                  >
+                    문서 이동
+                  </button>
+                </>
+              )}
+              {(download || isTrashPage) && (
+                <button
+                  className={`${styles.tooltipButton} ${
+                    isTrashPage ? styles.restoreButton : styles.downloadButton
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    isTrashPage ? onRestore?.() : onDownload?.();
+                  }}
+                >
+                  {isTrashPage ? "복구" : "다운로드"}
+                </button>
+              )}
+              {(remove || isTrashPage) && (
+                <button
+                  className={`${styles.tooltipButton} ${styles.deleteButton}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    isTrashPage ? onPermanentDelete?.() : onDelete?.();
+                  }}
+                >
+                  삭제
+                </button>
+              )}
+            </Tooltip>
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
 
-  // 휴지통 페이지일 때 영구 삭제, 아니면 일반 삭제 동작 실행
-  const handlePermanentDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    isTrashPage ? onPermanentDelete?.() : onDelete?.();
-  };
+  // MoveCategoryModal Portal
+  const moveModalPortal =
+    showMoveModal &&
+    createPortal(
+      <MoveCategoryModal
+        docId={doc_id ?? ""}
+        originCategoryId={category_id ?? ""}
+        onClose={() => setShowMoveModal(false)}
+        onMoved={onMoved}
+      />,
+      document.body
+    );
 
-  // 오른쪽 클릭 시 호출되는 콜백
-  const handleRightClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onRightClick?.();
-  };
+// Tooltip 위치 계산 (툴팁이 열릴 때만 즉시 계산)
+const handleKebabClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  if (!showTooltip && kebabButtonRef.current) {
+    const rect = kebabButtonRef.current.getBoundingClientRect();
+    setTooltipVars({
+      "--tooltip-top": `${rect.top}px`,
+      "--tooltip-left": `${rect.right + 4}px`,
+    });
+  }
+  setShowTooltip(!showTooltip);
+};
 
   return (
     <div
@@ -77,103 +159,51 @@ const DocumentCard: React.FC<DocumentCardProps> = (props) => {
           setShowTooltip(false);
           return;
         }
+        if (isTrashPage) {
+          e.stopPropagation();
+          return;
+        }
         navigate(`/editor/${doc_id}`);
       }}
     >
-      {/* Tooltip 및 모달을 Portal로 렌더링 */}
-      {showTooltip &&
-        createPortal(
-          <>
-            <div
-              className={styles.tooltipOverlay}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowTooltip(false);
-              }}
-            />
-            <div className={styles.tooltipMenuWrapper} style={tooltipVars}>
-              <Tooltip visible={showTooltip}>
-                <button
-                  className={styles.tooltipButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRightClick(e);
-                  }}
-                >
-                  제목 변경
-                </button>
-                {!isTrashPage && (
-                  <>
-                <button
-                  className={styles.tooltipButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowMoveModal(true);
-                  }}
-                >
-                  문서 이동
-                </button>
-                {showMoveModal &&
-                  createPortal(
-                    <MoveCategoryModal
-                      docId={doc_id ?? ""}
-                      originCategoryId={category_id ?? ""}
-                      onClose={() => setShowMoveModal(false)}
-                      onMoved={onMoved}
-                    />,
-                    document.body
-                  )}
-                  </>
-                  )}
-                {(download || isTrashPage) && (
-                  <button
-                    className={`${styles.tooltipButton} ${
-                      isTrashPage ? styles.restoreButton : styles.downloadButton
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRestoreOrDownload(e);
-                    }}
-                  >
-                    {isTrashPage ? "복구" : "다운로드"}
-                  </button>
-                )}
-                {(remove || isTrashPage) && (
-                  <button
-                    className={`${styles.tooltipButton} ${styles.deleteButton}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePermanentDelete(e);
-                    }}
-                  >
-                    삭제
-                  </button>
-                )}
-              </Tooltip>
-            </div>
-          </>,
-          document.body
-        )}
+      {tooltipPortal}
+      {moveModalPortal}
       <div className={styles.cardContent}>
         <div className={styles.cardHeader}>
           <h3 className={styles.cardTitle} title={title}>
             {title.length > 25 ? title.slice(0, 25) + "..." : title}
           </h3>
           <div className={styles.tooltipWrapper}>
-            <button
-              className={styles.kebabButton}
-              aria-label="옵션 열기"
-              ref={kebabButtonRef}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowTooltip(!showTooltip);
-              }}
-            >
-              ︙
-            </button>
+          <button
+            className={styles.kebabButton}
+            aria-label="옵션 열기"
+            ref={kebabButtonRef}
+            onClick={handleKebabClick}
+          >
+            ︙
+          </button>
           </div>
         </div>
-        <p className={styles.previewText}>내용 미리보기</p>
+        <div className={styles.previewTextWrapper}>
+          <p
+            className={styles.previewText}
+            ref={previewRef}
+            onMouseEnter={() => setIsHoveringPreview(true)}
+            onMouseLeave={() => setIsHoveringPreview(false)}
+          >
+            내용 미리보기
+          </p>
+          {isHoveringPreview && (
+          <div className={styles.previewPopover}>
+            {(
+              (contents || "")
+                .replace(/^\s+/, "")
+                .replace(/\n{2,}/g, "\n")
+                .slice(0, 100)
+            ) + ((contents || "").length > 100 ? "..." : "")}
+          </div>
+        )}
+        </div>
         <div className={styles.cardDate}>
           {dayjs(date).format("YYYY-MM-DD")}
         </div>

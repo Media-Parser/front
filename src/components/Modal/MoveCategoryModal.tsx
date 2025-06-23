@@ -1,8 +1,12 @@
-// src/features/Dashboard/components/MoveCategoryModal.tsx
+// src/components/Modal/MoveCategoryModal.tsx
 import { useEffect, useState } from "react";
-import { getCategoriesApi, moveDocumentApi } from "../../../lib/api/documentsApi";
-import type { Category } from "../../../types/documentType";
+import {
+  getCategoriesApi,
+  moveDocumentApi,
+} from "../../lib/api/documentsApi";
+import type { Category } from "../../types/documentType";
 import styles from "./MoveCategoryModal.module.css";
+import useAuthStore from "../../store/useAuthStore";
 
 interface MoveCategoryModalProps {
   docId: string;
@@ -13,23 +17,27 @@ interface MoveCategoryModalProps {
 
 const MoveCategoryModal = ({
   docId,
-  originCategoryId = "",   // 기본값 빈 문자열
+  originCategoryId = "", // 기본값 빈 문자열
   onClose,
   onMoved,
 }: MoveCategoryModalProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(originCategoryId);
   const [loading, setLoading] = useState(false);
+  const userId = useAuthStore((state) => state.userId);
 
   // 1. body 스크롤 잠금
   useEffect(() => {
     const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = original; };
+    return () => {
+      document.body.style.overflow = original;
+    };
   }, []);
 
   useEffect(() => {
-    getCategoriesApi(localStorage.getItem("user_id")!).then((res) => {
+    if (!userId) return;
+    getCategoriesApi(userId).then((res) => {
       setCategories(res.data as Category[]);
     });
   }, []);
@@ -57,7 +65,7 @@ const MoveCategoryModal = ({
     <>
       <div
         className={styles.categoryModalOverlay}
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
           onClose();
         }}
@@ -68,17 +76,19 @@ const MoveCategoryModal = ({
         className={styles.categoryModal}
         role="dialog"
         aria-modal="true"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
-        <h3 className={styles.categoryModalTitle}>카테고리 선택</h3>
+        <h3 className={styles.categoryModalTitle}>문서 카테고리 선택</h3>
         <select
           value={selectedCategory}
-          onChange={e => setSelectedCategory(e.target.value)}
+          onChange={(e) => setSelectedCategory(e.target.value)}
           className={styles.categoryModalSelect}
         >
           <option value="">-- 카테고리 없음 --</option>
-          {categories.map(cat => (
-            <option key={cat.category_id} value={cat.category_id}>{cat.label}</option>
+          {categories.map((cat) => (
+            <option key={cat.category_id} value={cat.category_id}>
+              {cat.label}
+            </option>
           ))}
         </select>
         <div className={styles.categoryModalButtonContainer}>
@@ -89,7 +99,10 @@ const MoveCategoryModal = ({
           >
             이동
           </button>
-          <button onClick={onClose} className={styles.categoryModalCancelButton}>
+          <button
+            onClick={onClose}
+            className={styles.categoryModalCancelButton}
+          >
             취소
           </button>
         </div>

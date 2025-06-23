@@ -1,8 +1,9 @@
-/* 📁 src/features/Home/HomePage.tsx */
+// src/features/Home/HomePage.tsx
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
+import useAuthStore from "../../store/useAuthStore";
 
 const fullText = "안녕하세요\n함께 중립적 기사 컨펌을 시작해볼까요?";
 
@@ -11,9 +12,11 @@ const Homepage = () => {
   const [displayedText, setDisplayedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
-  localStorage.removeItem("user_id");
-  localStorage.removeItem("access_token");
+  useEffect(() => {
+    clearAuth();
+  }, [clearAuth]);
 
   useEffect(() => {
     let i = 0;

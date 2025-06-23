@@ -1,9 +1,12 @@
+// src/components/Sidebar/Sidebar.tsx
 import styles from "./Sidebar.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { HiFolderAdd } from "react-icons/hi";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { useCategories } from "../../hooks/useCategories";
+import useAuthStore from "../../store/useAuthStore";
+import { useGlobalFlagStore } from "../../store/useAuthStore"; 
 
 interface SidebarProps {
   onRefetch?: () => void;
@@ -12,7 +15,8 @@ interface SidebarProps {
 const Sidebar = ({ onRefetch }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const setAutoLogoutTriggered = useGlobalFlagStore((s) => s.setAutoLogoutTriggered);
   const [isDocDropdownOpen, setIsDocDropdownOpen] = useState(false); // 초기 false
 
   useEffect(() => {
@@ -54,8 +58,8 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
   }) => {
     if (menu.label === "로그아웃") {
       if (window.confirm("정말 로그아웃하시겠습니까?")) {
-        localStorage.removeItem("user_id");
-        localStorage.removeItem("access_token");
+        setAutoLogoutTriggered(true);
+        clearAuth();
         navigate("/");
       }
       return;

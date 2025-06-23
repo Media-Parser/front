@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./EditorSidebar.module.css";
-import { Menu, Home, Trash2, Download, Save, LogOut } from "lucide-react";
+import { Menu, Home, Trash2, Download, Save, LogOut, Icon } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
+import useAuthStore from "../../../store/useAuthStore";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
@@ -21,6 +22,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const { deleteDocument, downloadDocument } = useDocumentActions();
   const navigate = useNavigate();
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
   const handleDelete = async () => {
     await deleteDocument(id);
@@ -50,15 +52,14 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleLogout = () => {
     if (window.confirm("정말 로그아웃하시겠습니까?")) {
-      localStorage.removeItem("user_id");
-      localStorage.removeItem("access_token");
       alert("로그아웃을 완료했습니다.");
+      clearAuth();
       navigate("/");
     }
   };
 
   const handleMenuClick = (item: (typeof menuItems)[number]) => {
-    console.log("handleMenuClick:", item.label);
+    console.log("handleMenuClick:", item.label, new Date().getTime());
     if (item.action) {
       item.action();
     } else if (item.path) {
@@ -67,6 +68,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   };
 
   const menuItems = [
+    { icon: <Menu />, label: "  ", action: toggleSidebar },
     { icon: <Home />, label: "홈", path: "/dashboard" },
     { icon: <Save />, label: "저장", action: handleSave },
     { icon: <Trash2 />, label: "삭제", action: handleDelete },
@@ -80,16 +82,13 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
         isExpanded ? styles.expanded : styles.collapsed
       }`}
     >
-      <button className={styles.toggleButton} onClick={toggleSidebar}>
-        <Menu />
-      </button>
       <nav className={styles.menu}>
         {menuItems.map((item, idx) => (
           <div
             key={idx}
             className={`${styles.menuItem} ${
               item.label === "저장" && isSaving ? styles.saving : ""
-            }`}
+            } ${item.label === "메뉴" ? styles.menuHover : ""}`} // ✅ 추가
             onClick={() => handleMenuClick(item)}
           >
             {item.icon}

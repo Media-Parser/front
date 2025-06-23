@@ -5,7 +5,7 @@ import useAuthStore from "../../store/useAuthStore";
 
 const OAuthCallback = () => {
   const navigate = useNavigate();
-  const setToken = useAuthStore((state) => state.setToken);
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -17,10 +17,7 @@ const OAuthCallback = () => {
       const user_id = url.searchParams.get("user_id");
 
       if (token) {
-        setToken(token); // localStorage 세팅 포함
-        if (user_id) {
-          localStorage.setItem("user_id", user_id);
-        }
+        setAuth(token!, user_id!);
         setLoading(false);
         navigate("/dashboard");
       } else {
@@ -28,7 +25,7 @@ const OAuthCallback = () => {
         setLoading(false);
       }
     })();
-  }, [setToken, navigate]);
+  }, [setAuth, navigate]);
 
   return (
     <div style={{ textAlign: "center", paddingTop: "100px" }}>

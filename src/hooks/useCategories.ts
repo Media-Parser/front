@@ -7,16 +7,17 @@ import {
   deleteCategoryApi,
   updateCategoryApi,
 } from "../lib/api/documentsApi";
+import useAuthStore from "../store/useAuthStore";
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const user_id = localStorage.getItem("user_id");
+  const userId = useAuthStore((state) => state.userId);
 
   const fetchCategories = async (): Promise<Category[]> => {
     try {
-      if (!user_id) return [];
-      const res = await getCategoriesApi(user_id);
+      if (!userId) return [];
+      const res = await getCategoriesApi(userId);
       setCategories(res.data as Category[]);
       setLoaded(true);
       return res.data as Category[];
@@ -28,9 +29,9 @@ export const useCategories = () => {
   };
 
   const addCategory = async (name: string): Promise<Category | null> => {
-    if (!user_id) return null;
+    if (!userId) return null;
     try {
-      const res = await addCategoryApi(user_id, name);
+      const res = await addCategoryApi(userId, name);
       await fetchCategories();
       return res.data as Category;
     } catch (error) {
@@ -40,7 +41,7 @@ export const useCategories = () => {
   };
 
   const deleteCategory = async (category_id: string) => {
-    if (!user_id) return;
+    if (!userId) return;
     try {
       await deleteCategoryApi(category_id);
       await fetchCategories();
@@ -53,10 +54,10 @@ export const useCategories = () => {
     category_id: string,
     label: string
   ): Promise<Category | null> => {
-    if (!user_id) return null;
+    if (!userId) return null;
     try {
       await updateCategoryApi(category_id, label); // 업데이트
-      const res = await getCategoriesApi(user_id); // 다시 전체 fetch
+      const res = await getCategoriesApi(userId); // 다시 전체 fetch
       const data = res.data as Category[];
       setCategories(data); // 상태 동기화
       // ⭐ 바로 여기서 data에서 반환

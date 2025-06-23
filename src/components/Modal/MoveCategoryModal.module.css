@@ -1,0 +1,113 @@
+/* src/components/Modal/MoveCategoryModal.module.css */
+
+.categoryModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 320px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.categoryModalTitle {
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
+.categoryModalSelect {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.8rem;
+  border: 1px solid #ececec;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.categoryModalMoveButton {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-bg);
+  color: #222;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.categoryModalCancelButton {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  border: none;
+  background: #eaeaea;
+  color: #222;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.categoryModalMoveButton[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.categoryModalMoveButton:last-child {
+  background: #eaeaea;
+  color: #444;
+  margin-right: 0;
+}
+
+@media (max-width: 500px) {
+  .categoryModal {
+    min-width: 220px;
+    padding: 1.2rem 0.7rem 1rem 0.7rem;
+  }
+}
+
+.categoryModalButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.categoryModalOverlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.23);
+  z-index: 1999;
+  /* 아래 속성은 접근성/레이어 구분을 위해 추가 */
+  pointer-events: auto;
+}
+
+.categoryModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 320px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: stretch;
+}

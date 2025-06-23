@@ -8,17 +8,18 @@ import {
   downloadDocumentApi,
 } from "../lib/api/documentsApi";
 import type { Document } from "../types/documentType";
+import useAuthStore from "../store/useAuthStore";
 
 export const useDocumentActions = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const user_id = localStorage.getItem("user_id") ?? "";
+  const userId = useAuthStore((state) => state.userId);
 
   // 문서 목록 조회
   const fetchDocuments = useCallback(async () => {
-    if (!user_id) {
+    if (!userId) {
       setDocuments([]);
       setError("로그인 정보가 없습니다.");
       setLoading(false);
@@ -26,7 +27,7 @@ export const useDocumentActions = () => {
     }
     setLoading(true);
     try {
-      const res = await getDocumentsApi(user_id);
+      const res = await getDocumentsApi(userId);
 
       // ✅ 데이터가 undefined/null이면 무조건 빈 배열로 처리
       const data = Array.isArray(res.data) ? res.data : [];
@@ -51,7 +52,7 @@ export const useDocumentActions = () => {
       setDocuments([]);
     }
     setLoading(false);
-  }, [user_id]);
+  }, [userId]);
 
   useEffect(() => {
     fetchDocuments();

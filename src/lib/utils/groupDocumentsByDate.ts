@@ -24,7 +24,7 @@ export function groupDocumentsByDate(documents: Document[]) {
       label = "Previous 30 Days";
       sortDate = now.subtract(10, "day");
     } else if (now.year() === date.year()) {
-      label = date.format("MMM"); // Jan, Feb, ...
+      label = date.format("MMM");
       sortDate = dayjs(`${now.year()}-${date.month() + 1}-01`);
     } else {
       const yearDiff = now.year() - date.year();
@@ -39,10 +39,18 @@ export function groupDocumentsByDate(documents: Document[]) {
     groupMap.get(label)!.documents.push(doc);
   });
 
-  // 정렬된 그룹 객체 반환
+  // 그룹 내부 문서까지 최신순(내림차순) 정렬
   const sortedEntries = [...groupMap.entries()]
     .sort((a, b) => b[1].sortDate.unix() - a[1].sortDate.unix())
-    .map(([label, { documents }]) => [label, documents]);
+    .map(([label, { documents }]) => [
+      label,
+      documents.slice().sort(
+        (a, b) =>
+          new Date(b.created_dt ?? "").getTime() -
+          new Date(a.created_dt ?? "").getTime()
+      ),
+    ]);
 
   return Object.fromEntries(sortedEntries) as { [label: string]: Document[] };
 }
+

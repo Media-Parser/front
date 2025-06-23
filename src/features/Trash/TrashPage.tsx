@@ -8,10 +8,11 @@ import { FaTrashAlt } from "react-icons/fa";
 import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
 import type { Document } from "../../types/documentType";
 import LoadingOrError from "../../components/Common/LoadingOrError";
+import useAuthStore from "../../store/useAuthStore";
 
 const TrashPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const user_id = localStorage.getItem("user_id") ?? "";
+  const userId = useAuthStore((state) => state.userId) ?? "";
 
   const {
     trashDocs,
@@ -20,7 +21,7 @@ const TrashPage = () => {
     restoreDocument,
     deleteDocument,
     deleteAllDocuments,
-  } = useTrashActions(user_id);
+  } = useTrashActions(userId);
 
   if (loading || error) {
     return <LoadingOrError loading={loading} error={error} />;

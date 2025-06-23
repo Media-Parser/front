@@ -1,26 +1,53 @@
 // src/store/useAuthStore.ts
 import { create } from "zustand";
+import { LOCAL_KEY_PREFIX } from "../constants/storage";
 
 interface AuthState {
   token: string | null;
-  setToken: (token: string) => void;
-  clearToken: () => void;
+  userId: string | null;
+  setAuth: (token: string, userId: string) => void;
+  clearAuth: () => void;
+  syncAuth: () => void;  
 }
 
-const tokenFromStorage = localStorage.getItem("token");
+interface AutoLogoutFlagState {
+  autoLogoutTriggered: boolean;
+  setAutoLogoutTriggered: (value: boolean) => void;
+}
 
 const useAuthStore = create<AuthState>((set) => ({
-  token: tokenFromStorage || null, // null 안전 처리
-
-  setToken: (token) => {
-    set({ token });
-    localStorage.setItem("token", token); // 여기서만 localStorage 세팅
+  token: localStorage.getItem("token"),
+  userId: localStorage.getItem("user_id"),
+  setAuth: (token, userId) => {
+    set({ token, userId });
+    localStorage.setItem("token", token);
+    localStorage.setItem("user_id", userId);
   },
-
-  clearToken: () => {
-    set({ token: null });
+  clearAuth: () => {
+    set({ token: null, userId: null });
     localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(LOCAL_KEY_PREFIX)) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
   },
+  syncAuth: () => {
+    set({
+      token: localStorage.getItem("token"),
+      userId: localStorage.getItem("user_id"),
+    });
+  },
+}));
+
+export const useGlobalFlagStore = create<AutoLogoutFlagState>(set => ({
+  autoLogoutTriggered: false,
+  setAutoLogoutTriggered: (value) => set({ autoLogoutTriggered: value }),
 }));
 
 export default useAuthStore;

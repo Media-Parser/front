@@ -26,6 +26,7 @@ export interface Category {
 // DocumentCardProps
 export interface DocumentCardProps {
   title: string;
+  contents: string;
   date: string;
   doc_id: string;
   category_id: string;
