@@ -44,7 +44,6 @@ export const useFileUpload = (onSuccess: (docId: string) => void) => {
       toast.success("업로드 성공");
     } catch (error) {
       toast.error("업로드 실패");
-      console.error("업로드 실패", error);
     }
   };
 

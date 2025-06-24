@@ -35,12 +35,13 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   };
 
   const handleSave = async () => {
+    // 저장 버튼 클릭 시 모든 input blur 처리
+    document.activeElement instanceof HTMLElement && document.activeElement.blur();
+    
     if (!onSave) return;
-
     setIsSaving(true);
     try {
       await onSave();
-      // Optional: Show success message
       // alert("저장을 완료했습니다.");
     } catch (error) {
       console.error("Save error:", error);
@@ -59,7 +60,6 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   };
 
   const handleMenuClick = (item: (typeof menuItems)[number]) => {
-    console.log("handleMenuClick:", item.label, new Date().getTime());
     if (item.action) {
       item.action();
     } else if (item.path) {

@@ -48,7 +48,9 @@ export const useEditDocument = (id: string) => {
         await autosaveDocumentApi(id, data);
         setIsTempDoc(true);
       } finally {
-        setIsSaving(false);
+        setTimeout(() => {
+          setIsSaving(false);
+        }, 500);
       }
     },
     [id]

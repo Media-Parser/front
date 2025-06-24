@@ -32,16 +32,16 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
   useEffect(() => {
     if (!id) return;
     fetchDocument();
-    setIsTempDocCreated(false);
   }, [id, fetchDocument]);
 
   const [showRestoreModal, setShowRestoreModal] = useState(false);
-  const [ready, setReady] = useState(false); // 진짜 에디터 활성화
+  const [ready, setReady] = useState(false);
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
-  const [isTempDocCreated, setIsTempDocCreated] = useState(false);
+  const [isProgrammaticUpdate, setIsProgrammaticUpdate] = useState(false);
+  const [isFinalizing, setIsFinalizing] = useState(false);
 
-  // [2] 진입 시 temp_docs 존재 여부 체크 (한 번만)
+  // 진입시 temp_docs 존재여부 체크 (이 코드는 동일)
   useEffect(() => {
     let isMounted = true;
     setReady(false);
@@ -58,11 +58,12 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
         if (isMounted) setDocument(null);
       } finally {
         if (isMounted) setReady(true);
-        setIsTempDocCreated(false);
       }
     })();
-    return () => { isMounted = false; };
-  }, [id]);
+    return () => {
+      isMounted = false;
+    };
+  }, [id, setDocument]);
 
   // 복원/취소 선택 시 원본/임시 불러오기
   const handleRestore = async () => {
@@ -70,17 +71,15 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     setDocument(doc);
     setShowRestoreModal(false);
     setReady(true);
-    setIsTempDocCreated(true);
   };
   const handleCancel = async () => {
     const doc = await getDocApi(id);
     setDocument(doc);
     setShowRestoreModal(false);
     setReady(true);
-    setIsTempDocCreated(false);
   };
 
-  // 문서 내용 반영 (원본/임시 불러온 뒤)
+  // 문서 내용 반영
   useEffect(() => {
     if (document) {
       setTitle(document.title || "");
@@ -88,32 +87,36 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     }
   }, [document]);
 
-  // 입력 → 최초만 insert, 이후엔 patch
+  // ⭐ [변경1] debounce only! 입력시마다 insert가 아님
   const debouncedAutoSave = useRef(
     debounce(async (data: Partial<Document>) => {
       await autosave({ title: data.title, contents: data.contents });
-      setIsTempDocCreated(true); // 최초 insert 후 patch 전환
     }, 3000)
   ).current;
 
+  // 문서 내용 반영
+  useEffect(() => {
+    if (document) {
+      setIsProgrammaticUpdate(true);
+      setTitle(document.title || "");
+      setContents(document.contents || "");
+      setTimeout(() => setIsProgrammaticUpdate(false), 0);
+    }
+  }, [document]);
+
+  // 입력 핸들러
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    if (!isTempDocCreated) {
-      autosave({ title: newTitle, contents }); // insert
-      setIsTempDocCreated(true);
-    } else {
+    if (!isProgrammaticUpdate && !isFinalizing) {
+      // ⭐ 최종 저장 중이 아닐 때만
       debouncedAutoSave({ title: newTitle, contents });
     }
   };
-
   const handleContentsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContents = e.target.value;
     setContents(newContents);
-    if (!isTempDocCreated) {
-      autosave({ title, contents: newContents }); // insert
-      setIsTempDocCreated(true);
-    } else {
+    if (!isProgrammaticUpdate && !isFinalizing) {
       debouncedAutoSave({ title, contents: newContents });
     }
   };
@@ -122,14 +125,33 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
   useEffect(() => {
     if (onSaveReady) {
       onSaveReady(async () => {
+        setIsFinalizing(true);
+  
+        // (1) 임시저장 취소 및 입력 중 debounce 즉시 반영
+        debouncedAutoSave.cancel();
+  
+        // (2) 반드시 최신 title/contents를 temp에 patch(임시저장) → 이후 finalize
+        await autosave({ title, contents });
+  
+        // (3) finalize API 호출(임시->docs 이동 및 임시 삭제)
         await finalizeDocument();
-        setIsTempDocCreated(false); // 임시저장 플래그 리셋
-        setShowRestoreModal(false); // 혹시 모달 남아있으면 닫기
-        // 최신 원본 다시 로드
-        fetchDocument();
+  
+        setShowRestoreModal(false);
+        await fetchDocument();
+        setTimeout(() => {
+          setIsFinalizing(false);
+        }, 500); // 0.5초
       });
     }
-  }, [finalizeDocument, onSaveReady, fetchDocument]);
+  }, [
+    finalizeDocument,
+    onSaveReady,
+    fetchDocument,
+    debouncedAutoSave,
+    title,
+    contents,
+    autosave,  // <== 이거 꼭 넣기
+  ]);
 
   useEffect(() => {
     return () => {
@@ -137,8 +159,7 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     };
   }, [debouncedAutoSave]);
 
-  // ------------- UI --------------
-
+  // UI
   if (error) return <div className={styles.message}>에러: {error}</div>;
   if (loading || !ready) {
     return <div className={styles.message}>로딩 중...</div>;
@@ -149,11 +170,24 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
 
   return (
     <div className={styles.container}>
-      {isSaving && <div className={styles.toast}> <FaSpinner className={styles.spinner} /> 임시 저장 중...</div>}
+      {isSaving && !isFinalizing && (
+        <div className={styles.toast}>
+          <FaSpinner className={styles.spinner} /> 임시 저장 중...
+        </div>
+      )}
+      {isFinalizing && (
+      <div className={styles.toast}>
+        <FaSpinner className={styles.spinner} /> 저장 중입니다...
+      </div>
+    )}
       {showRestoreModal && (
         <div className={styles.restoreModal}>
           <div className={styles.modalContent}>
-            <p>이전에 임시저장된 편집본이 있습니다.<br />복원하시겠습니까?</p>
+            <p>
+              이전에 임시저장된 편집본이 있습니다.
+              <br />
+              복원하시겠습니까?
+            </p>
             <button onClick={handleRestore}>복원</button>
             <button onClick={handleCancel}>취소</button>
           </div>
