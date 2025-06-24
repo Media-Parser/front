@@ -9,7 +9,7 @@ import {
   getDocApi,
 } from "../../../lib/api/documentsApi";
 import type { Document } from "../../../types/documentType";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaCheck } from "react-icons/fa";
 
 interface EditDocProps {
   onSaveReady?: (saveFunction: () => Promise<void>) => void;
@@ -40,6 +40,7 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
   const [contents, setContents] = useState("");
   const [isProgrammaticUpdate, setIsProgrammaticUpdate] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
+  const [showAutosaveToast, setShowAutosaveToast] = useState(false);
 
   // 진입시 temp_docs 존재여부 체크 (이 코드는 동일)
   useEffect(() => {
@@ -91,6 +92,8 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
   const debouncedAutoSave = useRef(
     debounce(async (data: Partial<Document>) => {
       await autosave({ title: data.title, contents: data.contents });
+      setShowAutosaveToast(true);
+    setTimeout(() => setShowAutosaveToast(false), 800); // 0.8초 노출
     }, 3000)
   ).current;
 
@@ -170,9 +173,15 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
 
   return (
     <div className={styles.container}>
-      {isSaving && !isFinalizing && (
+      {/* {isSaving && !isFinalizing && (
         <div className={styles.toast}>
           <FaSpinner className={styles.spinner} /> 임시 저장 중...
+        </div>
+      )} */}
+      {showAutosaveToast && !isFinalizing && (
+        <div className={styles.autosaveToast}>
+          <span className={styles.autosaveIcon}><FaCheck /></span>
+          자동 임시저장
         </div>
       )}
       {isFinalizing && (

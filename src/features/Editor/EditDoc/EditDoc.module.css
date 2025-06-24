@@ -57,6 +57,36 @@
   animation: fadeInOut 3s ease forwards;
 }
 
+.autosaveToast {
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  background-color: white;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 500;
+  padding: 9px 22px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(255,229,125,0.12), 0 1.5px 4px rgba(0,0,0,0.07);
+  z-index: 1000;
+  font-size: 15.5px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  transition: box-shadow 0.18s;
+  animation: fadeInOut 1.7s cubic-bezier(.38,1.15,.69,.91) forwards;
+}
+
+.autosaveIcon {
+  display: flex;
+  align-items: center;
+  font-size: 16px;     /* 텍스트와 거의 일치 */
+  margin-right: 7px;
+  color: #20a45598;
+  vertical-align: -2px;  /* 필요시 미세조정 */
+}
+
 /* 나타났다 사라지는 애니메이션 */
 @keyframes fadeInOut {
   0% {
