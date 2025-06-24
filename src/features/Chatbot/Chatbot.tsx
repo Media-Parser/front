@@ -87,6 +87,7 @@ const Chatbot = ({ docId }: ChatbotProps) => {
       message,
       contain: false,
       session_id: sessionId ?? undefined,
+      article_content: document, // 본문 내용 추가
     };
 
     try {
