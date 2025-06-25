@@ -26,7 +26,6 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     autosave,
     finalizeDocument,
     setDocument,
-    isSaving,
   } = useEditDocument(id);
 
   useEffect(() => {

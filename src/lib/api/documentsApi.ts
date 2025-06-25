@@ -90,7 +90,7 @@ export const deleteUserApi = async (user_id: string) => {
 export const getUserInfoApi = async (user_id: string) => {
   return await api.get(`/users/${user_id}`);
 };
-// ==================================================== 챗봇 ====================================================
+// ==================================================== 챗봇 에디터 ====================================================
 // temp_docs 존재 여부 확인
 export const checkTempDocExists = async (doc_id: string): Promise<{ exists: boolean }> => {
   const res = await api.get<{ exists: boolean }>(`/documents/temp/exists/${doc_id}`);
@@ -129,4 +129,49 @@ export const autosaveDocumentApi = async (
 // 최종 저장
 export const finalizeDocumentApi = async (doc_id: string) => {
   return await api.post(`/documents/finalize/${doc_id}`);
+};
+
+// ================================ 챗봇 ================================
+
+// 1. 채팅 히스토리(문서별) 불러오기
+export const getChatHistoryApi = async (doc_id: string) => {
+  // ex: GET /api/chat/history/xxx
+  const res = await api.get(`/chat/history/${doc_id}`);
+  return res.data; // [{ sender, message, created_at }, ...]
+};
+
+// 2. 채팅 메시지 전송 (질문/답변 저장)
+export const sendChatMessageApi = async (
+  doc_id: string,
+  message: string,
+  article_content: string, // 에디터 최신 값
+  user_id?: string         // 필요 시
+) => {
+  // ex: POST /api/chat/send
+  const payload: any = { doc_id, message, article_content };
+  if (user_id) payload.user_id = user_id;
+  const res = await api.post(`/chat/send`, payload);
+  return res.data; // { answer, created_at, ... }
+};
+
+// 3. (선택) 전체 채팅 삭제 (예: 대화방 리셋)
+export const deleteChatHistoryApi = async (doc_id: string) => {
+  // ex: DELETE /chat/history/xxx
+  const res = await api.delete(`/chat/history/${doc_id}`);
+  return res.data;
+};
+
+// 4. 챗봇의 수정 제안을 기사에 반영 (예: 본문 contents를 수정)
+export const applyChatbotSuggestionApi = async (
+  doc_id: string,
+  suggestion: string, // 적용할 새 내용(본문, 일부 등)
+  field: "contents" | "title" = "contents"
+) => {
+  // PATCH /documents/{doc_id}/apply-suggestion
+  // (백엔드에서 실제로 이 엔드포인트를 구현해야 함)
+  const res = await api.patch(`/documents/${doc_id}/apply-suggestion`, {
+    field,
+    suggestion,
+  });
+  return res.data; // 예: { success: true, updated: { ... } }
 };

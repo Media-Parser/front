@@ -2,7 +2,7 @@
 import EditorLayout from "./EditorLayout/EditorLayout";
 import EditorSidebar from "./EditorSidebar/EditorSidebar";
 import styles from "./Editor.module.css";
-import Chatbot from "../Chatbot/Chatbot";
+import Chatbot from "../Chatbot/Chatbot2";
 import EditDoc from "./EditDoc/EditDoc";
 import { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
