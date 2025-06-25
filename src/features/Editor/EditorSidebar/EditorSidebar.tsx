@@ -36,8 +36,8 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleSave = async () => {
     if (!onSave) return;
-
     setIsSaving(true);
+
     try {
       await onSave();
       // Optional: Show success message
@@ -88,7 +88,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
             key={idx}
             className={`${styles.menuItem} ${
               item.label === "저장" && isSaving ? styles.saving : ""
-            } ${item.label === "메뉴" ? styles.menuHover : ""}`} // ✅ 추가
+            } ${item.label === "메뉴" ? styles.menuHover : ""}`}
             onClick={() => handleMenuClick(item)}
           >
             {item.icon}
