@@ -66,7 +66,6 @@ export const useDocumentActions = () => {
       await fetchDocuments();
     } catch (error) {
       alert("삭제 실패");
-      console.error("삭제 실패", error);
     }
   };
 
