@@ -9,6 +9,7 @@ import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
 import type { Document } from "../../types/documentType";
 import LoadingOrError from "../../components/Common/LoadingOrError";
 import useAuthStore from "../../store/useAuthStore";
+import SearchBar from "../../components/SearchBar/SearchBar"; // 검색바 컴포넌트
 
 const TrashPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,13 +53,7 @@ const TrashPage = () => {
       <div className={styles.mainArea}>
         <div className={styles.mainAreaHeader}>
           <h2>삭제된 문서</h2>
-          <input
-            type="search"
-            className={styles.searchBar}
-            placeholder="검색어를 입력하세요"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <SearchBar value={searchTerm} onChange={setSearchTerm} />
           <button className={styles.uploadButton} onClick={handleDeleteAll}>
             <FaTrashAlt className={styles.uploadIcon} />
             전체 삭제

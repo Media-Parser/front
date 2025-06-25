@@ -1,4 +1,4 @@
-// src/features/Dashboard/DashboardPage.tsx
+// 📁 src/features/Dashboard/DashboardPage.tsx
 import { useRef, useState, useMemo, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
@@ -16,7 +16,7 @@ import { useCategories } from "../../hooks/useCategories";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
 import useAuthStore from "../../store/useAuthStore";
-import { XCircle } from "lucide-react";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -98,24 +98,7 @@ const DashboardPage: React.FC = () => {
       <div className={styles.mainArea}>
         <div className={styles.mainAreaHeader}>
           <h2>{currentCategory?.label || "문서"}</h2>
-          <div className={styles.searchWrapper}>
-            <input
-              type="search"
-              className={styles.searchBar}
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />{" "}
-            {searchTerm && (
-              <button
-                className={styles.clearButton}
-                onClick={() => setSearchTerm("")}
-                aria-label="검색어 지우기"
-              >
-                <XCircle size={18} />
-              </button>
-            )}
-          </div>
+          <SearchBar value={searchTerm} onChange={setSearchTerm} />
           <input
             type="file"
             accept=".hwp, .hwpx"

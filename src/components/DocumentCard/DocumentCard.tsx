@@ -135,22 +135,22 @@ const DocumentCard: React.FC<
       document.body
     );
 
-// Tooltip 위치 계산 (툴팁이 열릴 때만 즉시 계산)
-const handleKebabClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-  if (!showTooltip && kebabButtonRef.current) {
-    const rect = kebabButtonRef.current.getBoundingClientRect();
-    setTooltipVars({
-      "--tooltip-top": `${rect.top}px`,
-      "--tooltip-left": `${rect.right + 4}px`,
-    });
-  }
-  setShowTooltip(!showTooltip);
-};
+  // Tooltip 위치 계산 (툴팁이 열릴 때만 즉시 계산)
+  const handleKebabClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!showTooltip && kebabButtonRef.current) {
+      const rect = kebabButtonRef.current.getBoundingClientRect();
+      setTooltipVars({
+        "--tooltip-top": `${rect.top}px`,
+        "--tooltip-left": `${rect.right + 4}px`,
+      });
+    }
+    setShowTooltip(!showTooltip);
+  };
 
   return (
     <div
-      className={styles.card}
+      className={`${styles.card} ${isTrashPage ? styles.noHover : ""}`}
       role="button"
       tabIndex={0}
       onClick={(e) => {
@@ -174,14 +174,14 @@ const handleKebabClick = (e: React.MouseEvent) => {
             {title.length > 25 ? title.slice(0, 25) + "..." : title}
           </h3>
           <div className={styles.tooltipWrapper}>
-          <button
-            className={styles.kebabButton}
-            aria-label="옵션 열기"
-            ref={kebabButtonRef}
-            onClick={handleKebabClick}
-          >
-            ︙
-          </button>
+            <button
+              className={styles.kebabButton}
+              aria-label="옵션 열기"
+              ref={kebabButtonRef}
+              onClick={handleKebabClick}
+            >
+              ︙
+            </button>
           </div>
         </div>
         <div className={styles.previewTextWrapper}>
@@ -194,15 +194,13 @@ const handleKebabClick = (e: React.MouseEvent) => {
             내용 미리보기
           </p>
           {isHoveringPreview && (
-          <div className={styles.previewPopover}>
-            {(
-              (contents || "")
+            <div className={styles.previewPopover}>
+              {(contents || "")
                 .replace(/^\s+/, "")
                 .replace(/\n{2,}/g, "\n")
-                .slice(0, 100)
-            ) + ((contents || "").length > 100 ? "..." : "")}
-          </div>
-        )}
+                .slice(0, 100) + ((contents || "").length > 100 ? "..." : "")}
+            </div>
+          )}
         </div>
         <div className={styles.cardDate}>
           {dayjs(date).format("YYYY-MM-DD")}

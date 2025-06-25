@@ -1,0 +1,40 @@
+.searchWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 500px;
+}
+
+.searchBar {
+  width: 100%; /* 부모 너비에 맞춰서 */
+  padding-right: 2.2rem; /* clear 버튼 여백 */
+  height: 2.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding-left: 0.75rem;
+  transition: border-color 0.2s ease;
+}
+
+.searchBar:focus {
+  border-color: var(--color-active);
+  outline: none;
+}
+
+.clearButton {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #999;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearButton:hover {
+  color: var(--color-active);
+}
