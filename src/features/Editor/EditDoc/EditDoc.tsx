@@ -106,31 +106,20 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     }, 3000)
   ).current;
 
-  // ------------- 제목 변경 핸들러 ---------------
+  // 제목 변경 핸들러
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
 
-    // 최초 입력이면 insert, 그 후엔 patch
-    if (!isTempDocCreated) {
-      autosave({ title: newTitle, contents });
-      setIsTempDocCreated(true);
-    } else {
-      debouncedAutoSave({ title: newTitle, contents });
-    }
+    debouncedAutoSave({ title: newTitle, contents });
   };
 
-  // ------------- 본문 변경 핸들러 ---------------
+  // 본문 변경 핸들러
   const handleContentsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContents = e.target.value;
     setContents(newContents);
 
-    if (!isTempDocCreated) {
-      autosave({ title, contents: newContents });
-      setIsTempDocCreated(true);
-    } else {
-      debouncedAutoSave({ title, contents: newContents });
-    }
+    debouncedAutoSave({ title, contents: newContents });
   };
 
   // ----------- 부모에게 저장 함수 전달 ------------
