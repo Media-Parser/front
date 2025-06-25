@@ -184,24 +184,15 @@ const DocumentCard: React.FC<
             </button>
           </div>
         </div>
-        <div className={styles.previewTextWrapper}>
-          <p
-            className={styles.previewText}
-            ref={previewRef}
-            onMouseEnter={() => setIsHoveringPreview(true)}
-            onMouseLeave={() => setIsHoveringPreview(false)}
-          >
-            내용 미리보기
-          </p>
-          {isHoveringPreview && (
-            <div className={styles.previewPopover}>
-              {(contents || "")
-                .replace(/^\s+/, "")
-                .replace(/\n{2,}/g, "\n")
-                .slice(0, 100) + ((contents || "").length > 100 ? "..." : "")}
-            </div>
-          )}
+
+        {/* 본문 미리보기 항상 표시 */}
+        <div className={styles.cardBody}>
+          {(contents || "")
+            .replace(/^\s+/, "")
+            .replace(/\n{2,}/g, "\n")
+            .slice(0, 100) + ((contents || "").length > 100 ? "..." : "")}
         </div>
+
         <div className={styles.cardDate}>
           {dayjs(date).format("YYYY-MM-DD")}
         </div>
