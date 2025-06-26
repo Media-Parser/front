@@ -6,6 +6,7 @@ import styles from "./Chatbot.module.css";
 import { Send } from "lucide-react";
 import axios from "axios";
 import useAuthStore from "../../store/useAuthStore";
+import logo from "../../assets/pol.png";
 
 // API 응답 타입 정의
 interface ApiResponse {
@@ -147,7 +148,9 @@ const Chatbot = ({ docId }: ChatbotProps) => {
       <div className={styles.chatMessages}>
         {/* 헤더 메시지 */}
         <h3 className={styles.defaultMessage}>
-          <span className={styles.highlight}>기잣말싸미</span>에게 질문하세요.
+          {" "}
+          <img src={logo} alt="로고" className={styles.logo} />
+          에게 질문하세요.
         </h3>
 
         {/* 초기 인사 메시지 */}

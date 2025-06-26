@@ -16,7 +16,6 @@ const Layout = ({
   showSidebar = true,
   sidebar,
 }: LayoutProps) => {
-  
   return (
     <div className={styles.wrapper}>
       {showHeader && <Header />}

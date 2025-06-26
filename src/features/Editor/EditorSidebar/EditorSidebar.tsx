@@ -6,6 +6,7 @@ import { Menu, Home, Trash2, Download, Save, LogOut, Icon } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
+import logo from "../../../assets/lolo.png";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
@@ -36,8 +37,9 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleSave = async () => {
     // 저장 버튼 클릭 시 모든 input blur 처리
-    document.activeElement instanceof HTMLElement && document.activeElement.blur();
-    
+    document.activeElement instanceof HTMLElement &&
+      document.activeElement.blur();
+
     if (!onSave) return;
     setIsSaving(true);
 

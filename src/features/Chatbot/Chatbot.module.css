@@ -15,12 +15,17 @@
   gap: 0.5rem;
 }
 
+.logo {
+  width: 150px;
+}
+
 /* 봇 메시지 스타일: 연한 배경, 둥근 모서리, 최대 너비 제한, fade-in 애니메이션 */
 .botMessage {
   font-size: 0.8rem;
-  background-color: var(--color-gray);
+  background-color: white;
   padding: 10px 14px;
-  border-radius: 12px;
+  border: 1px solid var(--color-hover);
+  border-radius: 15px;
   max-width: 70%;
   margin: 10px 0;
   animation: fadeIn 0.3s ease-in-out;
@@ -54,8 +59,7 @@
 /* 각 옵션 버튼 스타일: 배경, 테두리 없음, 둥근 모서리, 커서, 부드러운 호버 효과 */
 .optionButton {
   font-size: 0.8rem;
-  background-color: var(--color-gray);
-  border: none;
+  border: 1px solid var(--color-hover);
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
@@ -63,7 +67,7 @@
 }
 
 .optionButton:hover {
-  background-color: var(--color-bg);
+  background-color: var(--color-hover);
 }
 
 /* 메시지 입력 영역: 상단 테두리, 고정 위치, 배경 하얀색, z-index로 위에 표시 */
