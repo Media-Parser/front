@@ -1,7 +1,7 @@
 // 📁 src/hooks/useFileUpload.ts
 // 설명: 파일 업로드를 처리하는 로직 분리
 // 사용 위치: 파일 업로드 기능이 필요한 컴포넌트
-import api from "../lib/api/api";
+import { api } from "../lib/api/api";
 import { toast } from "react-hot-toast";
 
 type UploadArgs = {

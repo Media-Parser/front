@@ -23,27 +23,18 @@ export interface Category {
   updated_dt?: string;
 }
 
-// DocumentCardProps
-export interface DocumentCardProps {
-  title: string;
-  contents: string;
-  date: string;
-  doc_id: string;
-  category_id: string;
-  onRestore?: () => void;
-  onPermanentDelete?: () => void;
-  download?: boolean;
-  remove?: boolean;
-  onClick?: () => void;
-  onDelete?: () => void;
-  onDownload?: () => void;
-  onMoved?: () => void;
-  onRightClick?: () => void;
-}
-
 export interface UserInfo {
   user_id: string;
   user_name: string;
   user_email: string;
   provider: string;
+}
+
+export interface ChatQA {
+  chat_id: string;
+  doc_id: string;
+  question: string;
+  answer: string;
+  suggestion?: string;
+  created_dt: string;
 }

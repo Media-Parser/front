@@ -11,6 +11,7 @@ import {
 import type { Document } from "../../../types/documentType";
 import { FaSpinner, FaCheck } from "react-icons/fa";
 
+// 부모에게 저장 함수 넘길 수 있게 하는 prop
 interface EditDocProps {
   onSaveReady?: (saveFunction: () => Promise<void>) => void;
 }
@@ -18,6 +19,8 @@ interface EditDocProps {
 const EditDoc = ({ onSaveReady }: EditDocProps) => {
   const { id } = useParams<{ id: string }>();
   if (!id) return <div className={styles.message}>문서 ID가 없습니다.</div>;
+
+  // 커스텀 훅으로 문서 상태 및 로직 관리
   const {
     document,
     loading,
@@ -28,6 +31,7 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     setDocument,
   } = useEditDocument(id);
 
+  // id 변경될 때마다 문서 새로 fetch
   useEffect(() => {
     if (!id) return;
     fetchDocument();
@@ -44,18 +48,19 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
   // 진입시 temp_docs 존재여부 체크 (이 코드는 동일)
   useEffect(() => {
     let isMounted = true;
-    setReady(false);
+    setReady(false); // UI 렌더링 잠깐 멈춤
+
     (async () => {
       try {
-        const { exists } = await checkTempDocExists(id);
+        const { exists } = await checkTempDocExists(id); // 임시저장 존재 여부 확인
         if (exists) {
-          if (isMounted) setShowRestoreModal(true);
+          if (isMounted) setShowRestoreModal(true); // 있으면 복원 모달 띄우기
         } else {
-          const doc = await getDocApi(id);
+          const doc = await getDocApi(id); // 없으면 원본 문서 불러오기
           if (isMounted) setDocument(doc);
         }
       } catch (e) {
-        if (isMounted) setDocument(null);
+        if (isMounted) setDocument(null); // 에러 시 문서 없다고 처리
       } finally {
         if (isMounted) setReady(true);
       }
@@ -65,9 +70,9 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     };
   }, [id, setDocument]);
 
-  // 복원/취소 선택 시 원본/임시 불러오기
+  // ----------- 복원/취소 선택 시 로직 --------------
   const handleRestore = async () => {
-    const doc = await getTempDocApi(id);
+    const doc = await getTempDocApi(id); // 임시문서 불러오기
     setDocument(doc);
     setShowRestoreModal(false);
     setReady(true);
@@ -78,6 +83,7 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     setShowRestoreModal(false);
     setReady(true);
   };
+
 
   // 문서 내용 반영
   useEffect(() => {
@@ -123,7 +129,8 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     }
   };
 
-  // 저장 함수 부모에 전달
+  // ----------- 부모에게 저장 함수 전달 ------------
+  // EditDoc.tsx
   useEffect(() => {
     if (onSaveReady) {
       onSaveReady(async () => {
@@ -155,6 +162,7 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     autosave,  // <== 이거 꼭 넣기
   ]);
 
+  // 컴포넌트 사라질 때 디바운스된 작업 취소
   useEffect(() => {
     return () => {
       debouncedAutoSave.cancel();
@@ -170,6 +178,7 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
     return <div className={styles.message}>문서가 존재하지 않습니다.</div>;
   }
 
+  // ------------------ UI 렌더링 ------------------
   return (
     <div className={styles.container}>
       {/* {isSaving && !isFinalizing && (
@@ -201,6 +210,8 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
           </div>
         </div>
       )}
+
+      {/* 제목 입력 */}
       <input
         type="text"
         className={styles.titleInput}
@@ -209,6 +220,8 @@ const EditDoc = ({ onSaveReady }: EditDocProps) => {
         placeholder="제목을 입력하세요"
         disabled={!ready}
       />
+
+      {/* 본문 입력 */}
       <textarea
         className={styles.contentsInput}
         value={contents}
