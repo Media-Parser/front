@@ -55,8 +55,8 @@
 .submitButton {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #fbe51bd9;
-  color: black;
+  background-color: black;
+  color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -66,5 +66,5 @@
 }
 
 .submitButton:hover {
-  background-color: #f9d314;
+  background-color: #ccc
 }
