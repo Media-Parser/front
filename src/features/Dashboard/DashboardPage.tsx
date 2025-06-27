@@ -17,6 +17,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
 import useAuthStore from "../../store/useAuthStore";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import Button from "../../components/Button/Button";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -106,30 +107,30 @@ const DashboardPage: React.FC = () => {
             onChange={handleUpload}
             style={{ display: "none" }}
           />
-          <button
-            className={styles.uploadButton}
+          <Button
+            icon={<FaCloudUploadAlt />}
+            label="파일 업로드"
             onClick={() => fileInputRef.current?.click()}
-          >
-            <FaCloudUploadAlt className={styles.uploadIcon} />
-            파일 업로드
-          </button>
+          />
         </div>
-        {Object.keys(groupedDocs).length === 0 ? (
-          <div className={styles.noDocuments}>
-            <span>저장된 문서가 없습니다.</span>
-          </div>
-        ) : (
-          Object.entries(groupedDocs).map(([label, docs]) => (
-            <DocumentGroupSection
-              key={label}
-              groupLabel={label}
-              documents={docs}
-              onDelete={deleteDocument}
-              onDownload={downloadDocument}
-              onMoved={refetch}
-            />
-          ))
-        )}
+        <div className={styles.documentList}>
+          {Object.keys(groupedDocs).length === 0 ? (
+            <div className={styles.noDocuments}>
+              <span>저장된 문서가 없습니다.</span>
+            </div>
+          ) : (
+            Object.entries(groupedDocs).map(([label, docs]) => (
+              <DocumentGroupSection
+                key={label}
+                groupLabel={label}
+                documents={docs}
+                onDelete={deleteDocument}
+                onDownload={downloadDocument}
+                onMoved={refetch}
+              />
+            ))
+          )}
+        </div>
       </div>
     </Layout>
   );

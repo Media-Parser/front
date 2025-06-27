@@ -10,6 +10,7 @@ import type { Document } from "../../types/documentType";
 import LoadingOrError from "../../components/Common/LoadingOrError";
 import useAuthStore from "../../store/useAuthStore";
 import SearchBar from "../../components/SearchBar/SearchBar"; // 검색바 컴포넌트
+import Button from "../../components/Button/Button";
 
 const TrashPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,27 +55,30 @@ const TrashPage = () => {
         <div className={styles.mainAreaHeader}>
           <h2>삭제된 문서</h2>
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
-          <button className={styles.uploadButton} onClick={handleDeleteAll}>
-            <FaTrashAlt className={styles.uploadIcon} />
-            전체 삭제
-          </button>
+          <Button
+            icon={<FaTrashAlt />}
+            label="전체 삭제"
+            onClick={handleDeleteAll}
+          />
         </div>
-        {Object.keys(groupedDocs).length === 0 ? (
-          <div className={styles.noDocuments}>
-            <span>삭제된 문서가 없습니다.</span>
-          </div>
-        ) : (
-          Object.entries(groupedDocs).map(([label, docs]) => (
-            <DocumentGroupSection
-              key={label}
-              groupLabel={label}
-              documents={docs}
-              onRestore={handleRestore}
-              onPermanentDelete={handlePermanentDelete}
-              isTrashPage
-            />
-          ))
-        )}
+        <div className={styles.documentList}>
+          {Object.keys(groupedDocs).length === 0 ? (
+            <div className={styles.noDocuments}>
+              <span>삭제된 문서가 없습니다.</span>
+            </div>
+          ) : (
+            Object.entries(groupedDocs).map(([label, docs]) => (
+              <DocumentGroupSection
+                key={label}
+                groupLabel={label}
+                documents={docs}
+                onRestore={handleRestore}
+                onPermanentDelete={handlePermanentDelete}
+                isTrashPage
+              />
+            ))
+          )}
+        </div>
       </div>
     </Layout>
   );

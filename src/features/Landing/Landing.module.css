@@ -10,10 +10,10 @@
 
 .logoContainer {
   position: fixed; /* 또는 absolute */
-  top: 40%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 160px;
+  width: 500px;
   max-width: 100%;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .logoImage {
-  width: 160px;
+  /* width: 160px; */
   max-width: 100%;
   object-fit: contain;
 }

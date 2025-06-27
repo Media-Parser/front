@@ -12,7 +12,6 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 0;
   background-color: #fff;
 }
 
@@ -61,7 +60,7 @@ ul {
 .dropdownArrow {
   cursor: pointer;
   font-size: 12px;
-  color: #666;
+  color: #fff;
   padding: 2px 4px;
   margin-left: 12px;
   transition: color 0.2s ease;
@@ -73,14 +72,13 @@ ul {
 /* === 현재 선택된 메뉴 강조 === */
 .active {
   background-color: var(--color-bg);
-  color: #000000;
-  font-weight: bold;
+  color: #fff;
 }
 
 /* === 메뉴 섹션 간 구분선 === */
 .separator {
-  height: 1px;
-  background-color: #ddd;
+  height: 0.5px;
+  background-color: #000000;
   margin: 10px 0;
 }
 
@@ -96,7 +94,7 @@ ul {
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  color: #333;
+  color: #fff;
   font-size: 0.95em;
   transition: background-color 0.2s, color 0.2s, border-bottom 0.2s;
   cursor: pointer;
@@ -137,7 +135,7 @@ ul {
   border: none;
   cursor: pointer;
   font-size: 0.9em;
-  color: #666;
+  color: #fff;
   padding: 2px;
 }
 .categoryBtn:hover {
@@ -147,7 +145,7 @@ ul {
 /* === '새 카테고리' 추가 버튼 === */
 .addCategoryItem {
   justify-content: center;
-  color: #aaa;
+  color: #fff;
   font-size: 0.88em;
   cursor: pointer;
   margin-bottom: 6px;

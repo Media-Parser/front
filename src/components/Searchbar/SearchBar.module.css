@@ -6,7 +6,7 @@
 }
 
 .searchBar {
-  width: 100%; /* 부모 너비에 맞춰서 */
+  width: 100%;
   padding-right: 2.2rem; /* clear 버튼 여백 */
   height: 2.5rem;
   border: 1px solid #ccc;
@@ -17,7 +17,7 @@
 }
 
 .searchBar:focus {
-  border-color: var(--color-active);
+  border-color: var(--color-bg);
   outline: none;
 }
 
@@ -36,5 +36,5 @@
 }
 
 .clearButton:hover {
-  color: var(--color-active);
+  color: var(--color-bg);
 }

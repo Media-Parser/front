@@ -16,7 +16,6 @@ const EditorLayout = ({
 }: EditorLayoutProps) => {
   return (
     <div className={styles.wrapper}>
-      {showHeader && <Header />}
       <div className={styles.main}>
         <div className={styles.left}>{left}</div>
         <div className={styles.divider} />

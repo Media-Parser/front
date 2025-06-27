@@ -7,9 +7,12 @@ import useAuthStore from "../../store/useAuthStore";
 import { fetchChatHistoryApi, sendChatMessageApi } from "../../lib/api/aiApi";
 import type { ChatSendRequest, ChatQA } from "../../types/chatType";
 
-// (필요 없다면 제거)
-// interface ChatbotProps { docId: string; }
-type ChatbotProps = { docId: string; };
+import logo from "../../assets/pol.png";
+
+// 컴포넌트 Props 타입
+interface ChatbotProps {
+  docId: string;
+}
 
 const Chatbot = ({ docId }: ChatbotProps) => {
   const token = useAuthStore((state) => state.token);
@@ -129,7 +132,9 @@ const Chatbot = ({ docId }: ChatbotProps) => {
       <div className={styles.chatMessages}>
         {/* 헤더 */}
         <h3 className={styles.defaultMessage}>
-          <span className={styles.highlight}>기잣말싸미</span>에게 질문하세요.
+          {" "}
+          <img src={logo} alt="로고" className={styles.logo} />
+          에게 질문하세요.
         </h3>
         {/* 첫 인사 */}
         {chatLog.length === 0 && (
