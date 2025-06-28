@@ -25,9 +25,7 @@ export const sendChatMessageApi = async (
 
 /** 3. (선택) 전체 채팅 삭제 (예: 대화방 리셋) */
 export const deleteChatHistoryApi = async (doc_id: string) => {
-  await api.delete(`/chat/history`, {
-    params: { doc_id },
-  });
+  await api.delete(`/chat/history/${doc_id}`);
 };
 
 /** 4. 챗봇의 수정 제안을 기사에 반영 (예: 본문 contents를 수정) */

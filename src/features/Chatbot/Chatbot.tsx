@@ -1,10 +1,14 @@
 // features/Chatbot/Chatbot.tsx
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Chatbot.module.css";
 import { Send } from "lucide-react";
 import useAuthStore from "../../store/useAuthStore";
-import { fetchChatHistoryApi, sendChatMessageApi } from "../../lib/api/aiApi";
+import {
+  fetchChatHistoryApi,
+  sendChatMessageApi,
+  deleteChatHistoryApi,
+} from "../../lib/api/aiApi";
 import type { ChatSendRequest, ChatQA } from "../../types/chatType";
 
 import logo from "../../assets/pol.png";
@@ -12,9 +16,21 @@ import logo from "../../assets/pol.png";
 // 컴포넌트 Props 타입
 interface ChatbotProps {
   docId: string;
+  selectedTextData?: {
+    selectedText: string | null;
+    startIndex: number;
+    endIndex: number;
+  } | null;
+  onMessageSent?: () => void;
+  onClearSelectedText?: () => void;
 }
 
-const Chatbot = ({ docId }: ChatbotProps) => {
+const Chatbot = ({
+  docId,
+  selectedTextData,
+  onMessageSent,
+  onClearSelectedText,
+}: ChatbotProps) => {
   const token = useAuthStore((state) => state.token);
 
   // UI 상태들
@@ -24,8 +40,10 @@ const Chatbot = ({ docId }: ChatbotProps) => {
   const [error, setError] = useState<string | null>(null);
   const [userInput, setUserInput] = useState("");
   const [chatLog, setChatLog] = useState<ChatQA[]>([]);
-  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
+  // const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // 옵션 버튼 → 메시지 변환
   const optionMessages: Record<string, string> = {
@@ -59,6 +77,20 @@ const Chatbot = ({ docId }: ChatbotProps) => {
       .catch(() => setChatLog([]));
   }, [docId]);
 
+  // 선택된 텍스트 자동 입력
+  useEffect(() => {
+    if (selectedTextData && selectedTextData.selectedText) {
+      // setUserInput(selectedTextData.selectedText);
+      inputRef.current?.focus();
+    }
+  }, [selectedTextData]);
+
+  // 전송 이후 선택 해제
+  // useEffect(() => {
+  //   if (!userInput && onMessageSent) onMessageSent();
+  //   // (상황에 따라 필요 없으면 삭제)
+  // }, [userInput, onMessageSent]);
+
   // 메시지 보내기
   const sendMessageToApi = async (message: string) => {
     if (!token) {
@@ -83,11 +115,14 @@ const Chatbot = ({ docId }: ChatbotProps) => {
     const req: ChatSendRequest = {
       doc_id: docId,
       message,
-      session_id: sessionId,
+      selected_yn: !!selectedTextData?.selectedText,
+      selected_text: selectedTextData?.selectedText || "",
+      start_index: selectedTextData?.startIndex ?? -1,
+      end_index: selectedTextData?.endIndex ?? -1,
     };
     try {
       const res = await sendChatMessageApi(req);
-      setSessionId(res.session_id);
+      // setSessionId(res.session_id);
       setChatLog((prev) => [
         ...prev.filter((q) => !(q.question === message && q.answer === "")),
         res,
@@ -95,13 +130,17 @@ const Chatbot = ({ docId }: ChatbotProps) => {
       setUserInput("");
       setShowOptions(true);
       setError(null);
+      if (onMessageSent) onMessageSent();
     } catch (e) {
       setError("❌ 응답에 실패했습니다. 다시 시도해 주세요.");
       // 답변이 없는 빈 botMessage로 남지 않게 임시 Q를 유지
-      setChatLog((prev) => prev.map((chat, i) =>
-        (i === prev.length - 1 && chat.answer === "") ?
-          { ...chat, answer: "" } : chat
-      ));
+      setChatLog((prev) =>
+        prev.map((chat, i) =>
+          i === prev.length - 1 && chat.answer === ""
+            ? { ...chat, answer: "" }
+            : chat
+        )
+      );
       setShowOptions(true);
     } finally {
       setLoading(false);
@@ -127,24 +166,58 @@ const Chatbot = ({ docId }: ChatbotProps) => {
     await sendMessageToApi(userInput.trim());
   };
 
+  // 대화방 초기화 핸들러
+  const handleResetChat = async () => {
+    if (!window.confirm("정말 대화방을 초기화하시겠습니까?")) return;
+    try {
+      await deleteChatHistoryApi(docId);
+      setChatLog([]); // 채팅 로그도 초기화
+      setError(null);
+      setUserInput("");
+      setShowOptions(true);
+      setHasShownOptionsOnce(false);
+      alert("대화방이 초기화되었습니다.");
+    } catch (e) {
+      alert("대화방 리셋에 실패했습니다.");
+    }
+  };
+
   return (
     <div className={styles.Wrapper}>
-      <div className={styles.chatMessages}>
-        {/* 헤더 */}
+      <div className={styles.chatHeaderArea}>
         <h3 className={styles.defaultMessage}>
-          {" "}
           <img src={logo} alt="로고" className={styles.logo} />
-          에게 질문하세요.
+          {/* 에게 질문하세요. */}
         </h3>
+        <button className={styles.resetButton} onClick={handleResetChat}>
+          대화방 리셋
+        </button>
+      </div>
+      <div className={styles.chatMessages}>
         {/* 첫 인사 */}
         {chatLog.length === 0 && (
           <div className={styles.botMessage}>{displayedMessage}</div>
         )}
-
         {/* 채팅 로그 */}
         {chatLog.map((chat, idx) => (
-          <div key={chat.chat_id || `${chat.question}-${idx}`} className={styles.chatLog}>
-            <div className={styles.userMessage}>{chat.question}</div>
+          <div
+            key={
+              chat.chat_id ||
+              `${
+                typeof chat.question === "string"
+                  ? chat.question
+                  : chat.question?.message
+              }-${idx}`
+            }
+            className={styles.chatLog}
+          >
+            <div className={styles.userMessage}>
+              {typeof chat.question === "string"
+                ? chat.question
+                : chat.question && "message" in chat.question
+                ? chat.question.message
+                : ""}
+            </div>
             {/* 마지막 메시지에만 로딩/에러 */}
             {idx === chatLog.length - 1 ? (
               error ? (
@@ -178,17 +251,39 @@ const Chatbot = ({ docId }: ChatbotProps) => {
           </div>
         )}
       </div>
-
+      {/* 선택된 텍스트 노출 */}
+      {selectedTextData?.selectedText && (
+        <div className={styles.selectedTextBoxWrapper}>
+          <button
+            className={styles.closeSelectedBtn}
+            onClick={onClearSelectedText}
+            aria-label="선택 영역 지우기"
+            type="button"
+          >
+            ×
+          </button>
+          <div className={styles.selectedTextBox}>
+            <span>↳</span>
+            <span className={styles.selectedText}>
+              {selectedTextData.selectedText}
+            </span>
+          </div>
+        </div>
+      )}
       {/* 입력창 */}
       <div className={styles.inputArea}>
-        <input
-          type="text"
+        <textarea
+          ref={inputRef as any}
+          // type="text"
           className={styles.chatInput}
           placeholder="메시지를 입력하세요..."
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") handleSend();
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
           }}
           disabled={loading}
         />
