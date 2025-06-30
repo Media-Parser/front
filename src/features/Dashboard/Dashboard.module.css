@@ -23,17 +23,11 @@
   margin-bottom: 15px;
 }
 
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
 .documentList {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
+  margin-top: 10px;
 }
 
 .noDocuments {
@@ -67,4 +61,8 @@
   color: red;
   text-align: center;
   height: 100vh;
+}
+
+.uploadButton {
+  width: auto;
 }

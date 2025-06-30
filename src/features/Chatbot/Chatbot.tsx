@@ -10,8 +10,9 @@ import {
   deleteChatHistoryApi,
 } from "../../lib/api/aiApi";
 import type { ChatSendRequest, ChatQA } from "../../types/chatType";
-
-import logo from "../../assets/pol.png";
+import { Eraser } from "lucide-react";
+import logo from "../../assets/a.png";
+import pPro from "../../assets/go.png";
 
 // 컴포넌트 Props 타입
 interface ChatbotProps {
@@ -50,7 +51,6 @@ const Chatbot = ({
     "기사 제목 추천 받기": "이 기사 제목 추천해줘",
     "기사 톤 다듬기": "이 기사의 톤을 다듬어줘",
     "유사 기사 추천": "유사한 기사를 추천해줘",
-    "다른 의견 듣기": "다른 의견을 알려줘",
   };
 
   // 타이핑 효과 (처음 1회)
@@ -187,16 +187,18 @@ const Chatbot = ({
       <div className={styles.chatHeaderArea}>
         <h3 className={styles.defaultMessage}>
           <img src={logo} alt="로고" className={styles.logo} />
-          {/* 에게 질문하세요. */}
         </h3>
         <button className={styles.resetButton} onClick={handleResetChat}>
-          대화방 리셋
+          <Eraser strokeWidth={1.2} />
         </button>
       </div>
       <div className={styles.chatMessages}>
         {/* 첫 인사 */}
         {chatLog.length === 0 && (
-          <div className={styles.botMessage}>{displayedMessage}</div>
+          <div className={styles.botIntroContainer}>
+            <img src={pPro} alt="로고" className={styles.pPro} />
+            <div className={styles.botMessage}>{displayedMessage}</div>
+          </div>
         )}
         {/* 채팅 로그 */}
         {chatLog.map((chat, idx) => (

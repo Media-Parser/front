@@ -1,5 +1,5 @@
 .mainArea {
-  padding: 20px;
+  overflow-y: auto;
 }
 
 .mainAreaHeader {
@@ -54,17 +54,7 @@
 
 .submitButton {
   margin-top: 10px;
-  padding: 10px 20px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
-  width: 15%;
+  width: auto;
   margin-left: auto;
-}
-
-.submitButton:hover {
-  background-color: #ccc
 }

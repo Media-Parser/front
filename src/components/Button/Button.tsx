@@ -25,7 +25,9 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
     >
       <span className={styles.icon}>{icon}</span>
-      {label}
+      <span className={styles.label} data-text={label}>
+        {label}
+      </span>
     </button>
   );
 };

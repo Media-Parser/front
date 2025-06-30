@@ -6,7 +6,7 @@
 }
 
 .chatHeaderArea {
-  position: sticky;   /* ← 고정 */
+  position: sticky;
   top: 0;
   z-index: 3;
   background: #fff;
@@ -30,7 +30,7 @@
   padding: 16px 12px 8px 12px;
 }
 .logo {
-  width: 150px;
+  width: 260px;
 }
 
 .chatLog {
@@ -129,25 +129,16 @@
 /* 텍스트 입력 박스: flex 확장, 패딩, 테두리, 둥근 모서리 */
 .chatInput {
   flex: 1;
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-}
-/* .chatInput {
-  flex: 1;
   resize: vertical;
   min-height: 42px;
   max-height: 120px;
   padding: 0.6em 1em;
-  font-size: 1rem;
+  font-size: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
-  line-height: 1.4;
   box-sizing: border-box;
-} */
+}
 
 /* 전송 버튼: 좌측 여백, 색상, 테두리 없음, 커서, 중앙 정렬 */
 .sendButton {
@@ -230,8 +221,21 @@
   transition: background 0.18s;
   padding: 0;
 }
+
+.pPro {
+  width: 50px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Container for the initial bot greeting */
+.botIntroContainer {
+  display: flex;
+  align-items: flex-start; /* Align items to the top if content wraps */
+  margin-bottom: 10px; /* Space after the greeting */
+}
+
 .closeSelectedBtn:hover {
-  /* background: #ececec; */
   color: #c00;
 }
 
@@ -240,19 +244,16 @@
 }
 
 .resetButton {
-  margin-left: 12px;
-  background: #fff;
-  color: #f33;
-  border: 1.2px solid #f66;
-  border-radius: 6px;
-  font-size: 15px;
+  font-size: 0.8rem;
   padding: 5px 15px;
   cursor: pointer;
   transition: background 0.16s;
 }
+
 .resetButton:hover {
-  background: #ffecec;
+  color: red;
 }
+
 .chatHeaderArea {
   display: flex;
   align-items: center;

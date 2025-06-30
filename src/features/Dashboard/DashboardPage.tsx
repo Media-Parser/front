@@ -108,6 +108,7 @@ const DashboardPage: React.FC = () => {
             style={{ display: "none" }}
           />
           <Button
+            className={styles.uploadButton}
             icon={<FaCloudUploadAlt />}
             label="파일 업로드"
             onClick={() => fileInputRef.current?.click()}

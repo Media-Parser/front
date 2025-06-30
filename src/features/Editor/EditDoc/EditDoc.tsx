@@ -48,9 +48,15 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
   // contenteditable 용 상태 ↓
   const editableRef = useRef<HTMLDivElement>(null);
   const [showAskBtn, setShowAskBtn] = useState(false);
-  const [selectionRect, setSelectionRect] = useState<{ top: number; left: number } | null>(null);
+  const [selectionRect, setSelectionRect] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   const [selectedText, setSelectedText] = useState<string>("");
-  const [selectionRange, setSelectionRange] = useState<{ start: number; end: number } | null>(null);
+  const [selectionRange, setSelectionRange] = useState<{
+    start: number;
+    end: number;
+  } | null>(null);
 
   // 임시저장 복원
   useEffect(() => {
@@ -71,7 +77,9 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
         if (isMounted) setReady(true);
       }
     })();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [id, setDocument]);
 
   const handleRestore = async () => {
@@ -141,22 +149,25 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     const range = sel.getRangeAt(0);
     // ⭐ 첫번째 줄 첫 문자 위치를 구함
     const clientRects = range.getClientRects();
-    const rect = clientRects.length > 0 ? clientRects[0] : range.getBoundingClientRect();
+    const rect =
+      clientRects.length > 0 ? clientRects[0] : range.getBoundingClientRect();
     if (rect.width === 0 && rect.height === 0) return;
-  
+
     setShowAskBtn(true);
     setSelectionRect({
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX,
     });
-  
+
     const text = sel.toString();
     setSelectedText(text);
-  
+
     const fullText = editableRef.current?.innerText || "";
     const start = fullText.indexOf(text);
     setSelectionRange(
-      start !== -1 ? { start, end: start + text.length } : { start: -1, end: -1 }
+      start !== -1
+        ? { start, end: start + text.length }
+        : { start: -1, end: -1 }
     );
   };
 
@@ -183,7 +194,7 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     window.document.addEventListener("mousedown", handleClick);
     return () => window.document.removeEventListener("mousedown", handleClick);
   }, []);
-  
+
   // 저장 함수 부모로 전달
   useEffect(() => {
     if (onSaveReady) {
@@ -226,7 +237,9 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     <div className={styles.container}>
       {showAutosaveToast && !isFinalizing && (
         <div className={styles.autosaveToast}>
-          <span className={styles.autosaveIcon}><FaCheck /></span>
+          <span className={styles.autosaveIcon}>
+            <FaCheck />
+          </span>
           자동 임시저장
         </div>
       )}
@@ -260,40 +273,44 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
       />
 
       {/* 본문 contenteditable (기존 textarea 스타일 유사) */}
-      <div
-        className={styles.contentsInput}
-        contentEditable
-        ref={editableRef}
-        onMouseUp={handleSelection}
-        onKeyUp={handleSelection}
-        suppressContentEditableWarning
-        spellCheck={false}
-        onInput={handleInput}
-        tabIndex={0}
-        aria-label="문서 편집기"
-        style={{ minHeight: "240px" }}
-      />
-        {/* {contents}
+      <div className={styles.contentsWrapper}>
+        <div
+          className={styles.contentsInput}
+          contentEditable
+          ref={editableRef}
+          onMouseUp={handleSelection}
+          onKeyUp={handleSelection}
+          suppressContentEditableWarning
+          spellCheck={false}
+          onInput={handleInput}
+          tabIndex={0}
+          aria-label="문서 편집기"
+          style={{ minHeight: "240px" }}
+        />
+      </div>
+      {/* {contents}
       </div>  */}
       {showAskBtn && selectionRect && (
-      <span
-        ref={replyBtnRef}
-        className={styles.replyQuoteBtn}
-        style={{
-          position: "fixed",
-          top: selectionRect.top - 38,
-          left: selectionRect.left,
-          zIndex: 120,
-        }}
-        onClick={handleAskAI}
-        onMouseDown={e => e.stopPropagation()}
-        tabIndex={0}
-        aria-label="AI에게 물어보기"
-      >
-        <span className={styles.gptQuoteIcon}><BiSolidQuoteAltRight /></span>
-        <span className={styles.gptTooltip}>AI에게 물어보기</span>
-      </span>
-    )}
+        <span
+          ref={replyBtnRef}
+          className={styles.replyQuoteBtn}
+          style={{
+            position: "fixed",
+            top: selectionRect.top - 38,
+            left: selectionRect.left,
+            zIndex: 120,
+          }}
+          onClick={handleAskAI}
+          onMouseDown={(e) => e.stopPropagation()}
+          tabIndex={0}
+          aria-label="AI에게 물어보기"
+        >
+          <span className={styles.gptQuoteIcon}>
+            <BiSolidQuoteAltRight />
+          </span>
+          <span className={styles.gptTooltip}>AI에게 물어보기</span>
+        </span>
+      )}
     </div>
   );
 };

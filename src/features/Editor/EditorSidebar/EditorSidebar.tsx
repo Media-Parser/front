@@ -6,7 +6,7 @@ import { Menu, Home, Trash2, Download, Save, LogOut, Icon } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
-import logo from "../../../assets/lolo.png";
+import logo from "../../../assets/p.png";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
@@ -71,7 +71,11 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   };
 
   const menuItems = [
-    { icon: <Menu />, label: "  ", action: toggleSidebar },
+    {
+      icon: <img src={logo} className={styles.logo} />,
+      label: "  ",
+      action: toggleSidebar,
+    },
     { icon: <Home />, label: "홈", path: "/dashboard" },
     { icon: <Save />, label: "저장", action: handleSave },
     { icon: <Trash2 />, label: "삭제", action: handleDelete },

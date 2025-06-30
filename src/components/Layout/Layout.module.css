@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column; /* ⬅ 상단에 Header, 아래는 본문 */
   height: 100vh;
-  max-width: 1320px; /* 원하는 전체 폭 */
+  max-width: 1350px; /* 원하는 전체 폭 */
   margin: 0 auto; /* 중앙 정렬 */
   width: 100%;
 }
@@ -18,5 +18,5 @@
 
 .content {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: hidden;
 }

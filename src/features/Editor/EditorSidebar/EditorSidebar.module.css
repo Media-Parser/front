@@ -60,3 +60,9 @@
   font-size: 14px;
   white-space: nowrap;
 }
+
+.logo {
+  width: 26px;
+  height: 26px;
+  object-fit: cover;
+}

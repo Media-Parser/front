@@ -28,14 +28,3 @@
   justify-content: flex-end;
   padding: 10px 0;
 }
-
-.deleteButton {
-  background-color: var(--color-gray);
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-.deleteButton:hover {
-  background-color: var(--color-hover);
-}

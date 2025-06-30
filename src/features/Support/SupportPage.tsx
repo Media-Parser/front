@@ -1,6 +1,8 @@
 import styles from "./SupportPage.module.css";
 import Layout from "../../components/Layout/Layout";
 import React, { useState } from "react";
+import Button from "../../components/Button/Button";
+import { Smile } from "lucide-react";
 
 const SupportPage = () => {
   const [formData, setFormData] = useState({
@@ -10,18 +12,24 @@ const SupportPage = () => {
     message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const { name, email, inquiryType, message } = formData;
     const subject = encodeURIComponent(`[문의] ${inquiryType} - ${name}`);
-    const body = encodeURIComponent(`보낸 사람: ${name} (${email})\n\n${message}`);
-    
+    const body = encodeURIComponent(
+      `보낸 사람: ${name} (${email})\n\n${message}`
+    );
+
     window.location.href = `mailto:media-parser@gmail.com?subject=${subject}&body=${body}`;
   };
 
@@ -89,10 +97,13 @@ const SupportPage = () => {
                   required
                 />
               </label>
-
-              <button type="submit" className={styles.submitButton}>
-                제출하기
-              </button>
+              <Button
+                className={styles.submitButton}
+                label="제출하기"
+                icon={<Smile size={18} />}
+                onClick={() => {}}
+                type="submit"
+              />
             </form>
           </div>
         </div>

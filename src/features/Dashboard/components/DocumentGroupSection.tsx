@@ -16,7 +16,7 @@ interface DocumentGroupSectionProps {
   onMoved?: () => void;
 }
 
-const PREVIEW_COUNT = 3;
+const PREVIEW_COUNT = 4;
 
 const DocumentGroupSection = ({
   groupLabel,

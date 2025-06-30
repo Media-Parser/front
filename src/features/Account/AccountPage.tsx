@@ -3,9 +3,11 @@ import styles from "./Account.module.css";
 import Layout from "../../components/Layout/Layout";
 import type { UserInfo } from "../../types/documentType";
 import { getUserInfoApi } from "../../lib/api/documentsApi";
-import { deleteUserApi } from "../../lib/api/documentsApi"; 
+import { deleteUserApi } from "../../lib/api/documentsApi";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/useAuthStore";
+import Button from "../../components/Button/Button";
+import { FaTimes } from "react-icons/fa";
 
 const AccountPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -62,12 +64,12 @@ const AccountPage: React.FC = () => {
           </div>
         </div>
         <div className={styles.deleteAccount}>
-          <button
+          <Button
             className={styles.deleteButton}
+            icon={<FaTimes />}
+            label="회원 탈퇴"
             onClick={handleDeleteAccount}
-          >
-            회원 탈퇴
-          </button>
+          />
         </div>
       </div>
     </Layout>
