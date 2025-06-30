@@ -1,12 +1,14 @@
 // 📁 src/features/Editor/EditorSidebar/EditorSidebar.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import styles from "./EditorSidebar.module.css";
-import { Menu, Home, Trash2, Download, Save, LogOut, Icon } from "lucide-react";
+import { Menu, Home, Trash2, Download, Save, LogOut } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 import logo from "../../../assets/p.png";
+import { useCategories } from "../../../hooks/useCategories";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
@@ -24,6 +26,18 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const { deleteDocument, downloadDocument } = useDocumentActions();
   const navigate = useNavigate();
   const clearAuth = useAuthStore((state) => state.clearAuth);
+
+  const { categories } = useCategories(); // ❌ 이건 컴포넌트 함수 내부에서 호출해야 해!
+  const { documents } = useDocumentActions(); // ❌ 이것도 마찬가지
+
+  const currentDoc = documents.find((doc) => doc.doc_id === id);
+
+  const categorySlug = useMemo(() => {
+    const matched = categories.find(
+      (cat) => cat.category_id === currentDoc?.category_id
+    );
+    return matched?.path?.replace(/^\/dashboard\//, "") ?? null;
+  }, [categories, currentDoc]);
 
   const handleDelete = async () => {
     await deleteDocument(id);
@@ -76,7 +90,17 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
       label: "  ",
       action: toggleSidebar,
     },
-    { icon: <Home />, label: "홈", path: "/dashboard" },
+    {
+      icon: <Home />,
+      label: "홈",
+      action: () => {
+        if (categorySlug) {
+          navigate(`/dashboard/${categorySlug}`);
+        } else {
+          navigate("/dashboard");
+        }
+      },
+    },
     { icon: <Save />, label: "저장", action: handleSave },
     { icon: <Trash2 />, label: "삭제", action: handleDelete },
     { icon: <Download />, label: "파일 다운", action: handleDownload },

@@ -7,7 +7,6 @@ import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import { useCategories } from "../../hooks/useCategories";
 import useAuthStore from "../../store/useAuthStore";
 import { useGlobalFlagStore } from "../../store/useAuthStore";
-import Header from "../Header/Header";
 
 interface Category {
   category_id: string;
