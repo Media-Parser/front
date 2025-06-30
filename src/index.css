@@ -8,6 +8,7 @@
   --color-hover: #e4e4e4; /* 호버 색 */
   --color-active: #ffffff; /* 활성화 색 */
   --color-gray: var(--color-hover);
+  --color-red: #ff7777;
 }
 
 * {

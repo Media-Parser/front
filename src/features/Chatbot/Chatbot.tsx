@@ -132,7 +132,7 @@ const Chatbot = ({
       setError(null);
       if (onMessageSent) onMessageSent();
     } catch (e) {
-      setError("❌ 응답에 실패했습니다. 다시 시도해 주세요.");
+      setError("응답에 실패했습니다. 다시 시도해 주세요.");
       // 답변이 없는 빈 botMessage로 남지 않게 임시 Q를 유지
       setChatLog((prev) =>
         prev.map((chat, i) =>
@@ -200,43 +200,51 @@ const Chatbot = ({
             <div className={styles.botMessage}>{displayedMessage}</div>
           </div>
         )}
+
         {/* 채팅 로그 */}
-        {chatLog.map((chat, idx) => (
-          <div
-            key={
-              chat.chat_id ||
-              `${
-                typeof chat.question === "string"
+        {chatLog.map((chat, idx) => {
+          const isLast = idx === chatLog.length - 1;
+
+          return (
+            <div
+              key={
+                chat.chat_id ||
+                `${
+                  typeof chat.question === "string"
+                    ? chat.question
+                    : chat.question?.message
+                }-${idx}`
+              }
+              className={styles.chatLog}
+            >
+              {/* 사용자 메시지 */}
+              <div className={styles.userMessage}>
+                {typeof chat.question === "string"
                   ? chat.question
-                  : chat.question?.message
-              }-${idx}`
-            }
-            className={styles.chatLog}
-          >
-            <div className={styles.userMessage}>
-              {typeof chat.question === "string"
-                ? chat.question
-                : chat.question && "message" in chat.question
-                ? chat.question.message
-                : ""}
-            </div>
-            {/* 마지막 메시지에만 로딩/에러 */}
-            {idx === chatLog.length - 1 ? (
-              error ? (
+                  : chat.question && "message" in chat.question
+                  ? chat.question.message
+                  : ""}
+              </div>
+
+              {/* 봇 메시지 or 에러 메시지 */}
+              {isLast && error ? (
                 <div className={styles.errorMessage}>{error}</div>
-              ) : loading ? (
-                <div className={styles.botMessage}>응답을 기다리는 중...</div>
               ) : (
-                <div className={styles.botMessage}>{chat.answer}</div>
-              )
-            ) : (
-              <div className={styles.botMessage}>{chat.answer}</div>
-            )}
-            {chat.suggestion && (
-              <div className={styles.suggestion}>제안: {chat.suggestion}</div>
-            )}
-          </div>
-        ))}
+                <div className={styles.botIntroContainer}>
+                  <img src={pPro} alt="bot profile" className={styles.pPro} />
+                  <div className={styles.botMessage}>
+                    {isLast && loading ? "응답을 기다리는 중..." : chat.answer}
+                  </div>
+                </div>
+              )}
+
+              {/* suggestion 있을 때만 */}
+              {chat.suggestion && (
+                <div className={styles.suggestion}>제안: {chat.suggestion}</div>
+              )}
+            </div>
+          );
+        })}
 
         {/* 옵션 버튼 그룹 */}
         {showOptions && !loading && !hasShownOptionsOnce && (
