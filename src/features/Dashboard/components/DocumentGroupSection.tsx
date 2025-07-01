@@ -36,7 +36,7 @@ const DocumentGroupSection = ({
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <h3 className={styles.groupLabel}>{groupLabel}</h3>
+        <h3 className={styles.groupLabel}>| {groupLabel}</h3>
         {documents.length > PREVIEW_COUNT && !showAll && (
           <button className={styles.button} onClick={() => setShowAll(true)}>
             Show All ({documents.length})

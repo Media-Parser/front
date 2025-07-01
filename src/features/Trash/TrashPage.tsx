@@ -59,6 +59,7 @@ const TrashPage = () => {
             icon={<FaTrashAlt />}
             label="전체 삭제"
             onClick={handleDeleteAll}
+            className={styles.deleteAllButton}
           />
         </div>
         <div className={styles.documentList}>
