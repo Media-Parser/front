@@ -5,6 +5,13 @@
   overflow-y: auto;
 }
 
+.maincontent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .mainAreaHeader {
   display: flex;
   justify-content: space-between;
@@ -65,5 +72,4 @@
 
 .uploadButton {
   width: auto;
-  margin-right: 20px;
 }

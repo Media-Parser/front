@@ -196,7 +196,7 @@ const Chatbot = ({
         {/* 첫 인사 */}
         {chatLog.length === 0 && (
           <div className={styles.botIntroContainer}>
-            <img src={pPro} alt="로고" className={styles.pPro} />
+            <img src={pPro} alt="로고" className={styles.botlogo} />
             <div className={styles.botMessage}>{displayedMessage}</div>
           </div>
         )}
@@ -231,7 +231,11 @@ const Chatbot = ({
                 <div className={styles.errorMessage}>{error}</div>
               ) : (
                 <div className={styles.botIntroContainer}>
-                  <img src={pPro} alt="bot profile" className={styles.pPro} />
+                  <img
+                    src={pPro}
+                    alt="bot profile"
+                    className={styles.botlogo}
+                  />
                   <div className={styles.botMessage}>
                     {isLast && loading ? "응답을 기다리는 중..." : chat.answer}
                   </div>
@@ -240,7 +244,7 @@ const Chatbot = ({
 
               {/* suggestion 있을 때만 */}
               {chat.suggestion && (
-                <div className={styles.suggestion}>제안: {chat.suggestion}</div>
+                <div className={styles.suggestion}>💡 {chat.suggestion}</div>
               )}
             </div>
           );
@@ -303,7 +307,7 @@ const Chatbot = ({
           disabled={loading}
           aria-label="send message"
         >
-          <Send />
+          <Send size={20} />
         </button>
       </div>
     </div>
