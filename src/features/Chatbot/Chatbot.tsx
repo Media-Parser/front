@@ -204,6 +204,12 @@ const Chatbot = ({
         {/* 채팅 로그 */}
         {chatLog.map((chat, idx) => {
           const isLast = idx === chatLog.length - 1;
+          
+          let selectedText = "";
+
+          if (typeof chat.question !== "string" && chat.question?.selected_text) {
+            selectedText = chat.question.selected_text;
+          }
 
           return (
             <div
@@ -217,6 +223,14 @@ const Chatbot = ({
               }
               className={styles.chatLog}
             >
+              {/* === 드래그(선택)한 내용도 바로 위에 추가 === */}
+              {selectedText && (
+                <div className={styles.selectedTextBoxInLog}>
+                  <span className={styles.selectedTextIcon}>↳</span>
+                  <span className={styles.selectedText}>{selectedText}</span>
+                </div>
+              )}
+
               {/* 사용자 메시지 */}
               <div className={styles.userMessage}>
                 {typeof chat.question === "string"

@@ -1,9 +1,9 @@
 // 📁 src/features/Editor/EditorSidebar/EditorSidebar.tsx
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import styles from "./EditorSidebar.module.css";
-import { Menu, Home, Trash2, Download, Save, LogOut } from "lucide-react";
+import { Home, Trash2, Download, Save, LogOut } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
@@ -14,6 +14,10 @@ interface EditorSidebarProps {
   onSave?: () => Promise<void>;
 }
 
+type MenuItem =
+  | { icon: JSX.Element; label: string; action: () => void }
+  | { icon: JSX.Element; label: string; path: string };
+
 const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const { id } = useParams<{ id: string }>();
   if (!id) {
@@ -22,15 +26,12 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleSidebar = () => setIsExpanded((prev) => !prev);
 
+  const { documents, deleteDocument, downloadDocument } = useDocumentActions();
   const [isSaving, setIsSaving] = useState(false);
-  const { deleteDocument, downloadDocument } = useDocumentActions();
   const navigate = useNavigate();
   const clearAuth = useAuthStore((state) => state.clearAuth);
-
-  const { categories } = useCategories(); // ❌ 이건 컴포넌트 함수 내부에서 호출해야 해!
-  const { documents } = useDocumentActions(); // ❌ 이것도 마찬가지
-
   const currentDoc = documents.find((doc) => doc.doc_id === id);
+  const { categories } = useCategories();
 
   const categorySlug = useMemo(() => {
     const matched = categories.find(
@@ -45,8 +46,17 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
     navigate("/dashboard");
   };
 
+  const docForDownload = documents.find((doc) => doc.doc_id === id);
+
   const handleDownload = async () => {
-    await downloadDocument(id);
+    if (!docForDownload) {
+      alert("다운로드할 문서를 찾을 수 없습니다.");
+      return;
+    }
+    await downloadDocument(docForDownload.doc_id);
+    console.log("doc.doc_id", docForDownload.doc_id);
+    console.log("doc.title", docForDownload.title);
+    console.log("doc.file_type", docForDownload.file_type);
   };
 
   const handleSave = async () => {
@@ -76,15 +86,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
     }
   };
 
-  const handleMenuClick = (item: (typeof menuItems)[number]) => {
-    if (item.action) {
-      item.action();
-    } else if (item.path) {
-      navigate(item.path);
-    }
-  };
-
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       icon: <img src={logo} className={styles.logo} />,
       label: "  ",
@@ -106,6 +108,14 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
     { icon: <Download />, label: "파일 다운", action: handleDownload },
     { icon: <LogOut />, label: "로그아웃", action: handleLogout },
   ];
+
+  const handleMenuClick = (item: MenuItem) => {
+    if ("action" in item && item.action) {
+      item.action();
+    } else if ("path" in item && item.path) {
+      navigate(item.path);
+    }
+  };
 
   return (
     <aside

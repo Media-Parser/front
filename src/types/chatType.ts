@@ -6,6 +6,7 @@ export interface ChatQA {
   chat_id: string;
   doc_id: string;
   question: string | ChatSendRequest; // 사용자가 보낸 질문
+  selection?: string; // 선택 영역
   answer: string; // AI가 생성한 답변
   suggestion?: string; // (optional) AI의 수정 제안
   created_dt: string;

@@ -7,6 +7,7 @@ import {
   checkTempDocExists,
   getTempDocApi,
   getDocApi,
+  deleteTempDocApi,
 } from "../../../lib/api/documentsApi";
 import type { Document } from "../../../types/documentType";
 import { FaSpinner, FaCheck } from "react-icons/fa";
@@ -89,6 +90,11 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     setReady(true);
   };
   const handleCancel = async () => {
+    try {
+      await deleteTempDocApi(id);
+    } catch (e) {
+      alert("임시저장 삭제 실패");
+    }
     const doc = await getDocApi(id);
     setDocument(doc);
     setShowRestoreModal(false);
@@ -303,12 +309,12 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
           onClick={handleAskAI}
           onMouseDown={(e) => e.stopPropagation()}
           tabIndex={0}
-          aria-label="AI에게 물어보기"
+          aria-label="Polexible에게 묻기"
         >
           <span className={styles.gptQuoteIcon}>
             <BiSolidQuoteAltRight />
           </span>
-          <span className={styles.gptTooltip}>AI에게 물어보기</span>
+          <span className={styles.gptTooltip}>Polexible에게 묻기</span>
         </span>
       )}
     </div>
