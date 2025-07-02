@@ -3,6 +3,7 @@ import Layout from "../../components/Layout/Layout";
 import React, { useState } from "react";
 import Button from "../../components/Button/Button";
 import { Smile } from "lucide-react";
+import emailjs from "emailjs-com";
 
 const SupportPage = () => {
   const [formData, setFormData] = useState({
@@ -21,16 +22,35 @@ const SupportPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const { name, email, inquiryType, message } = formData;
-    const subject = encodeURIComponent(`[문의] ${inquiryType} - ${name}`);
-    const body = encodeURIComponent(
-      `보낸 사람: ${name} (${email})\n\n${message}`
-    );
 
-    window.location.href = `mailto:media-parser@gmail.com?subject=${subject}&body=${body}`;
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: name,
+          reply_to: email,
+          inquiry_type: inquiryType,
+          message: message,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      alert("문의가 성공적으로 전송되었습니다!");
+      setFormData({
+        name: "",
+        email: "",
+        inquiryType: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("이메일 전송 실패:", error);
+      alert("문의 전송에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -41,7 +61,7 @@ const SupportPage = () => {
         </div>
         <div className={styles.Content}>
           <span className={styles.default}>
-            자세한 사항은 media-parser@gmail.com으로 연락주세요.
+            자세한 사항은 hc.media.parser@gmail.com으로 문의주세요.
           </span>
           <div className={styles.formArea}>
             <form className={styles.form} onSubmit={handleSubmit}>
