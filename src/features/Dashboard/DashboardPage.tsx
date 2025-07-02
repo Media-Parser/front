@@ -142,40 +142,42 @@ const DashboardPage: React.FC = () => {
   return (
     <Layout sidebar={<Sidebar onRefetch={handleCategoryUpdate} />}>
       <div className={styles.mainArea}>
-        <div className={styles.mainAreaHeader}>
-          <h2>{currentCategory?.label || "문서"}</h2>
-          <SearchBar value={searchTerm} onChange={setSearchTerm} />
-          <input
-            type="file"
-            accept=".hwp, .hwpx"
-            ref={fileInputRef}
-            onChange={handleUpload}
-            style={{ display: "none" }}
-          />
-          <Button
-            className={styles.uploadButton}
-            icon={<FaCloudUploadAlt />}
-            label="파일 업로드"
-            onClick={() => fileInputRef.current?.click()}
-          />
-        </div>
-        <div className={styles.documentList}>
-          {Object.keys(groupedDocs).length === 0 ? (
-            <div className={styles.noDocuments}>
-              <span>저장된 문서가 없습니다.</span>
-            </div>
-          ) : (
-            Object.entries(groupedDocs).map(([label, docs]) => (
-              <DocumentGroupSection
-                key={label}
-                groupLabel={label}
-                documents={docs}
-                onDelete={deleteDocument}
-                onDownload={handleDownload}
-                onMoved={refetch}
-              />
-            ))
-          )}
+        <div className={styles.maincontent}>
+          <div className={styles.mainAreaHeader}>
+            <h2>{currentCategory?.label || "문서"}</h2>
+            <SearchBar value={searchTerm} onChange={setSearchTerm} />
+            <input
+              type="file"
+              accept=".hwp, .hwpx"
+              ref={fileInputRef}
+              onChange={handleUpload}
+              style={{ display: "none" }}
+            />
+            <Button
+              className={styles.uploadButton}
+              icon={<FaCloudUploadAlt />}
+              label="파일 업로드"
+              onClick={() => fileInputRef.current?.click()}
+            />
+          </div>
+          <div className={styles.documentList}>
+            {Object.keys(groupedDocs).length === 0 ? (
+              <div className={styles.noDocuments}>
+                <span>저장된 문서가 없습니다.</span>
+              </div>
+            ) : (
+              Object.entries(groupedDocs).map(([label, docs]) => (
+                <DocumentGroupSection
+                  key={label}
+                  groupLabel={label}
+                  documents={docs}
+                  onDelete={deleteDocument}
+                  onDownload={handleDownload}
+                  onMoved={refetch}
+                />
+              ))
+            )}
+          </div>
         </div>
         <DownloadDocModal
           open={modalOpen}

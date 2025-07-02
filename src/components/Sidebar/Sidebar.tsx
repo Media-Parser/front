@@ -201,9 +201,10 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
               <li key={menu.label}>
                 <div
                   className={`${styles.menuItem} ${
-                    (menu.label === "문서" && isDocDropdownOpen) ||
                     isActive(menu.path)
                       ? styles.active
+                      : menu.label === "문서" && isDocDropdownOpen
+                      ? styles.openOnly
                       : ""
                   }`}
                 >
@@ -237,7 +238,14 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
                   )}
                 </div>
                 {menu.hasDropdown && isDocDropdownOpen && (
-                  <ul className={styles.subMenu}>
+                  <ul
+                    className={`${styles.subMenu} ${
+                      isDocDropdownOpen &&
+                      !location.pathname.startsWith("/dashboard")
+                        ? styles.subMenuOpenOnly
+                        : ""
+                    }`}
+                  >
                     <li
                       key="add-category"
                       className={`${styles.subMenuItem} ${styles.addCategoryItem}`}

@@ -45,6 +45,7 @@ const Chatbot = ({
   const [loading, setLoading] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
 
   // 옵션 버튼 → 메시지 변환
   const optionMessages: Record<string, string> = {
@@ -52,6 +53,13 @@ const Chatbot = ({
     "기사 톤 다듬기": "이 기사의 톤을 다듬어줘",
     "유사 기사 추천": "유사한 기사를 추천해줘",
   };
+
+  // 채팅 메시지 스크롤
+  useEffect(() => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
+  }, [chatLog, loading]);
 
   // 타이핑 효과 (처음 1회)
   useEffect(() => {
@@ -192,11 +200,11 @@ const Chatbot = ({
           <Eraser strokeWidth={1.2} />
         </button>
       </div>
-      <div className={styles.chatMessages}>
+      <div className={styles.chatMessages} ref={chatMessagesRef}>
         {/* 첫 인사 */}
         {chatLog.length === 0 && (
           <div className={styles.botIntroContainer}>
-            <img src={pPro} alt="로고" className={styles.pPro} />
+            <img src={pPro} alt="로고" className={styles.botlogo} />
             <div className={styles.botMessage}>{displayedMessage}</div>
           </div>
         )}
@@ -245,7 +253,11 @@ const Chatbot = ({
                 <div className={styles.errorMessage}>{error}</div>
               ) : (
                 <div className={styles.botIntroContainer}>
-                  <img src={pPro} alt="bot profile" className={styles.pPro} />
+                  <img
+                    src={pPro}
+                    alt="bot profile"
+                    className={styles.botlogo}
+                  />
                   <div className={styles.botMessage}>
                     {isLast && loading ? "응답을 기다리는 중..." : chat.answer}
                   </div>
@@ -254,7 +266,7 @@ const Chatbot = ({
 
               {/* suggestion 있을 때만 */}
               {chat.suggestion && (
-                <div className={styles.suggestion}>제안: {chat.suggestion}</div>
+                <div className={styles.suggestion}>💡 {chat.suggestion}</div>
               )}
             </div>
           );
@@ -317,7 +329,7 @@ const Chatbot = ({
           disabled={loading}
           aria-label="send message"
         >
-          <Send />
+          <Send size={20} />
         </button>
       </div>
     </div>
