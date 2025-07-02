@@ -97,6 +97,7 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
 
   useEffect(() => {
     if (document) {
+      console.log("불러온 문서:", document);
       setTitle(document.title || "");
       setContents(document.contents || "");
     }

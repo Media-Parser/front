@@ -1,113 +1,87 @@
-/* src/components/Modal/MoveCategoryModal.module.css */
+/* Overlay */
+.categoryModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1999;
+}
 
+/* Modal Container */
 .categoryModal {
   position: fixed;
   top: 50%;
   left: 50%;
-  min-width: 320px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
   transform: translate(-50%, -50%);
+  min-width: 320px;
+  max-width: 90vw;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+  padding: 2rem 1.5rem;
   z-index: 2000;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  align-items: stretch;
+  gap: 1.5rem;
 }
 
+/* Modal Title */
 .categoryModalTitle {
-  font-size: 1rem;
-  margin-bottom: 0.7rem;
+  font-size: 1.2rem;
+  font-weight: 600;
   text-align: center;
+  color: #222;
 }
 
+/* Select Box */
 .categoryModalSelect {
   width: 100%;
-  padding: 0.5rem 0.6rem;
-  font-size: 0.8rem;
-  border: 1px solid #ececec;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
   border-radius: 6px;
-  margin-bottom: 1rem;
+  background: #fafafa;
+  transition: border-color 0.2s ease;
 }
 
-.categoryModalMoveButton {
-  padding: 0.5rem 0.9rem;
-  font-size: 0.8rem;
-  border-radius: 8px;
-  border: none;
-  background: var(--color-bg);
-  color: #222;
-  margin-right: 0.5rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
+.categoryModalSelect:focus {
+  border-color: var(--color-primary, #000000);
+  outline: none;
+  background: #fff;
 }
 
-.categoryModalCancelButton {
-  padding: 0.5rem 0.9rem;
-  font-size: 0.8rem;
-  border-radius: 8px;
-  border: none;
-  background: #eaeaea;
-  color: #222;
-  margin-right: 0.5rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.categoryModalMoveButton[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.categoryModalMoveButton:last-child {
-  background: #eaeaea;
-  color: #444;
-  margin-right: 0;
-}
-
-@media (max-width: 500px) {
-  .categoryModal {
-    min-width: 220px;
-    padding: 1.2rem 0.7rem 1rem 0.7rem;
-  }
-}
-
+/* Button Container */
 .categoryModalButtonContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.5rem;
 }
 
-.categoryModalOverlay {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.23);
-  z-index: 1999;
-  /* 아래 속성은 접근성/레이어 구분을 위해 추가 */
-  pointer-events: auto;
+/* Button Styles */
+.categoryModalMoveButton,
+.categoryModalCancelButton {
+  width: 50px;
+  height: 30px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #000000;
+  background: transparent;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.categoryModal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  min-width: 320px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
-  transform: translate(-50%, -50%);
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  align-items: stretch;
+/* Hover Effect */
+.categoryModalMoveButton:hover,
+.categoryModalCancelButton:hover {
+  background: #f2f2f2;
+}
+
+/* Disabled Button */
+.categoryModalMoveButton[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #aaa;
+  color: #aaa;
+  background: transparent;
 }
