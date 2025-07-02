@@ -1,12 +1,12 @@
 // 📁 src/components/Button.tsx
 
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import styles from "./Button.module.css";
 
 interface ButtonProps {
   icon: ReactNode;
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
   type?: "button" | "submit" | "reset";
   className?: string;
 }
