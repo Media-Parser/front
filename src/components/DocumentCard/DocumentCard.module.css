@@ -98,14 +98,14 @@
   padding: 8px 12px;
   border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  color: #000000;
   cursor: pointer;
   text-align: left;
   transition: background-color 0.2s ease;
 }
 
 .tooltipButton:hover {
-  background-color: #e0e0e0;
+  background-color: var(--color-gray);
 }
 
 .tooltipOverlay {

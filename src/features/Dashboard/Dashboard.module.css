@@ -44,7 +44,7 @@
   align-items: center;
   min-height: 60vh; /* 화면 기준 높이 */
   font-size: 1rem;
-  color: var(--color-gray);
+  color: #999;
   text-align: center;
 }
 
