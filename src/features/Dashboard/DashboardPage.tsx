@@ -20,6 +20,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import Button from "../../components/Button/Button";
 import DownloadDocModal from "../../components/Modal/DownloadDocModal";
 import { checkTempDocExists } from "../../lib/api/documentsApi";
+import { getUserInfoApi } from "../../lib/api/documentsApi";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -32,6 +33,8 @@ const DashboardPage: React.FC = () => {
   const { categories, loaded, fetchCategories } = useCategories();
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.userId) ?? "";
+  const token = useAuthStore((state) => state.token) ?? "";
+  const clearAuth = useAuthStore((state) => state.clearAuth);
   const { uploadFile } = useFileUpload((docId) => navigate(`/editor/${docId}`));
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingDocId, setPendingDocId] = useState<string | null>(null);
@@ -61,6 +64,19 @@ const DashboardPage: React.FC = () => {
     refetch();
   }, [categoryId]);
 
+  useEffect(() => {
+    if (!token || !userId) {
+      alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
+      window.location.replace("/");
+      return;
+    }
+    // 토큰이 있는데 진짜 유효한지 백엔드에 한 번 체크!
+    getUserInfoApi(userId).catch(() => {
+      clearAuth();
+      window.location.replace("/");
+    });
+  }, [token, userId, clearAuth]);
+  
   // 📌 문서 필터링
   const filteredDocs = documents
     .filter((doc) => doc.category_id === categoryId)

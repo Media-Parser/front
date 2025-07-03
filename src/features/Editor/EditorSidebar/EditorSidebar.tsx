@@ -82,7 +82,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
     if (window.confirm("정말 로그아웃하시겠습니까?")) {
       alert("로그아웃을 완료했습니다.");
       clearAuth();
-      navigate("/");
+      window.location.replace("/");
     }
   };
 

@@ -27,6 +27,7 @@ const useAuthStore = create<AuthState>((set) => ({
     set({ token: null, userId: null });
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
+    sessionStorage.setItem("justLoggedOut", "1");
 
     const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
