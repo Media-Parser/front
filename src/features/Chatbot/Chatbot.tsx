@@ -45,6 +45,7 @@ const Chatbot = ({
   const [loading, setLoading] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
 
   // 옵션 버튼 → 메시지 변환
   const optionMessages: Record<string, string> = {
@@ -52,6 +53,13 @@ const Chatbot = ({
     "기사 톤 다듬기": "이 기사의 톤을 다듬어줘",
     "유사 기사 추천": "유사한 기사를 추천해줘",
   };
+
+  // 채팅 메시지 스크롤
+  useEffect(() => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
+  }, [chatLog, loading]);
 
   // 타이핑 효과 (처음 1회)
   useEffect(() => {
@@ -192,7 +200,7 @@ const Chatbot = ({
           <Eraser strokeWidth={1.2} />
         </button>
       </div>
-      <div className={styles.chatMessages}>
+      <div className={styles.chatMessages} ref={chatMessagesRef}>
         {/* 첫 인사 */}
         {chatLog.length === 0 && (
           <div className={styles.botIntroContainer}>
@@ -204,6 +212,12 @@ const Chatbot = ({
         {/* 채팅 로그 */}
         {chatLog.map((chat, idx) => {
           const isLast = idx === chatLog.length - 1;
+          
+          let selectedText = "";
+
+          if (typeof chat.question !== "string" && chat.question?.selected_text) {
+            selectedText = chat.question.selected_text;
+          }
 
           return (
             <div
@@ -217,6 +231,14 @@ const Chatbot = ({
               }
               className={styles.chatLog}
             >
+              {/* === 드래그(선택)한 내용도 바로 위에 추가 === */}
+              {selectedText && (
+                <div className={styles.selectedTextBoxInLog}>
+                  <span className={styles.selectedTextIcon}>↳</span>
+                  <span className={styles.selectedText}>{selectedText}</span>
+                </div>
+              )}
+
               {/* 사용자 메시지 */}
               <div className={styles.userMessage}>
                 {typeof chat.question === "string"

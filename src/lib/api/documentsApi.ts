@@ -114,6 +114,11 @@ export const getDocApi = async (doc_id: string): Promise<Document|null> => {
   }
 };
 
+// temp_docs 삭제
+export const deleteTempDocApi = async (doc_id: string) => {
+  return await api.delete(`/documents/temp/${doc_id}`);
+};
+
 // temp_docs patch(자동저장)
 export const autosaveDocumentApi = async (
   doc_id: string,

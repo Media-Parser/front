@@ -15,6 +15,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<LandingWrapper />} />
         <Route path="/login" element={<LandingWrapper />} />
+        <Route path="/oauth/callback" element={<OAuthCallback/>} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/dashboard/:categoryPath" element={<DashboardPage />} />
@@ -22,8 +23,7 @@ const AppRouter = () => {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/editor/:id" element={<EditorPage />} />
-        </Route>
-        <Route path="/oauth/callback" element={<OAuthCallback />} />
+        </Route>        
       </Routes>
   );
 };

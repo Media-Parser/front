@@ -79,8 +79,9 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
       if (menu.label === "로그아웃") {
         if (window.confirm("정말 로그아웃하시겠습니까?")) {
           setAutoLogoutTriggered(true);
+          sessionStorage.setItem("justLoggedOut", "1");
           clearAuth();
-          navigate("/");
+          window.location.replace("/");
         }
         return;
       }

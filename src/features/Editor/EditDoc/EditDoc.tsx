@@ -1,3 +1,4 @@
+// src/features/Editor/EditDoc/EditDoc.tsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import debounce from "lodash.debounce";
 import { useParams } from "react-router-dom";
@@ -8,6 +9,7 @@ import {
   checkTempDocExists,
   getTempDocApi,
   getDocApi,
+  deleteTempDocApi,
 } from "../../../lib/api/documentsApi";
 import type { Document } from "../../../types/documentType";
 import styles from "./EditDoc.module.css";
@@ -125,14 +127,40 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     };
   }, [id, setDocument]);
 
-  // Update local state when document from hook changes
+  // 복원: 임시 문서 불러오기
+  const handleRestore = useCallback(async () => {
+    try {
+      const doc = await getTempDocApi(id);
+      setDocument(doc);
+      setShowRestoreModal(false);
+    } catch (e) {
+      console.error("Failed to restore temp document:", e);
+    } finally {
+      setIsReady(true);
+    }
+  }, [id, setDocument]);
+
+  // 취소: 임시문서 삭제 & 원본 불러오기
+  const handleCancelRestore = useCallback(async () => {
+    try {
+      await deleteTempDocApi(id);
+      const doc = await getDocApi(id);
+      setDocument(doc);
+      setShowRestoreModal(false);
+    } catch (e) {
+      alert("임시저장 삭제 실패");
+      console.error("Failed to fetch original document:", e);
+    } finally {
+      setIsReady(true);
+    }
+  }, [id, setDocument]);
+
   useEffect(() => {
     if (document) {
       setTitle(document.title || "");
       setContents(document.contents || "");
       if (editableRef.current) {
         editableRef.current.innerText = document.contents || "";
-        // If content is empty, ensure a <br> for proper cursor display in contenteditable
         if (!document.contents) {
           editableRef.current.innerHTML = "<br />";
         }
@@ -180,36 +208,9 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     }
   };
 
-  const handleRestore = useCallback(async () => {
-    try {
-      const doc = await getTempDocApi(id);
-      setDocument(doc);
-      setShowRestoreModal(false);
-    } catch (e) {
-      console.error("Failed to restore temp document:", e);
-      // Optionally show an error message to the user
-    } finally {
-      setIsReady(true); // Ensure ready state is set
-    }
-  }, [id, setDocument]);
-
-  const handleCancelRestore = useCallback(async () => {
-    try {
-      const doc = await getDocApi(id);
-      setDocument(doc);
-      setShowRestoreModal(false);
-    } catch (e) {
-      console.error("Failed to fetch original document:", e);
-      // Optionally show an error message to the user
-    } finally {
-      setIsReady(true); // Ensure ready state is set
-    }
-  }, [id, setDocument]);
-
   // Logic for handling text selection and showing the AI button
   const handleTextSelection = useCallback(() => {
     const sel = window.getSelection();
-    // Check if there's a selection, it's not collapsed (empty), and it's within our editable area
     if (
       !sel ||
       sel.rangeCount === 0 ||
@@ -226,14 +227,12 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     const range = sel.getRangeAt(0);
     const rects = range.getClientRects();
 
-    // If no client rects or dimensions are zero, hide the button
     if (rects.length === 0 || (rects[0].width === 0 && rects[0].height === 0)) {
       setShowAskAIButton(false);
       setSelectionButtonPosition(null);
       return;
     }
 
-    // Use the first client rect for positioning
     const rect = rects[0];
     setShowAskAIButton(true);
     setSelectionButtonPosition({
@@ -244,7 +243,6 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     const text = sel.toString();
     setSelectedText(text);
 
-    // Calculate start and end indices of the selected text within the full content
     const fullText = editableRef.current?.innerText || "";
     const start = fullText.indexOf(text);
     setSelectionRange(
@@ -256,7 +254,6 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
   const handleAskAI = useCallback(() => {
     if (selectedText && selectionRange && onSelectText) {
       onSelectText(selectedText, selectionRange.start, selectionRange.end);
-      // Clear selection and hide button after action
       window.getSelection()?.removeAllRanges();
       setShowAskAIButton(false);
       setSelectionButtonPosition(null);
@@ -268,10 +265,13 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
   // Hide AI button when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // event.target이 HTMLElement 타입임을 보장
+      const target = event.target as HTMLElement | null;
       if (
         editableRef.current &&
-        !editableRef.current.contains(event.target as Node) &&
-        !event.target.closest(`.${styles.replyQuoteBtn}`) // Allow clicks on the button itself
+        target &&
+        !editableRef.current.contains(target) &&
+        !target.closest(`.${styles.replyQuoteBtn}`)
       ) {
         setShowAskAIButton(false);
         setSelectionButtonPosition(null);
@@ -297,10 +297,8 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
         debouncedAutoSave.cancel(); // Cancel any pending autosaves
         await autosave({ title, contents }); // Ensure latest changes are saved
         await finalizeDocument(); // Finalize the document
-        // After final save, refetch document to get the latest state
         await fetchDocument();
-        // Reset state
-        setShowRestoreModal(false); // In case it was showing
+        setShowRestoreModal(false);
         setTimeout(() => setIsSavingFinal(false), 500);
       };
       onSaveReady(saveFunction);
@@ -374,7 +372,7 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
           contentEditable
           ref={editableRef}
           onMouseUp={handleTextSelection}
-          onKeyUp={handleTextSelection} // Also trigger on key up for keyboard selections
+          onKeyUp={handleTextSelection}
           suppressContentEditableWarning
           spellCheck={false}
           onInput={handleContentsInput}
@@ -388,21 +386,20 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
         <span
           className={styles.replyQuoteBtn}
           style={{
-            top: selectionButtonPosition.top - 38, // Adjust for button height
+            top: selectionButtonPosition.top - 38,
             left: selectionButtonPosition.left,
-            position: "fixed", // Keep fixed for dynamic positioning
+            position: "fixed",
             zIndex: 120,
           }}
           onClick={handleAskAI}
-          // Prevent hiding the button immediately when clicked
           onMouseDown={(e) => e.stopPropagation()}
           tabIndex={0}
-          aria-label="AI에게 물어보기"
+          aria-label="Polexible에게 묻기"
         >
           <span className={styles.gptQuoteIcon}>
             <BiSolidQuoteAltRight />
           </span>
-          <span className={styles.gptTooltip}>AI에게 물어보기</span>
+          <span className={styles.gptTooltip}>Polexible에게 묻기</span>
         </span>
       )}
     </div>

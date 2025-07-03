@@ -15,11 +15,24 @@ const OAuthCallback = () => {
       const token = url.searchParams.get("token");
       const err = url.searchParams.get("error");
       const user_id = url.searchParams.get("user_id");
-
-      if (token) {
-        setAuth(token!, user_id!);
+  
+      // [추가] 로그아웃 직후 뒤로가기 방지
+      if (sessionStorage.getItem("justLoggedOut")) {
+        sessionStorage.removeItem("justLoggedOut");
         setLoading(false);
-        navigate("/dashboard");
+        navigate("/", { replace: true });
+        return;
+      }
+  
+      if (token && user_id) {
+        setAuth(token, user_id);
+        setLoading(false);
+        // navigate 직전 localStorage에 값 확실히 들어갔는지 체크
+        setTimeout(() => {
+          // navigate 전에 콘솔로 한 번 더 체크
+          console.log('콜백 navigate 직전:', localStorage.getItem("token"), localStorage.getItem("user_id"));
+          navigate("/dashboard");
+        }, 0); // setTimeout은 0ms로만 써도 race condition 대부분 방지
       } else {
         setError(err || "로그인 중 오류가 발생했습니다.");
         setLoading(false);

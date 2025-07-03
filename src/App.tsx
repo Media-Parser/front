@@ -4,15 +4,28 @@ import { ToastContainer } from "react-toastify";
 import AppRouter from "./routes";
 import { Toaster } from "react-hot-toast";
 import useAuthStore from "./store/useAuthStore";
+import { getUserInfoApi } from "./lib/api/documentsApi"; // 유저 정보 불러오기
 
 function App() {
+  const { token, clearAuth, syncAuth } = useAuthStore();
+
   useEffect(() => {
     const onStorage = () => {
-      useAuthStore.getState().syncAuth();
+      syncAuth();
     };
     window.addEventListener("storage", onStorage);
+    // 토큰이 있을 때만 유효성 검사
+
+    const user_id = localStorage.getItem("user_id");
+    if (token && user_id) {
+      getUserInfoApi(user_id)
+        .catch(() => {
+          clearAuth();
+        });
+    }
     return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  }, [token, clearAuth, syncAuth]);
+
   return (
     <>
       <AppRouter />

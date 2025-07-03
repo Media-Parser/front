@@ -60,6 +60,7 @@
   word-break: break-word;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  white-space: pre-wrap;
 }
 
 /* 봇 메시지 스타일 */
@@ -75,6 +76,7 @@
   animation: fadeIn 0.3s ease-in-out;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  white-space: pre-wrap;
 }
 
 /* 에러 메시지 */
@@ -230,4 +232,51 @@
 
 .closeSelectedBtn:hover {
   color: var(--color-red);
+}
+
+.selectedText {
+  margin-left: 10px;
+}
+
+.resetButton {
+  font-size: 0.8rem;
+  padding: 5px 15px;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+
+.resetButton:hover {
+  color: var(--color-red);
+}
+
+.chatHeaderArea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.sendButton:hover {
+  color: var(--color-hover);
+}
+
+.selectedTextBoxInLog {
+  margin: 4px 0 8px 20px;
+  padding: 4px 8px;
+  background: #f7f7fa;
+  border-left: 3px solid #b5befb;
+  font-size: 0.93rem;
+  color: #6b6b82;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+.selectedTextIcon {
+  margin-right: 7px;
+  color: #6b6bbf;
+  font-weight: bold;
+}
+.selectedText {
+  font-style: italic;
+  font-size: 0.98em;
 }

@@ -18,6 +18,9 @@ import { useDocumentActions } from "../../hooks/useDocumentActions";
 import useAuthStore from "../../store/useAuthStore";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import Button from "../../components/Button/Button";
+import DownloadDocModal from "../../components/Modal/DownloadDocModal";
+import { checkTempDocExists } from "../../lib/api/documentsApi";
+import { getUserInfoApi } from "../../lib/api/documentsApi";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -30,7 +33,11 @@ const DashboardPage: React.FC = () => {
   const { categories, loaded, fetchCategories } = useCategories();
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.userId) ?? "";
+  const token = useAuthStore((state) => state.token) ?? "";
+  const clearAuth = useAuthStore((state) => state.clearAuth);
   const { uploadFile } = useFileUpload((docId) => navigate(`/editor/${docId}`));
+  const [modalOpen, setModalOpen] = useState(false);
+  const [pendingDocId, setPendingDocId] = useState<string | null>(null);
 
   const {
     documents,
@@ -57,26 +64,43 @@ const DashboardPage: React.FC = () => {
     refetch();
   }, [categoryId]);
 
+  useEffect(() => {
+    if (!token || !userId) {
+      // alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
+      window.location.replace("/");
+      return;
+    }
+    // 토큰이 있는데 진짜 유효한지 백엔드에 한 번 체크!
+    getUserInfoApi(userId).catch(() => {
+      clearAuth();
+      window.location.replace("/");
+    });
+  }, [token, userId, clearAuth]);
+  
+  // 📌 문서 필터링
   const filteredDocs = documents
     .filter((doc) => doc.category_id === categoryId)
     .filter((doc) =>
       doc.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+  // 📌 문서 그룹화
   const groupedDocs = groupDocumentsByDate(filteredDocs);
 
+  // 📌 파일 업로드 핸들러
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     await uploadFile({ file, userId, categoryId });
   };
 
+  // 카테고리 업데이트 핸들러
   const handleCategoryUpdate = useCallback(() => {
     fetchCategories();
     refetch();
   }, [fetchCategories, refetch]);
 
-  // ✅ categories/loaded 불러온 뒤 유효하지 않은 카테고리면 대시보드로 이동
+  // categories/loaded 불러온 뒤 유효하지 않은 카테고리면 대시보드로 이동
   useEffect(() => {
     if (
       categoryPath &&
@@ -93,6 +117,43 @@ const DashboardPage: React.FC = () => {
   if (loading || !loaded) {
     return <LoadingOrError loading={true} error={error} />;
   }
+
+    // 문서 다운로드 핸들러
+    const handleDownload = async (doc_id: string) => {
+      try {
+        const { exists } = await checkTempDocExists(doc_id);
+        if (exists) {
+          setPendingDocId(doc_id);
+          setModalOpen(true);
+        } else {
+          downloadDocument(doc_id);
+        }
+      } catch (e) {
+        // 네트워크 예외 시 그냥 다운로드 (or alert)
+        downloadDocument(doc_id);
+      }
+    };
+  
+    // 모달 "확인" (editor로 이동)
+    const handleModalConfirm = () => {
+      console.log('modal confirm');
+      if (pendingDocId) {
+        navigate(`/editor/${pendingDocId}`);
+      }
+      setModalOpen(false);
+      setPendingDocId(null);
+    };
+  
+    // 모달 "다운로드" (다운로드 진행)
+    const handleModalDownload = () => {
+      console.log('modal download');
+      if (pendingDocId) {
+        downloadDocument(pendingDocId);
+      }
+      setModalOpen(false);
+      setPendingDocId(null);
+    };
+  
 
   return (
     <Layout sidebar={<Sidebar onRefetch={handleCategoryUpdate} />}>
@@ -127,13 +188,19 @@ const DashboardPage: React.FC = () => {
                   groupLabel={label}
                   documents={docs}
                   onDelete={deleteDocument}
-                  onDownload={downloadDocument}
+                  onDownload={handleDownload}
                   onMoved={refetch}
                 />
               ))
             )}
           </div>
         </div>
+        <DownloadDocModal
+          open={modalOpen}
+          onConfirm={handleModalConfirm}
+          onDownload={handleModalDownload}
+          onClose={() => setModalOpen(false)}
+        />
       </div>
     </Layout>
   );

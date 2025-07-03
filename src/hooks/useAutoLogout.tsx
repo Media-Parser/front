@@ -1,7 +1,6 @@
 // src/hooks/useAutoLogout.tsx
 import { useEffect, useRef } from "react";
 import useAuthStore, { useGlobalFlagStore } from "../store/useAuthStore";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // 테스트 시
@@ -16,8 +15,7 @@ export default function useAutoLogout() {
   const { token, clearAuth } = useAuthStore();
   const setAutoLogoutTriggered = useGlobalFlagStore((s) => s.setAutoLogoutTriggered);
   const timerRef = useRef<number | null>(null);
-  const warnTimerRef = useRef<number | null>(null);
-  const navigate = useNavigate();
+  const warnTimerRef = useRef<number | null>(null);;
 
   const resetTimer = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -43,8 +41,9 @@ export default function useAutoLogout() {
         </div>
       );
       setTimeout(() => {
+        sessionStorage.setItem("justLoggedOut", "1");
         clearAuth();
-        navigate("/", { replace: true });
+        window.location.replace("/");
       }, 0);
     }, AUTO_LOGOUT_TIME);
   };

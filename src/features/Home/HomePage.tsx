@@ -17,6 +17,7 @@ const Homepage = () => {
   useEffect(() => {
     clearAuth();
   }, [clearAuth]);
+  
 
   useEffect(() => {
     let i = 0;
