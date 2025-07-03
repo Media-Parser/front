@@ -111,6 +111,10 @@ ul {
   color: white;
 }
 
+.subMenuItem:hover .subMenuBullet {
+  color: var(--color-bg);
+}
+
 /* 서브메뉴가 openOnly 상태일 때 밝은 테마 적용 */
 .subMenuOpenOnly {
   background-color: #fff;
@@ -123,6 +127,10 @@ ul {
 .subMenuOpenOnly .subMenuItem:hover {
   background-color: var(--color-hover);
   color: var(--color-bg);
+}
+
+.subMenuOpenOnly .subMenuBullet {
+  color: #000;
 }
 
 .subMenuOpenOnly .categoryBtn {

@@ -58,7 +58,7 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
 
   // 경로 일치 여부 체크
   const isActive = useCallback(
-    (path: string) => location.pathname === path,
+    (path: string) => location.pathname.startsWith(path),
     [location.pathname]
   );
 
