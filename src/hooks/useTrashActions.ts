@@ -33,7 +33,6 @@ export const useTrashActions = (user_id: string) => {
       await fetchTrashDocuments();
     } catch (error) {
       alert("복원 실패");
-      console.error("복원 실패", error);
     }
   };
 
@@ -49,7 +48,6 @@ export const useTrashActions = (user_id: string) => {
       await fetchTrashDocuments();
     } catch (error) {
       alert("영구 삭제 실패");
-      console.error("영구 삭제 실패", error);
     }
   };
 
@@ -65,7 +63,6 @@ export const useTrashActions = (user_id: string) => {
       await fetchTrashDocuments();
     } catch (error) {
       alert("전체 삭제 실패");
-      console.error("전체 삭제 실패", error);
     }
   };
 

@@ -6,7 +6,23 @@ import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import MoveCategoryModal from "../Modal/MoveCategoryModal";
-import type { DocumentCardProps } from "../../types/documentType";
+
+interface DocumentCardProps {
+  title: string;
+  contents: string;
+  date: string;
+  doc_id: string;
+  category_id: string;
+  onRestore?: () => void;
+  onPermanentDelete?: () => void;
+  download?: boolean;
+  remove?: boolean;
+  onClick?: () => void;
+  onDelete?: () => void;
+  onDownload?: () => void;
+  onMoved?: () => void;
+  onRightClick?: () => void;
+}
 
 const DocumentCard: React.FC<
   DocumentCardProps & { onTitleEdit: () => void }
@@ -35,11 +51,6 @@ const DocumentCard: React.FC<
   const [showMoveModal, setShowMoveModal] = useState(false);
   const kebabButtonRef = useRef<HTMLButtonElement>(null);
 
-  // 미리보기 툴팁용 상태/좌표
-  const [isHoveringPreview, setIsHoveringPreview] = useState(false);
-  const previewRef = useRef<HTMLParagraphElement>(null);
-
-  // Tooltip 위치 계산
   const [tooltipVars, setTooltipVars] = useState<{ [key: string]: string }>({
     "--tooltip-top": "0px",
     "--tooltip-left": "0px",
@@ -55,7 +66,6 @@ const DocumentCard: React.FC<
     }
   }, [showTooltip]);
 
-  // Tooltip Portal
   const tooltipPortal = showTooltip
     ? createPortal(
         <div>
@@ -135,22 +145,22 @@ const DocumentCard: React.FC<
       document.body
     );
 
-// Tooltip 위치 계산 (툴팁이 열릴 때만 즉시 계산)
-const handleKebabClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-  if (!showTooltip && kebabButtonRef.current) {
-    const rect = kebabButtonRef.current.getBoundingClientRect();
-    setTooltipVars({
-      "--tooltip-top": `${rect.top}px`,
-      "--tooltip-left": `${rect.right + 4}px`,
-    });
-  }
-  setShowTooltip(!showTooltip);
-};
+  // Tooltip 위치 계산 (툴팁이 열릴 때만 즉시 계산)
+  const handleKebabClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!showTooltip && kebabButtonRef.current) {
+      const rect = kebabButtonRef.current.getBoundingClientRect();
+      setTooltipVars({
+        "--tooltip-top": `${rect.top}px`,
+        "--tooltip-left": `${rect.right + 4}px`,
+      });
+    }
+    setShowTooltip(!showTooltip);
+  };
 
   return (
     <div
-      className={styles.card}
+      className={`${styles.card} ${isTrashPage ? styles.noHover : ""}`}
       role="button"
       tabIndex={0}
       onClick={(e) => {
@@ -174,36 +184,25 @@ const handleKebabClick = (e: React.MouseEvent) => {
             {title.length > 25 ? title.slice(0, 25) + "..." : title}
           </h3>
           <div className={styles.tooltipWrapper}>
-          <button
-            className={styles.kebabButton}
-            aria-label="옵션 열기"
-            ref={kebabButtonRef}
-            onClick={handleKebabClick}
-          >
-            ︙
-          </button>
+            <button
+              className={styles.kebabButton}
+              aria-label="옵션 열기"
+              ref={kebabButtonRef}
+              onClick={handleKebabClick}
+            >
+              ︙
+            </button>
           </div>
         </div>
-        <div className={styles.previewTextWrapper}>
-          <p
-            className={styles.previewText}
-            ref={previewRef}
-            onMouseEnter={() => setIsHoveringPreview(true)}
-            onMouseLeave={() => setIsHoveringPreview(false)}
-          >
-            내용 미리보기
-          </p>
-          {isHoveringPreview && (
-          <div className={styles.previewPopover}>
-            {(
-              (contents || "")
-                .replace(/^\s+/, "")
-                .replace(/\n{2,}/g, "\n")
-                .slice(0, 100)
-            ) + ((contents || "").length > 100 ? "..." : "")}
-          </div>
-        )}
+
+        {/* 본문 미리보기 항상 표시 */}
+        <div className={styles.cardBody}>
+          {(contents || "")
+            .replace(/^\s+/, "")
+            .replace(/\n{2,}/g, "\n")
+            .slice(0, 100) + ((contents || "").length > 100 ? "..." : "")}
         </div>
+
         <div className={styles.cardDate}>
           {dayjs(date).format("YYYY-MM-DD")}
         </div>

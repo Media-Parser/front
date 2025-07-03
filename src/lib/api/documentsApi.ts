@@ -1,7 +1,7 @@
 // 📁 src/lib/api/documentsApi.ts
 // ✅ 문서 관련 백엔드 API 호출을 담당하는 함수 모음
 
-import api from "./api";
+import { api } from "./api";
 import type { Document } from "../../types/documentType";
 
 // ==================================================== 대시보드 ====================================================
@@ -90,7 +90,7 @@ export const deleteUserApi = async (user_id: string) => {
 export const getUserInfoApi = async (user_id: string) => {
   return await api.get(`/users/${user_id}`);
 };
-// ==================================================== 챗봇 ====================================================
+// ==================================================== 챗봇 에디터 ====================================================
 // temp_docs 존재 여부 확인
 export const checkTempDocExists = async (doc_id: string): Promise<{ exists: boolean }> => {
   const res = await api.get<{ exists: boolean }>(`/documents/temp/exists/${doc_id}`);
@@ -113,10 +113,11 @@ export const getDocApi = async (doc_id: string): Promise<Document|null> => {
     throw err;
   }
 };
-// export const getDocApi = async (docId: string): Promise<Document> => {
-//   const res = await api.get<Document>(`/documents/${docId}`);
-//   return res.data;
-// };
+
+// temp_docs 삭제
+export const deleteTempDocApi = async (doc_id: string) => {
+  return await api.delete(`/documents/temp/${doc_id}`);
+};
 
 // temp_docs patch(자동저장)
 export const autosaveDocumentApi = async (

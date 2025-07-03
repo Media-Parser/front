@@ -10,9 +10,15 @@ interface Props {
   onClose: () => void;
 }
 
-const DocumentTitleModal = ({ currentTitle, docId, onSave, onClose }: Props) => {
+const DocumentTitleModal = ({
+  currentTitle,
+  docId,
+  onSave,
+  onClose,
+}: Props) => {
   const [title, setTitle] = useState(currentTitle);
   const [loading, setLoading] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
 
   const handleSave = async () => {
     if (!title.trim() || title === currentTitle) {
@@ -33,19 +39,34 @@ const DocumentTitleModal = ({ currentTitle, docId, onSave, onClose }: Props) => 
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>제목 변경</h3>
         <input
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
+          onFocus={() => setInputFocused(true)}
+          onBlur={() => setInputFocused(false)}
           maxLength={100}
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key === "Enter") handleSave();
           }}
         />
+
         <div className={styles.actions}>
-          <button onClick={onClose} disabled={loading}>취소</button>
-          <button onClick={handleSave} disabled={loading}>저장</button>
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className={inputFocused ? styles.grayBorder : ""}
+          >
+            취소
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={loading}
+            className={inputFocused ? styles.grayBorder : ""}
+          >
+            저장
+          </button>
         </div>
       </div>
     </div>

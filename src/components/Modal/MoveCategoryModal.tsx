@@ -1,9 +1,6 @@
 // src/components/Modal/MoveCategoryModal.tsx
 import { useEffect, useState } from "react";
-import {
-  getCategoriesApi,
-  moveDocumentApi,
-} from "../../lib/api/documentsApi";
+import { getCategoriesApi, moveDocumentApi } from "../../lib/api/documentsApi";
 import type { Category } from "../../types/documentType";
 import styles from "./MoveCategoryModal.module.css";
 import useAuthStore from "../../store/useAuthStore";
@@ -93,17 +90,17 @@ const MoveCategoryModal = ({
         </select>
         <div className={styles.categoryModalButtonContainer}>
           <button
+            onClick={onClose}
+            className={styles.categoryModalCancelButton}
+          >
+            취소
+          </button>
+          <button
             onClick={handleMove}
             disabled={loading || selectedCategory === originCategoryId}
             className={styles.categoryModalMoveButton}
           >
             이동
-          </button>
-          <button
-            onClick={onClose}
-            className={styles.categoryModalCancelButton}
-          >
-            취소
           </button>
         </div>
       </div>

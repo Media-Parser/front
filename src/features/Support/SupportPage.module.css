@@ -1,5 +1,5 @@
 .mainArea {
-  padding: 20px;
+  overflow-y: auto;
 }
 
 .mainAreaHeader {
@@ -7,7 +7,7 @@
 }
 
 .mainAreaHeaderTitle {
-  font-size: 1.8em;
+  font-size: 1.5em;
   color: black;
   margin: 0;
 }
@@ -52,19 +52,15 @@
   background-color: white;
 }
 
-.submitButton {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #fbe51bd9;
-  color: black;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 15%;
-  margin-left: auto;
+.input[readonly] {
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
 }
 
-.submitButton:hover {
-  background-color: #f9d314;
+.submitButton {
+  margin-top: 10px;
+  cursor: pointer;
+  width: auto;
+  margin-left: auto;
 }

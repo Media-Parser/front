@@ -1,8 +1,8 @@
 /* 📁 src/features/Account/Account.module.css */
 
 .mainAreaHeader h2 {
-  font-size: 1.8em;
-  color: black;
+  font-size: 1.5em;
+  color: var(--color-bg);
   margin: 0;
 }
 
@@ -27,15 +27,4 @@
   display: flex;
   justify-content: flex-end;
   padding: 10px 0;
-}
-
-.deleteButton {
-  background-color: var(--color-gray);
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-.deleteButton:hover {
-  background-color: var(--color-hover);
 }

@@ -1,15 +1,22 @@
 // 📁 src/features/Editor/EditorSidebar/EditorSidebar.tsx
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import styles from "./EditorSidebar.module.css";
-import { Menu, Home, Trash2, Download, Save, LogOut, Icon } from "lucide-react";
+import { Home, Trash2, Download, Save, LogOut } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
+import logo from "../../../assets/p.png";
+import { useCategories } from "../../../hooks/useCategories";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
 }
+
+type MenuItem =
+  | { icon: JSX.Element; label: string; action: () => void }
+  | { icon: JSX.Element; label: string; path: string };
 
 const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const { id } = useParams<{ id: string }>();
@@ -19,10 +26,19 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleSidebar = () => setIsExpanded((prev) => !prev);
 
+  const { documents, deleteDocument, downloadDocument } = useDocumentActions();
   const [isSaving, setIsSaving] = useState(false);
-  const { deleteDocument, downloadDocument } = useDocumentActions();
   const navigate = useNavigate();
   const clearAuth = useAuthStore((state) => state.clearAuth);
+  const currentDoc = documents.find((doc) => doc.doc_id === id);
+  const { categories } = useCategories();
+
+  const categorySlug = useMemo(() => {
+    const matched = categories.find(
+      (cat) => cat.category_id === currentDoc?.category_id
+    );
+    return matched?.path?.replace(/^\/dashboard\//, "") ?? null;
+  }, [categories, currentDoc]);
 
   const handleDelete = async () => {
     await deleteDocument(id);
@@ -30,17 +46,29 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
     navigate("/dashboard");
   };
 
+  const docForDownload = documents.find((doc) => doc.doc_id === id);
+
   const handleDownload = async () => {
-    await downloadDocument(id);
+    if (!docForDownload) {
+      alert("다운로드할 문서를 찾을 수 없습니다.");
+      return;
+    }
+    await downloadDocument(docForDownload.doc_id);
+    console.log("doc.doc_id", docForDownload.doc_id);
+    console.log("doc.title", docForDownload.title);
+    console.log("doc.file_type", docForDownload.file_type);
   };
 
   const handleSave = async () => {
-    if (!onSave) return;
+    // 저장 버튼 클릭 시 모든 input blur 처리
+    document.activeElement instanceof HTMLElement &&
+      document.activeElement.blur();
 
+    if (!onSave) return;
     setIsSaving(true);
+
     try {
       await onSave();
-      // Optional: Show success message
       // alert("저장을 완료했습니다.");
     } catch (error) {
       console.error("Save error:", error);
@@ -52,29 +80,43 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleLogout = () => {
     if (window.confirm("정말 로그아웃하시겠습니까?")) {
-      alert("로그아웃을 완료했습니다.");
+      sessionStorage.setItem("justLoggedOut", "1");
       clearAuth();
-      navigate("/");
+      alert("로그아웃을 완료했습니다.");
+      window.location.replace("/"); // ← 진짜 새로고침
     }
   };
 
-  const handleMenuClick = (item: (typeof menuItems)[number]) => {
-    console.log("handleMenuClick:", item.label, new Date().getTime());
-    if (item.action) {
-      item.action();
-    } else if (item.path) {
-      navigate(item.path);
-    }
-  };
-
-  const menuItems = [
-    { icon: <Menu />, label: "  ", action: toggleSidebar },
-    { icon: <Home />, label: "홈", path: "/dashboard" },
+  const menuItems: MenuItem[] = [
+    {
+      icon: <img src={logo} className={styles.logo} />,
+      label: "  ",
+      action: toggleSidebar,
+    },
+    {
+      icon: <Home />,
+      label: "홈",
+      action: () => {
+        if (categorySlug) {
+          navigate(`/dashboard/${categorySlug}`);
+        } else {
+          navigate("/dashboard");
+        }
+      },
+    },
     { icon: <Save />, label: "저장", action: handleSave },
     { icon: <Trash2 />, label: "삭제", action: handleDelete },
     { icon: <Download />, label: "파일 다운", action: handleDownload },
     { icon: <LogOut />, label: "로그아웃", action: handleLogout },
   ];
+
+  const handleMenuClick = (item: MenuItem) => {
+    if ("action" in item && item.action) {
+      item.action();
+    } else if ("path" in item && item.path) {
+      navigate(item.path);
+    }
+  };
 
   return (
     <aside
@@ -88,7 +130,7 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
             key={idx}
             className={`${styles.menuItem} ${
               item.label === "저장" && isSaving ? styles.saving : ""
-            } ${item.label === "메뉴" ? styles.menuHover : ""}`} // ✅ 추가
+            } ${item.label === "메뉴" ? styles.menuHover : ""}`}
             onClick={() => handleMenuClick(item)}
           >
             {item.icon}

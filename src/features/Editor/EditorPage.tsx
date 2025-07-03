@@ -13,6 +13,12 @@ const EditorPage = () => {
     (() => Promise<void>) | null
   >(null);
 
+  const [selectedTextData, setSelectedTextData] = useState<{
+    selectedText: string | null;
+    startIndex: number;
+    endIndex: number;
+  } | null>(null);
+
   const handleSaveReady = useCallback((saveFn: () => Promise<void>) => {
     setSaveFunction(() => saveFn);
   }, []);
@@ -28,8 +34,26 @@ const EditorPage = () => {
       <EditorSidebar onSave={handleSave} />
       <div className={styles.pageWrapper}>
         <EditorLayout
-          left={<EditDoc onSaveReady={handleSaveReady} />}
-          right={<Chatbot docId={docId ?? ""} />}
+          left={
+            <EditDoc
+              onSaveReady={handleSaveReady}
+              onSelectText={(txt, start, end) => {
+                setSelectedTextData({
+                  selectedText: txt,
+                  startIndex: start,
+                  endIndex: end,
+                });
+              }}
+            />
+          }
+          right={
+            <Chatbot
+              docId={docId ?? ""}
+              selectedTextData={selectedTextData}
+              onMessageSent={() => setSelectedTextData(null)}
+              onClearSelectedText={() => setSelectedTextData(null)}
+            />
+          }
           showHeader={true}
         />
       </div>
