@@ -108,7 +108,7 @@ ul {
 .subMenuBullet {
   display: inline-block;
   margin-right: 0.25rem;
-  color: #888;
+  color: white;
 }
 
 /* 서브메뉴가 openOnly 상태일 때 밝은 테마 적용 */
