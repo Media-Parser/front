@@ -105,6 +105,12 @@ ul {
   color: var(--color-bg);
 }
 
+.subMenuBullet {
+  display: inline-block;
+  margin-right: 0.25rem;
+  color: #888;
+}
+
 /* 서브메뉴가 openOnly 상태일 때 밝은 테마 적용 */
 .subMenuOpenOnly {
   background-color: #fff;
@@ -143,6 +149,7 @@ ul {
 
 /* 카테고리 라벨 텍스트 */
 .categoryLabel {
+  margin-left: 0.5rem;
   flex: 1 1 auto;
   text-align: left;
   font-size: 0.9em;

@@ -91,7 +91,7 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
       }
 
       if (menu.label === "문서") {
-        navigate("/dashboard"); // 드롭다운 토글 안 함
+        navigate("/dashboard");
         return;
       }
 
@@ -165,7 +165,10 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
         }
       }}
     >
-      <span className={styles.categoryLabel}>{category.label}</span>
+      <span className={styles.categoryLabel}>
+        <span className={styles.subMenuBullet}>ㄴ</span>
+        {category.label}
+      </span>
       <div className={styles.categoryActions}>
         <button
           className={styles.categoryBtn}
