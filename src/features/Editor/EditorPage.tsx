@@ -36,20 +36,24 @@ const EditorPage = () => {
         <EditorLayout
           left={
             <EditDoc
-            onSaveReady={handleSaveReady}
-            onSelectText={(txt, start, end) => {
-              setSelectedTextData({ selectedText: txt, startIndex: start, endIndex: end })
-            }}
-          />
+              onSaveReady={handleSaveReady}
+              onSelectText={(txt, start, end) => {
+                setSelectedTextData({
+                  selectedText: txt,
+                  startIndex: start,
+                  endIndex: end,
+                });
+              }}
+            />
           }
           right={
             <Chatbot
-            docId={docId ?? ""}
-            selectedTextData={selectedTextData}
-            onMessageSent={() => setSelectedTextData(null)}
-            onClearSelectedText={() => setSelectedTextData(null)}
-          />
-        }
+              docId={docId ?? ""}
+              selectedTextData={selectedTextData}
+              onMessageSent={() => setSelectedTextData(null)}
+              onClearSelectedText={() => setSelectedTextData(null)}
+            />
+          }
           showHeader={true}
         />
       </div>

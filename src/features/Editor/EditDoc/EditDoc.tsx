@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+// src/features/Editor/EditDoc/EditDoc.tsx
+import { useState, useEffect, useRef, useCallback } from "react";
 import debounce from "lodash.debounce";
-import { useEditDocument } from "../../../hooks/useEditDocument";
-import styles from "./EditDoc.module.css";
 import { useParams } from "react-router-dom";
+import { FaSpinner, FaCheck } from "react-icons/fa";
+import { BiSolidQuoteAltRight } from "react-icons/bi";
+import { useEditDocument } from "../../../hooks/useEditDocument";
 import {
   checkTempDocExists,
   getTempDocApi,
@@ -10,8 +12,34 @@ import {
   deleteTempDocApi,
 } from "../../../lib/api/documentsApi";
 import type { Document } from "../../../types/documentType";
-import { FaSpinner, FaCheck } from "react-icons/fa";
-import { BiSolidQuoteAltRight } from "react-icons/bi";
+import styles from "./EditDoc.module.css";
+
+// ---
+// Components
+// ---
+
+interface RestoreModalProps {
+  onRestore: () => void;
+  onCancel: () => void;
+}
+
+const RestoreModal = ({ onRestore, onCancel }: RestoreModalProps) => (
+  <div className={styles.restoreModal}>
+    <div className={styles.modalContent}>
+      <p>
+        이전에 임시저장된 편집본이 있습니다.
+        <br />
+        복원하시겠습니까?
+      </p>
+      <button onClick={onRestore}>확인</button>
+      <button onClick={onCancel}>취소</button>
+    </div>
+  </div>
+);
+
+// ---
+// Main Component
+// ---
 
 interface EditDocProps {
   onSaveReady?: (saveFunction: () => Promise<void>) => void;
@@ -32,24 +60,18 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     setDocument,
   } = useEditDocument(id);
 
-  useEffect(() => {
-    if (!id) return;
-    fetchDocument();
-  }, [id, fetchDocument]);
-
-  const [showRestoreModal, setShowRestoreModal] = useState(false);
-  const [ready, setReady] = useState(false);
+  // Component State
+  const [isReady, setIsReady] = useState(false);
   const [title, setTitle] = useState("");
   const [contents, setContents] = useState("");
-  // const [isProgrammaticUpdate, setIsProgrammaticUpdate] = useState(false);
-  const [isFinalizing, setIsFinalizing] = useState(false);
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
+  const [isSavingFinal, setIsSavingFinal] = useState(false); // Renamed from isFinalizing for clarity
   const [showAutosaveToast, setShowAutosaveToast] = useState(false);
-  const replyBtnRef = useRef<HTMLSpanElement>(null);
 
-  // contenteditable 용 상태 ↓
+  // contenteditable related state and refs
   const editableRef = useRef<HTMLDivElement>(null);
-  const [showAskBtn, setShowAskBtn] = useState(false);
-  const [selectionRect, setSelectionRect] = useState<{
+  const [showAskAIButton, setShowAskAIButton] = useState(false);
+  const [selectionButtonPosition, setSelectionButtonPosition] = useState<{
     top: number;
     left: number;
   } | null>(null);
@@ -59,55 +81,98 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     end: number;
   } | null>(null);
 
-  // 임시저장 복원
+  // ---
+  // Data Fetching & Initialization Effects
+  // ---
+
+  // Initial document fetch on ID change
+  useEffect(() => {
+    if (id) {
+      fetchDocument();
+    }
+  }, [id, fetchDocument]);
+
+  // Handle temporary document check and restoration modal
   useEffect(() => {
     let isMounted = true;
-    setReady(false);
-    (async () => {
+    setIsReady(false); // Set to false while checking temp doc
+
+    const checkAndSetDocument = async () => {
       try {
         const { exists } = await checkTempDocExists(id);
-        if (exists) {
-          if (isMounted) setShowRestoreModal(true);
-        } else {
-          const doc = await getDocApi(id);
-          if (isMounted) setDocument(doc);
+        if (isMounted) {
+          if (exists) {
+            setShowRestoreModal(true);
+          } else {
+            const doc = await getDocApi(id);
+            setDocument(doc);
+          }
         }
       } catch (e) {
-        if (isMounted) setDocument(null);
+        if (isMounted) {
+          console.error("Failed to check or fetch document:", e);
+          setDocument(null);
+        }
       } finally {
-        if (isMounted) setReady(true);
+        if (isMounted) {
+          setIsReady(true);
+        }
       }
-    })();
+    };
+
+    checkAndSetDocument();
+
     return () => {
       isMounted = false;
     };
   }, [id, setDocument]);
 
-  const handleRestore = async () => {
-    const doc = await getTempDocApi(id);
-    setDocument(doc);
-    setShowRestoreModal(false);
-    setReady(true);
-  };
-  const handleCancel = async () => {
+  // 복원: 임시 문서 불러오기
+  const handleRestore = useCallback(async () => {
+    try {
+      const doc = await getTempDocApi(id);
+      setDocument(doc);
+      setShowRestoreModal(false);
+    } catch (e) {
+      console.error("Failed to restore temp document:", e);
+    } finally {
+      setIsReady(true);
+    }
+  }, [id, setDocument]);
+
+  // 취소: 임시문서 삭제 & 원본 불러오기
+  const handleCancelRestore = useCallback(async () => {
     try {
       await deleteTempDocApi(id);
+      const doc = await getDocApi(id);
+      setDocument(doc);
+      setShowRestoreModal(false);
     } catch (e) {
       alert("임시저장 삭제 실패");
+      console.error("Failed to fetch original document:", e);
+    } finally {
+      setIsReady(true);
     }
-    const doc = await getDocApi(id);
-    setDocument(doc);
-    setShowRestoreModal(false);
-    setReady(true);
-  };
+  }, [id, setDocument]);
 
   useEffect(() => {
     if (document) {
       setTitle(document.title || "");
       setContents(document.contents || "");
+      if (editableRef.current) {
+        editableRef.current.innerText = document.contents || "";
+        if (!document.contents) {
+          editableRef.current.innerHTML = "<br />";
+        }
+      }
     }
   }, [document]);
 
+  // ---
+  // Autosave Logic
+  // ---
+
+  // Debounced autosave function
   const debouncedAutoSave = useRef(
     debounce(async (data: Partial<Document>) => {
       await autosave({ title: data.title, contents: data.contents });
@@ -116,51 +181,61 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     }, 3000)
   ).current;
 
+  // Clean up debounced autosave on component unmount
   useEffect(() => {
-    if (document && editableRef.current) {
-      // setIsProgrammaticUpdate(true);
-      setTitle(document.title || "");
-      setContents(document.contents || "");
-      editableRef.current.innerText = document.contents || "";
-      // setTimeout(() => setIsProgrammaticUpdate(false), 0);
-    }
-  }, [document]);
+    return () => {
+      debouncedAutoSave.cancel();
+    };
+  }, [debouncedAutoSave]);
+
+  // ---
+  // Event Handlers
+  // ---
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    if (!isFinalizing) {
+    if (!isSavingFinal) {
       debouncedAutoSave({ title: newTitle, contents });
     }
   };
 
-  // contenteditable 입력 핸들러
-  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-    setContents(e.currentTarget.innerText);
-    if (!isFinalizing) {
-      debouncedAutoSave({ title, contents: e.currentTarget.innerText });
+  const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContents = e.currentTarget.innerText;
+    setContents(newContents);
+    if (!isSavingFinal) {
+      debouncedAutoSave({ title, contents: newContents });
     }
   };
 
-  // 드래그/선택 감지 및 말풍선 위치 계산
-  const handleSelection = () => {
+  // Logic for handling text selection and showing the AI button
+  const handleTextSelection = useCallback(() => {
     const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
-      setShowAskBtn(false);
-      setSelectionRect(null);
+    if (
+      !sel ||
+      sel.rangeCount === 0 ||
+      sel.isCollapsed ||
+      !editableRef.current?.contains(sel.anchorNode)
+    ) {
+      setShowAskAIButton(false);
+      setSelectionButtonPosition(null);
       setSelectionRange(null);
       setSelectedText("");
       return;
     }
-    const range = sel.getRangeAt(0);
-    // ⭐ 첫번째 줄 첫 문자 위치를 구함
-    const clientRects = range.getClientRects();
-    const rect =
-      clientRects.length > 0 ? clientRects[0] : range.getBoundingClientRect();
-    if (rect.width === 0 && rect.height === 0) return;
 
-    setShowAskBtn(true);
-    setSelectionRect({
+    const range = sel.getRangeAt(0);
+    const rects = range.getClientRects();
+
+    if (rects.length === 0 || (rects[0].width === 0 && rects[0].height === 0)) {
+      setShowAskAIButton(false);
+      setSelectionButtonPosition(null);
+      return;
+    }
+
+    const rect = rects[0];
+    setShowAskAIButton(true);
+    setSelectionButtonPosition({
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX,
     });
@@ -171,52 +246,66 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     const fullText = editableRef.current?.innerText || "";
     const start = fullText.indexOf(text);
     setSelectionRange(
-      start !== -1
-        ? { start, end: start + text.length }
-        : { start: -1, end: -1 }
+      start !== -1 ? { start, end: start + text.length } : null
     );
-  };
-
-  // 버튼 클릭 시 상위로 텍스트/위치 전달
-  const handleAskAI = () => {
-    if (selectedText && selectionRange && onSelectText) {
-      onSelectText(selectedText, selectionRange.start, selectionRange.end);
-      setShowAskBtn(false);
-      setSelectionRect(null);
-      setSelectionRange(null);
-      window.getSelection()?.removeAllRanges();
-    }
-  };
-
-  // 바깥 클릭시 버튼 사라지게
-  useEffect(() => {
-    const handleClick = () => {
-      setShowAskBtn(false);
-      setSelectionRect(null);
-      setSelectionRange(null);
-      setSelectedText("");
-      // window.getSelection()?.removeAllRanges();
-    };
-    window.document.addEventListener("mousedown", handleClick);
-    return () => window.document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  // 저장 함수 부모로 전달
+  // Handle AI button click
+  const handleAskAI = useCallback(() => {
+    if (selectedText && selectionRange && onSelectText) {
+      onSelectText(selectedText, selectionRange.start, selectionRange.end);
+      window.getSelection()?.removeAllRanges();
+      setShowAskAIButton(false);
+      setSelectionButtonPosition(null);
+      setSelectionRange(null);
+      setSelectedText("");
+    }
+  }, [onSelectText, selectedText, selectionRange]);
+
+  // Hide AI button when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // event.target이 HTMLElement 타입임을 보장
+      const target = event.target as HTMLElement | null;
+      if (
+        editableRef.current &&
+        target &&
+        !editableRef.current.contains(target) &&
+        !target.closest(`.${styles.replyQuoteBtn}`)
+      ) {
+        setShowAskAIButton(false);
+        setSelectionButtonPosition(null);
+        setSelectionRange(null);
+        setSelectedText("");
+      }
+    };
+
+    window.document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      window.document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // ---
+  // External Save Functionality
+  // ---
+
+  // Expose a save function to parent component
   useEffect(() => {
     if (onSaveReady) {
-      onSaveReady(async () => {
-        setIsFinalizing(true);
-        debouncedAutoSave.cancel();
-        await autosave({ title, contents });
-        await finalizeDocument();
-        setShowRestoreModal(false);
+      const saveFunction = async () => {
+        setIsSavingFinal(true);
+        debouncedAutoSave.cancel(); // Cancel any pending autosaves
+        await autosave({ title, contents }); // Ensure latest changes are saved
+        await finalizeDocument(); // Finalize the document
         await fetchDocument();
-        setTimeout(() => setIsFinalizing(false), 500);
-      });
+        setShowRestoreModal(false);
+        setTimeout(() => setIsSavingFinal(false), 500);
+      };
+      onSaveReady(saveFunction);
     }
   }, [
-    finalizeDocument,
     onSaveReady,
+    finalizeDocument,
     fetchDocument,
     debouncedAutoSave,
     title,
@@ -224,15 +313,12 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     autosave,
   ]);
 
-  useEffect(() => {
-    return () => {
-      debouncedAutoSave.cancel();
-    };
-  }, [debouncedAutoSave]);
+  // ---
+  // UI Rendering
+  // ---
 
-  // UI
   if (error) return <div className={styles.message}>에러: {error}</div>;
-  if (loading || !ready) {
+  if (loading || !isReady) {
     return <div className={styles.message}>로딩 중...</div>;
   }
   if (!document) {
@@ -241,7 +327,8 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
 
   return (
     <div className={styles.container}>
-      {showAutosaveToast && !isFinalizing && (
+      {/* Autosave Toast */}
+      {showAutosaveToast && !isSavingFinal && (
         <div className={styles.autosaveToast}>
           <span className={styles.autosaveIcon}>
             <FaCheck />
@@ -249,61 +336,59 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
           자동 임시저장
         </div>
       )}
-      {isFinalizing && (
+
+      {/* Final Saving Toast */}
+      {isSavingFinal && (
         <div className={styles.toast}>
           <FaSpinner className={styles.spinner} /> 저장 중입니다...
         </div>
       )}
+
+      {/* Restore Modal */}
       {showRestoreModal && (
-        <div className={styles.restoreModal}>
-          <div className={styles.modalContent}>
-            <p>
-              이전에 임시저장된 편집본이 있습니다.
-              <br />
-              복원하시겠습니까?
-            </p>
-            <button onClick={handleRestore}>확인</button>
-            <button onClick={handleCancel}>취소</button>
-          </div>
-        </div>
+        <RestoreModal
+          onRestore={handleRestore}
+          onCancel={handleCancelRestore}
+        />
       )}
 
-      {/* 제목 입력 */}
+      {/* Title Input */}
       <input
         type="text"
         className={styles.titleInput}
         value={title}
         onChange={handleTitleChange}
         placeholder="제목을 입력하세요"
-        disabled={!ready}
+        disabled={!isReady}
+        aria-label="문서 제목"
       />
 
-      {/* 본문 contenteditable (기존 textarea 스타일 유사) */}
+      {/* Content Editable Area */}
       <div className={styles.contentsWrapper}>
         <div
-          className={styles.contentsInput}
+          className={`${styles.contentsInput} ${
+            contents === "" ? styles.empty : ""
+          }`}
           contentEditable
           ref={editableRef}
-          onMouseUp={handleSelection}
-          onKeyUp={handleSelection}
+          onMouseUp={handleTextSelection}
+          onKeyUp={handleTextSelection}
           suppressContentEditableWarning
           spellCheck={false}
-          onInput={handleInput}
+          onInput={handleContentsInput}
           tabIndex={0}
           aria-label="문서 편집기"
-          style={{ minHeight: "240px" }}
         />
       </div>
-      {/* {contents}
-      </div>  */}
-      {showAskBtn && selectionRect && (
+
+      {/* AI Ask Button */}
+      {showAskAIButton && selectionButtonPosition && (
         <span
-          ref={replyBtnRef}
           className={styles.replyQuoteBtn}
           style={{
+            top: selectionButtonPosition.top - 38,
+            left: selectionButtonPosition.left,
             position: "fixed",
-            top: selectionRect.top - 38,
-            left: selectionRect.left,
             zIndex: 120,
           }}
           onClick={handleAskAI}
