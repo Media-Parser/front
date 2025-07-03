@@ -80,9 +80,10 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
 
   const handleLogout = () => {
     if (window.confirm("정말 로그아웃하시겠습니까?")) {
-      alert("로그아웃을 완료했습니다.");
+      sessionStorage.setItem("justLoggedOut", "1");
       clearAuth();
-      window.location.replace("/");
+      alert("로그아웃을 완료했습니다.");
+      window.location.replace("/"); // ← 진짜 새로고침
     }
   };
 

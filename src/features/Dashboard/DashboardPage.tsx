@@ -66,7 +66,7 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     if (!token || !userId) {
-      alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
+      // alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
       window.location.replace("/");
       return;
     }

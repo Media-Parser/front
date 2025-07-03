@@ -15,7 +15,12 @@ const LandingWrapper = () => {
   useEffect(() => {
     // 진입시마다 무조건 토큰 및 userId 등 클리어 (SPA history 캐시 진입시도 방지)
     clearAuth();
-    if (window.history.length > 1) {
+    sessionStorage.removeItem("justLoggedOut");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+
+    if (window.location.pathname === "/") {
+      window.history.pushState(null, "", "/");
       window.history.replaceState(null, "", "/");
     }
   }, [clearAuth]);

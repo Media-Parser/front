@@ -41,6 +41,7 @@ export default function useAutoLogout() {
         </div>
       );
       setTimeout(() => {
+        sessionStorage.setItem("justLoggedOut", "1");
         clearAuth();
         window.location.replace("/");
       }, 0);

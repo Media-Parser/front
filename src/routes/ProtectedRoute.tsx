@@ -15,28 +15,22 @@ const ProtectedRoute = () => {
 
   const [authChecked, setAuthChecked] = useState(false);
 
-  useEffect(() => {
-    // 로그아웃 시 플래그 감지
-    const justLoggedOut = sessionStorage.getItem("justLoggedOut");
+  // *** 1. 항상 플래그 먼저 검사! ***
+  if (sessionStorage.getItem("justLoggedOut")) {
+    sessionStorage.removeItem("justLoggedOut");
+    clearAuth();
+    return <Navigate to="/" replace />;
+  }
 
-    // 1. 로그인 정보가 없으면
+  useEffect(() => {
+    // *** token, userId 모두 없으면 API 호출/인증체크 하지 않음 ***
     if (!token || !userId) {
       setAuthChecked(true);
       setTimeout(() => setAutoLogoutTriggered(false), 0);
-      if (!justLoggedOut && !autoLogoutTriggered && !alertedRef.current) {
-        alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
-        alertedRef.current = true;
-      }
-      // 플래그는 항상 지워준다
-      sessionStorage.removeItem("justLoggedOut");
       return;
     }
-
-    // 2. 로그인 정보가 있으면, 서버에 실제 유저 확인
     getUserInfoApi(userId)
-      .then(() => {
-        setAuthChecked(true); // 인증 통과
-      })
+      .then(() => setAuthChecked(true))
       .catch(() => {
         clearAuth();
         setAuthChecked(true);
@@ -45,15 +39,19 @@ const ProtectedRoute = () => {
           alertedRef.current = true;
         }
       });
-    // eslint-disable-next-line
   }, [token, userId, setAutoLogoutTriggered, autoLogoutTriggered, clearAuth]);
 
-  // 아직 인증 확인 중이면 아무것도 렌더하지 않음
   if (!authChecked) return null;
 
-  if (!token || !userId) {
-    return <Navigate to="/" replace state={{ from: location }} />;
+if (!token || !userId) {
+  if (!alertedRef.current) {
+    alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
+    alertedRef.current = true;
   }
+  return <Navigate to="/" replace state={{ from: location }} />;
+}
+
+  // 6. 정상 접근
   return <Outlet />;
 };
 

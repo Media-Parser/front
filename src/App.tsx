@@ -15,10 +15,12 @@ function App() {
     };
     window.addEventListener("storage", onStorage);
     // 토큰이 있을 때만 유효성 검사
-    if (token) {
-      getUserInfoApi(localStorage.getItem("user_id")!)
+
+    const user_id = localStorage.getItem("user_id");
+    if (token && user_id) {
+      getUserInfoApi(user_id)
         .catch(() => {
-          clearAuth(); // 실패 시 강제 로그아웃
+          clearAuth();
         });
     }
     return () => window.removeEventListener("storage", onStorage);
