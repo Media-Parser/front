@@ -8,14 +8,15 @@ import { toast } from "react-toastify";
 // const WARNING_BEFORE = 1000 * 5;    // 5초 전
 
 const AUTO_LOGOUT_TIME = 1000 * 60 * 30; // 30분
-const WARNING_BEFORE = 1000 * 30;        // 30초 전
-
+const WARNING_BEFORE = 1000 * 30; // 30초 전
 
 export default function useAutoLogout() {
   const { token, clearAuth } = useAuthStore();
-  const setAutoLogoutTriggered = useGlobalFlagStore((s) => s.setAutoLogoutTriggered);
+  const setAutoLogoutTriggered = useGlobalFlagStore(
+    (s) => s.setAutoLogoutTriggered
+  );
   const timerRef = useRef<number | null>(null);
-  const warnTimerRef = useRef<number | null>(null);;
+  const warnTimerRef = useRef<number | null>(null);
 
   const resetTimer = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -25,7 +26,8 @@ export default function useAutoLogout() {
     warnTimerRef.current = window.setTimeout(() => {
       toast.warning(
         <div>
-          <b>곧 로그아웃됩니다!</b><br />
+          <b>곧 로그아웃됩니다!</b>
+          <br />
           30초 후 자동 로그아웃 예정입니다.
         </div>
       );
@@ -36,7 +38,8 @@ export default function useAutoLogout() {
       setAutoLogoutTriggered(true);
       toast.info(
         <div>
-          시간이 초과되어<br />
+          시간이 초과되어
+          <br />
           자동 로그아웃 되었습니다.
         </div>
       );

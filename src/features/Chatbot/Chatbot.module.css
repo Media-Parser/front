@@ -264,16 +264,16 @@
   margin: 4px 0 8px 20px;
   padding: 4px 8px;
   background: #f7f7fa;
-  border-left: 3px solid #b5befb;
-  font-size: 0.93rem;
-  color: #6b6b82;
+  border-left: 3px solid var(--color-gray);
+  font-size: 0.8rem;
+  color: black;
   border-radius: 5px;
   display: flex;
   align-items: center;
 }
 .selectedTextIcon {
   margin-right: 7px;
-  color: #6b6bbf;
+  color: #000000;
   font-weight: bold;
 }
 .selectedText {
