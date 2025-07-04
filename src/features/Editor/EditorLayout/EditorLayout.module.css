@@ -46,3 +46,33 @@
   display: flex;
   flex-direction: column;
 }
+
+.tabButtons {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  gap: 8px;
+  border-bottom: 1px solid #ddd;
+  background: #f9f9f9;
+}
+
+.tabButtons button {
+  border: none;
+  width: auto;
+  background: transparent;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #555;
+}
+
+.tabButtons .activeTab {
+  border-bottom: 2px solid black;
+  color: black;
+}
+
+.rightContent {
+  padding: 12px;
+  height: calc(100% - 50px); /* 탭 버튼 높이만큼 제외 */
+  overflow-y: auto;
+}
