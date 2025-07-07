@@ -24,6 +24,8 @@ interface ChatbotProps {
   } | null;
   onMessageSent?: () => void;
   onClearSelectedText?: () => void;
+  setEditorTitle?: (title: string) => void;
+  setEditorBody?: (body: string) => void;
 }
 
 const Chatbot = ({
@@ -31,6 +33,8 @@ const Chatbot = ({
   selectedTextData,
   onMessageSent,
   onClearSelectedText,
+  setEditorTitle,
+  setEditorBody,
 }: ChatbotProps) => {
   const token = useAuthStore((state) => state.token);
 
@@ -81,7 +85,10 @@ const Chatbot = ({
   // 히스토리 불러오기
   useEffect(() => {
     fetchChatHistoryApi(docId)
-      .then((history) => setChatLog(history))
+      .then((history) => {
+        setChatLog(history);
+        console.log('📦 서버에서 받아온 chatLog:', history);
+      })
       .catch(() => setChatLog([]));
   }, [docId]);
 
@@ -190,6 +197,28 @@ const Chatbot = ({
     }
   };
 
+  // 복사 핸들러
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert("복사되었습니다!");
+  };
+
+  useEffect(() => {
+    console.log("### [Chatbot] mount됨");
+  }, []);
+
+  // 적용 핸들러
+  const handleApply = (text: string, type?: "title" | "body") => {
+    console.log("[Chatbot] handleApply:", { text, type });
+    if (window.confirm("이 내용을 적용할까요?")) {
+      if (type === "title" && typeof setEditorTitle === "function") {
+        setEditorTitle(text);
+      } else if (type === "body" && typeof setEditorBody === "function") {
+        setEditorBody(text);
+      }
+    }
+  };
+
   return (
     <div className={styles.Wrapper}>
       <div className={styles.chatHeaderArea}>
@@ -211,14 +240,12 @@ const Chatbot = ({
 
         {/* 채팅 로그 */}
         {chatLog.map((chat, idx) => {
+          console.log(`[chat#${idx}] apply_value:`, chat.apply_value);
           const isLast = idx === chatLog.length - 1;
-          
           let selectedText = "";
-
           if (typeof chat.question !== "string" && chat.question?.selected_text) {
             selectedText = chat.question.selected_text;
           }
-
           return (
             <div
               key={
@@ -262,6 +289,37 @@ const Chatbot = ({
                     {isLast && loading ? "응답을 기다리는 중..." : chat.answer}
                   </div>
                 </div>
+              )}
+
+              {/* 적용/복사 박스 */}
+              {chat.apply_value && chat.apply_value.trim() !== "" && (
+                <>
+                {console.log('chat.type:', chat.type)}
+                <div className={styles.applyBox}>
+                {chat.type && (chat.type === "title" || chat.type === "body") && (
+                  <div className={styles.applyTypeLabel}>
+                    {chat.type === "title" ? "[ 제목 수정 ]" : "[ 내용 수정 ]"}
+                  </div>
+                )}
+                  <div className={styles.applyValueText}>
+                    {chat.apply_value}
+                  </div>
+                  <div className={styles.applyBtnRow}>
+                    <button
+                      className={styles.applyBtn}
+                      onClick={() => handleApply(chat.apply_value!)}
+                    >
+                      적용
+                    </button>
+                    <button
+                      className={styles.copyBtn}
+                      onClick={() => handleCopy(chat.apply_value!)}
+                    >
+                      복사
+                    </button>
+                  </div>
+                </div>
+                </>
               )}
 
               {/* suggestion 있을 때만 */}

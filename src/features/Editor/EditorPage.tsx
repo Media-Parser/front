@@ -4,7 +4,7 @@ import EditorSidebar from "./EditorSidebar/EditorSidebar";
 import styles from "./Editor.module.css";
 import Chatbot from "../Chatbot/Chatbot";
 import EditDoc from "./EditDoc/EditDoc";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Suggestion from "../Suggestion/Suggestion";
 
@@ -31,6 +31,18 @@ const EditorPage = () => {
     }
   }, [saveFunction]);
 
+  console.log("🔥 여기가 진짜 실행됨!");
+
+  const [title, setTitle] = useState("");
+  const [contents, setContents] = useState("");
+
+  useEffect(() => {
+    console.log("[EditorPage] title:", title);
+  }, [title]);
+  useEffect(() => {
+    console.log("[EditorPage] contents:", contents);
+  }, [contents]);
+
   return (
     <div>
       <EditorSidebar onSave={handleSave} />
@@ -46,6 +58,10 @@ const EditorPage = () => {
                   endIndex: end,
                 });
               }}
+              title={title}
+              setTitle={setTitle}
+              contents={contents}
+              setContents={setContents}
             />
           }
           rightTab={rightTab}
@@ -57,6 +73,8 @@ const EditorPage = () => {
                 selectedTextData={selectedTextData}
                 onMessageSent={() => setSelectedTextData(null)}
                 onClearSelectedText={() => setSelectedTextData(null)}
+                setEditorTitle={setTitle}
+                setEditorBody={setContents}
               />
             ) : (
               <Suggestion docId={docId ?? ""} />

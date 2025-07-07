@@ -9,6 +9,8 @@ export interface ChatQA {
   selection?: string; // 선택 영역
   answer: string; // AI가 생성한 답변
   suggestion?: string; // (optional) AI의 수정 제안
+  apply_value?: string; // (optional) AI의 적용/복사할 문구
+  type?: "title" | "body";
   created_dt: string;
 }
 

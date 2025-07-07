@@ -17,7 +17,12 @@
   padding: 0.5rem;
   outline: none;
   width: 100%;
+  resize: none;      /* 사용자가 드래그로 크기 조절 못하게 */
+  overflow: hidden;  /* 스크롤바 안나오게 */
+  background: transparent;
+  box-sizing: border-box;
 }
+
 
 .titleInput:focus {
   border-color: #0078d7;
