@@ -212,10 +212,13 @@ const Chatbot = ({
         {/* 채팅 로그 */}
         {chatLog.map((chat, idx) => {
           const isLast = idx === chatLog.length - 1;
-          
+
           let selectedText = "";
 
-          if (typeof chat.question !== "string" && chat.question?.selected_text) {
+          if (
+            typeof chat.question !== "string" &&
+            chat.question?.selected_text
+          ) {
             selectedText = chat.question.selected_text;
           }
 

@@ -20,12 +20,12 @@
 }
 
 .logo {
-  width: 250px;
+  width: 230px;
 }
 
 .resetButton {
   font-size: 0.8rem;
-  padding: 5px 15px;
+  padding: 5px;
   cursor: pointer;
   transition: background 0.16s;
 }

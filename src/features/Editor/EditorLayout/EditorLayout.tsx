@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import styles from "./EditorLayout.module.css";
 import { FiChevronLeft } from "react-icons/fi";
+import { RxCross1 } from "react-icons/rx";
 
 type EditorLayoutProps = {
   left: React.ReactNode;
@@ -29,7 +30,7 @@ const EditorLayout = ({
       const newRightWidth = containerRect.right - e.clientX;
 
       // 자동 닫기 조건
-      if (newRightWidth < 300) {
+      if (newRightWidth < 350) {
         setIsRightOpen(false);
         setIsDragging(false);
       } else if (newRightWidth <= 500) {
@@ -98,7 +99,7 @@ const EditorLayout = ({
               }}
               title="닫기"
             >
-              ✕
+              <RxCross1 size={16} />
             </button>
           ) : (
             <button
