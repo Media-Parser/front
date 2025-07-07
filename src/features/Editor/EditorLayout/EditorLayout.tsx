@@ -1,8 +1,6 @@
 // 📁 src/features/Editor/EditorLayout/EditorLayout.tsx
 
 import { useRef, useState, useEffect } from "react";
-import type { ReactNode } from "react";
-import Header from "../../../components/Header/Header";
 import styles from "./EditorLayout.module.css";
 
 type EditorLayoutProps = {
@@ -18,30 +16,25 @@ const EditorLayout = ({
   rightContent,
   rightTab,
   setRightTab,
-  showHeader = true,
 }: EditorLayoutProps) => {
-  const [leftWidth, setLeftWidth] = useState(60);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [rightWidth, setRightWidth] = useState(500);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging || !containerRef.current) return;
 
       const containerRect = containerRef.current.getBoundingClientRect();
-      const newLeftWidth =
-        ((e.clientX - containerRect.left) / containerRect.width) * 100;
+      const newRightWidth = containerRect.right - e.clientX;
 
-      // 최소 / 최대 너비 제한
-      if (newLeftWidth >= 30 && newLeftWidth <= 70) {
-        setLeftWidth(newLeftWidth);
+      if (newRightWidth >= 320 && newRightWidth <= 500) {
+        setRightWidth(newRightWidth);
       }
     };
 
     const handleMouseUp = () => {
-      if (isDragging) {
-        setIsDragging(false);
-      }
+      if (isDragging) setIsDragging(false);
     };
 
     if (isDragging) {
@@ -57,28 +50,19 @@ const EditorLayout = ({
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.main} ref={containerRef}>
-        <div
-          className={styles.left}
-          style={{ width: `${leftWidth}%`, minWidth: "500px" }}
-        >
-          {left}
-        </div>
+      <div
+        className={styles.gridLayout}
+        ref={containerRef}
+        style={{ gridTemplateColumns: `1fr 1px ${rightWidth}px` }}
+      >
+        <div className={styles.left}>{left}</div>
 
         <div
           className={styles.divider}
           onMouseDown={() => setIsDragging(true)}
         />
 
-        <div
-          className={styles.right}
-          style={{
-            width: `${100 - leftWidth}%`,
-            maxWidth: "500px",
-            minWidth: "320px",
-          }}
-        >
-          {/* 🔽 오른쪽 탭 버튼 */}
+        <div className={styles.right}>
           <div className={styles.tabButtons}>
             <button
               onClick={() => setRightTab("chatbot")}
@@ -93,8 +77,6 @@ const EditorLayout = ({
               제안
             </button>
           </div>
-
-          {/* 🔽 오른쪽 실제 콘텐츠 */}
           <div className={styles.rightContent}>{rightContent}</div>
         </div>
       </div>
