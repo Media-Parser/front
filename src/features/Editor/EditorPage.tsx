@@ -6,12 +6,14 @@ import Chatbot from "../Chatbot/Chatbot";
 import EditDoc from "./EditDoc/EditDoc";
 import { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
+import Suggestion from "../Suggestion/Suggestion";
 
 const EditorPage = () => {
   const { id: docId } = useParams<{ id: string }>();
   const [saveFunction, setSaveFunction] = useState<
     (() => Promise<void>) | null
   >(null);
+  const [rightTab, setRightTab] = useState<"chatbot" | "suggestion">("chatbot");
 
   const [selectedTextData, setSelectedTextData] = useState<{
     selectedText: string | null;
@@ -46,15 +48,20 @@ const EditorPage = () => {
               }}
             />
           }
-          right={
-            <Chatbot
-              docId={docId ?? ""}
-              selectedTextData={selectedTextData}
-              onMessageSent={() => setSelectedTextData(null)}
-              onClearSelectedText={() => setSelectedTextData(null)}
-            />
+          rightTab={rightTab}
+          setRightTab={setRightTab}
+          rightContent={
+            rightTab === "chatbot" ? (
+              <Chatbot
+                docId={docId ?? ""}
+                selectedTextData={selectedTextData}
+                onMessageSent={() => setSelectedTextData(null)}
+                onClearSelectedText={() => setSelectedTextData(null)}
+              />
+            ) : (
+              <Suggestion docId={docId ?? ""} />
+            )
           }
-          showHeader={true}
         />
       </div>
     </div>

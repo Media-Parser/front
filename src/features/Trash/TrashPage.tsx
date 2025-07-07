@@ -9,7 +9,7 @@ import { groupDocumentsByDate } from "../../lib/utils/groupDocumentsByDate";
 import type { Document } from "../../types/documentType";
 import LoadingOrError from "../../components/Common/LoadingOrError";
 import useAuthStore from "../../store/useAuthStore";
-import SearchBar from "../../components/SearchBar/SearchBar"; // 검색바 컴포넌트
+import SearchBar from "../../components/SearchBar/SearchBar";
 import Button from "../../components/Button/Button";
 
 const TrashPage = () => {
