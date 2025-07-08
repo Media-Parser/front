@@ -69,49 +69,25 @@ const EditorLayout = ({
         ref={containerRef}
         style={{
           gridTemplateColumns: isRightOpen
-            ? `1fr 5px ${rightWidth}px`
-            : `1fr 5px 0px`,
+            ? `1fr 5px ${rightWidth}px auto`
+            : `1fr 5px 0px auto`,
         }}
       >
         <div className={styles.left}>{left}</div>
 
-        {/* divider + button을 감싸는 래퍼 */}
+        {/* 드래그용 divider */}
         <div
-          className={styles.dividerWrapper}
+          className={`${styles.divider} ${
+            !isRightOpen ? styles.dividerClosed : ""
+          }`}
           onMouseDown={(e) => {
-            // 버튼 위에서 드래그 시작 안 되게 하기 위해 태그 체크
             if ((e.target as HTMLElement).tagName !== "BUTTON" && isRightOpen) {
               setIsDragging(true);
             }
           }}
-        >
-          <div
-            className={`${styles.divider} ${
-              !isRightOpen ? styles.dividerClosed : ""
-            }`}
-          />
-          {isRightOpen ? (
-            <button
-              className={styles.closeButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCloseRight();
-              }}
-              title="닫기"
-            >
-              <RxCross1 size={16} />
-            </button>
-          ) : (
-            <button
-              onClick={handleOpenRight}
-              className={styles.reopenButton}
-              title="오른쪽 창 열기"
-            >
-              <FiChevronLeft size={18} />
-            </button>
-          )}
-        </div>
+        />
 
+        {/* 오른쪽 콘텐츠 패널 */}
         {isRightOpen && (
           <div className={styles.right}>
             <div className={styles.tabButtons}>
@@ -131,6 +107,33 @@ const EditorLayout = ({
             <div className={styles.rightContent}>{rightContent}</div>
           </div>
         )}
+
+        {/* toggle 버튼만 따로 분리해서 오른쪽 끝에 고정 */}
+        <div className={styles.toggleArea}>
+          {isRightOpen ? (
+            <button
+              className={styles.closeButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCloseRight();
+              }}
+              title="닫기"
+            >
+              <RxCross1 size={16} />
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenRight();
+              }}
+              className={styles.reopenButton}
+              title="오른쪽 창 열기"
+            >
+              <FiChevronLeft size={18} />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

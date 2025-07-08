@@ -7,7 +7,7 @@
 }
 
 /* 헤더 영역 */
-.chatHeaderArea {
+.headerArea {
   position: sticky;
   top: 0;
   z-index: 3;
@@ -20,12 +20,11 @@
 }
 
 .logo {
-  width: 230px;
+  height: 25px;
 }
 
 .resetButton {
   font-size: 0.8rem;
-  padding: 5px;
   cursor: pointer;
   transition: background 0.16s;
 }

@@ -1,7 +1,8 @@
-// // 📁 src/features/Suggestion/Suggestion.tsx
-// import { useState, useCallback } from "react";
+// 📁 src/features/Suggestion/Suggestion.tsx
+import { useState, useCallback } from "react";
 // import { useParams } from "react-router-dom";
 import styles from "./Suggestion.module.css";
+import suggestionImage from "../../assets/suggestionImg.png";
 
 type SuggestionProps = {
   docId: string;
@@ -22,18 +23,48 @@ const dummySuggestions = [
 ];
 
 const Suggestion = ({ docId }: SuggestionProps) => {
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const handleToggle = (id: string) => {
+    setOpenId((prev) => (prev === id ? null : id));
+  };
+
   return (
-    <div className={styles.wrapper}>
-      <h3 className={styles.heading}>📝 제안 사항</h3>
-      <ul className={styles.suggestionList}>
-        {dummySuggestions.map((sug) => (
-          <li key={sug.id} className={styles.suggestionItem}>
-            <h4 className={styles.title}>{sug.title}</h4>
-            <p className={styles.description}>{sug.description}</p>
-            <button className={styles.applyBtn}>적용하기</button>
-          </li>
-        ))}
-      </ul>
+    <div className={styles.Wrapper}>
+      <div className={styles.headerArea}>
+        <h3 className={styles.heading}>
+          <img
+            src={suggestionImage}
+            alt="Suggestion Icon"
+            className={styles.image}
+          />
+        </h3>{" "}
+      </div>
+      <div className={styles.suggestionArea}>
+        <ul className={styles.suggestionList}>
+          {dummySuggestions.map((sug) => (
+            <li
+              key={sug.id}
+              className={`${styles.suggestionItem} ${
+                openId === sug.id ? styles.open : ""
+              }`}
+              onClick={() => handleToggle(sug.id)}
+            >
+              <h4 className={styles.title}>{sug.title}</h4>
+              {openId === sug.id && (
+                <p className={styles.description}>{sug.description}</p>
+              )}
+              <button className={styles.applyBtn}>적용하기</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={styles.noteArea}>
+        <p className={styles.note}>
+          {" "}
+          이 문서는 다소 보수적으로 작성되어 있습니다.{" "}
+        </p>
+      </div>
     </div>
   );
 };

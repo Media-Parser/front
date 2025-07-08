@@ -9,7 +9,7 @@
 
 .gridLayout {
   display: grid;
-  grid-template-columns: 1fr 5px 500px; /* dividerWrapper 폭 5px */
+  grid-template-columns: 1fr 5px 500px auto;
   height: 100%;
   margin-top: 20px;
   overflow: hidden;
@@ -25,41 +25,36 @@
   min-height: 0;
 }
 
-/* 새로 추가: divider + 버튼 감싸는 래퍼 */
-.dividerWrapper {
-  position: relative;
-  width: 5px; /* 넉넉히 잡음 */
+.divider {
+  width: 5px;
   height: 100%;
   cursor: col-resize;
   user-select: none;
+  position: relative;
   z-index: 10;
+  background-color: transparent;
 }
 
-/* 실제 드래그 영역인 divider */
-.divider {
+.divider::before {
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translateX(-100%);
+  transform: translate(-50%, -50%);
   width: 2px;
   height: 10%;
   background-color: #e0e0e0;
   transition: width 0.2s, background-color 0.2s;
 }
 
-.divider:hover {
+.divider:hover::before {
   width: 4px;
   background-color: #bdbdbd;
 }
 
-.dividerClosed {
+.dividerClosed::before {
   background-color: white;
-  cursor: default;
-}
-
-.dividerClosed:hover {
   width: 1px;
-  background-color: white;
 }
 
 .right {
@@ -94,37 +89,11 @@
   overflow-y: auto;
 }
 
-.closeButton {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-94%);
-  width: 24px;
-  height: 24px;
-  font-size: 16px;
-  font-weight: 500;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  color: #888;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s, background-color 0.2s;
-  z-index: 20;
-}
-
-.closeButton:hover {
-  color: #000;
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
+.closeButton,
 .reopenButton {
   position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-100%);
+  top: 0;
+  left: 0;
   width: 24px;
   height: 24px;
   font-size: 16px;
@@ -141,7 +110,17 @@
   z-index: 20;
 }
 
+.closeButton:hover,
 .reopenButton:hover {
   color: #000;
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+.toggleArea {
+  position: fixed;
+  top: 30px;
+  right: 70px;
+  width: 24px;
+  height: 24px;
+  z-index: 30;
 }

@@ -11,8 +11,8 @@ import {
 } from "../../lib/api/aiApi";
 import type { ChatSendRequest, ChatQA } from "../../types/chatType";
 import { Eraser } from "lucide-react";
-import logo from "../../assets/a.png";
 import pPro from "../../assets/go.png";
+import questionImg from "../../assets/questionImg.png";
 
 // 컴포넌트 Props 타입
 interface ChatbotProps {
@@ -192,9 +192,9 @@ const Chatbot = ({
 
   return (
     <div className={styles.Wrapper}>
-      <div className={styles.chatHeaderArea}>
+      <div className={styles.headerArea}>
         <h3 className={styles.defaultMessage}>
-          <img src={logo} alt="로고" className={styles.logo} />
+          <img src={questionImg} alt="로고" className={styles.logo} />
         </h3>
         <button className={styles.resetButton} onClick={handleResetChat}>
           <Eraser strokeWidth={1.2} />
