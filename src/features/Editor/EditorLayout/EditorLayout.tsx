@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from "react";
+// File: front/src/features/Editor/EditorLayout/EditorLayout.tsx
+
+import { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./EditorLayout.module.css";
 import { FiChevronLeft } from "react-icons/fi";
 import { RxCross1 } from "react-icons/rx";
@@ -17,46 +19,44 @@ const EditorLayout = ({
   rightTab,
   setRightTab,
 }: EditorLayoutProps) => {
-  const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [rightWidth, setRightWidth] = useState(500);
   const [isRightOpen, setIsRightOpen] = useState(true);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
       if (!isDragging || !containerRef.current) return;
 
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const newRightWidth = containerRect.right - e.clientX;
+      const { right } = containerRef.current.getBoundingClientRect();
+      const newRightWidth = right - e.clientX;
 
-      // 자동 닫기 조건
       if (newRightWidth < 350) {
         setIsRightOpen(false);
         setIsDragging(false);
       } else if (newRightWidth <= 500) {
         setRightWidth(newRightWidth);
       }
-    };
+    },
+    [isDragging]
+  );
 
-    const handleMouseUp = () => {
-      if (isDragging) setIsDragging(false);
-    };
+  const handleMouseUp = useCallback(() => {
+    if (isDragging) setIsDragging(false);
+  }, [isDragging]);
 
+  useEffect(() => {
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     }
-
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging]);
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  const handleCloseRight = () => {
-    setIsRightOpen(false);
-  };
-
+  const handleCloseRight = () => setIsRightOpen(false);
   const handleOpenRight = () => {
     setIsRightOpen(true);
     setRightWidth(500);
@@ -75,7 +75,7 @@ const EditorLayout = ({
       >
         <div className={styles.left}>{left}</div>
 
-        {/* 드래그용 divider */}
+        {/* 드래그 핸들러 */}
         <div
           className={`${styles.divider} ${
             !isRightOpen ? styles.dividerClosed : ""
@@ -87,7 +87,7 @@ const EditorLayout = ({
           }}
         />
 
-        {/* 오른쪽 콘텐츠 패널 */}
+        {/* 오른쪽 패널 */}
         {isRightOpen && (
           <div className={styles.right}>
             <div className={styles.tabButtons}>
@@ -108,7 +108,7 @@ const EditorLayout = ({
           </div>
         )}
 
-        {/* toggle 버튼만 따로 분리해서 오른쪽 끝에 고정 */}
+        {/* 토글 버튼 */}
         <div className={styles.toggleArea}>
           {isRightOpen ? (
             <button
@@ -123,11 +123,11 @@ const EditorLayout = ({
             </button>
           ) : (
             <button
+              className={styles.reopenButton}
               onClick={(e) => {
                 e.stopPropagation();
                 handleOpenRight();
               }}
-              className={styles.reopenButton}
               title="오른쪽 창 열기"
             >
               <FiChevronLeft size={18} />

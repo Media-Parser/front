@@ -33,6 +33,7 @@ a {
 }
 
 button {
+  font-family: inherit;
   cursor: pointer;
   border: none;
   outline: none;
@@ -46,6 +47,10 @@ textarea {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+select {
+  font-family: inherit;
 }
 
 .container {

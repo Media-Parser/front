@@ -1,3 +1,4 @@
+/* 전체 레이아웃 컨테이너 */
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -7,6 +8,7 @@
   width: 100%;
 }
 
+/* 그리드 레이아웃 구성 */
 .gridLayout {
   display: grid;
   grid-template-columns: 1fr 5px 500px auto;
@@ -15,6 +17,7 @@
   overflow: hidden;
 }
 
+/* 왼쪽 콘텐츠 영역 */
 .left {
   overflow-y: auto;
   padding: 16px;
@@ -22,9 +25,10 @@
   margin-right: 16px;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: 0; /* flex 아이템 최소 높이 지정 */
 }
 
+/* 좌우 분할 드래그 바 */
 .divider {
   width: 5px;
   height: 100%;
@@ -35,6 +39,7 @@
   background-color: transparent;
 }
 
+/* 드래그 핸들러 (가운데 선) */
 .divider::before {
   content: "";
   position: absolute;
@@ -52,11 +57,13 @@
   background-color: #bdbdbd;
 }
 
+/* 오른쪽 창이 닫혔을 때의 드래그바 상태 */
 .dividerClosed::before {
   background-color: white;
   width: 1px;
 }
 
+/* 오른쪽 콘텐츠 영역 */
 .right {
   padding: 16px 16px 0 16px;
   display: flex;
@@ -65,6 +72,7 @@
   background-color: #fafafa;
 }
 
+/* 탭 버튼 영역 (챗봇 / 제안) */
 .tabButtons {
   display: flex;
   justify-content: space-around;
@@ -79,16 +87,19 @@
   font-weight: 500;
 }
 
+/* 활성화된 탭 하이라이트 */
 .activeTab {
   border-bottom: 2px solid black;
 }
 
+/* 오른쪽 실제 콘텐츠 영역 */
 .rightContent {
   padding: 12px;
-  height: calc(100% - 35px);
+  height: calc(100% - 35px); /* 탭 버튼 높이 제외 */
   overflow-y: auto;
 }
 
+/* 오른쪽 창 닫기 / 열기 버튼 */
 .closeButton,
 .reopenButton {
   position: absolute;
@@ -116,6 +127,7 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+/* 오른쪽 토글 버튼 고정 위치 */
 .toggleArea {
   position: fixed;
   top: 30px;

@@ -11,7 +11,7 @@ import {
 } from "../../lib/api/aiApi";
 import type { ChatSendRequest, ChatQA } from "../../types/chatType";
 import { Eraser } from "lucide-react";
-import pPro from "../../assets/go.png";
+import pPro from "../../assets/logo.png";
 import questionImg from "../../assets/questionImg.png";
 
 // 컴포넌트 Props 타입

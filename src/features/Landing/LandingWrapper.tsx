@@ -3,7 +3,7 @@
 import { useLocation } from "react-router-dom";
 import Homepage from "../Home/HomePage";
 import Loginpage from "../Login/LoginPage";
-import logoImage from "../../assets/pol.png";
+import logoImage from "../../assets/polexibleS.png";
 import styles from "./Landing.module.css";
 import useAuthStore from "../../store/useAuthStore";
 import { useEffect } from "react";
