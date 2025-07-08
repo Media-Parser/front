@@ -280,18 +280,19 @@
 }
 
 .applyBox {
-  background: #e5e6e9;
+  background: white;
   border-radius: 4px;
   padding: 12px 14px 10px 14px;
   margin: 10px 0 5px 0;
   box-shadow: none;
-  border: none;
+  border: 1px solid var(--color-hover);
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
 }
 
 .applyTypeLabel {
-  font-size: 0.92rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #636363;
   margin-bottom: 4px;
@@ -301,13 +302,13 @@
 }
 
 .applyValueText {
-  font-size: 0.97rem;
+  font-size: 0.85rem;
   line-height: 1.6;
   color: #222;
   font-weight: 400;
-  background: rgba(211, 211, 211, 0.838);
+  background: #f0f1f4;
   padding: 10px;
-  border-radius: 0;
+  border-radius: 10px;
   word-break: break-word;
   margin-bottom: 4px;
 }

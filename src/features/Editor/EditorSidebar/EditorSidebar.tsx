@@ -54,9 +54,6 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
       return;
     }
     await downloadDocument(docForDownload.doc_id);
-    console.log("doc.doc_id", docForDownload.doc_id);
-    console.log("doc.title", docForDownload.title);
-    console.log("doc.file_type", docForDownload.file_type);
   };
 
   const handleSave = async () => {

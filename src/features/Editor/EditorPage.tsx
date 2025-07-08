@@ -1,25 +1,27 @@
 // 📁 src/features/Editor/EditorPage.tsx
+import { useRef, useState, useCallback } from "react";
+import EditDoc from "./EditDoc/EditDoc";
+import Chatbot from "../Chatbot/Chatbot";
 import EditorLayout from "./EditorLayout/EditorLayout";
 import EditorSidebar from "./EditorSidebar/EditorSidebar";
 import styles from "./Editor.module.css";
-import Chatbot from "../Chatbot/Chatbot";
-import EditDoc from "./EditDoc/EditDoc";
-import { useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Suggestion from "../Suggestion/Suggestion";
 
 const EditorPage = () => {
   const { id: docId } = useParams<{ id: string }>();
-  const [saveFunction, setSaveFunction] = useState<
-    (() => Promise<void>) | null
-  >(null);
+  const [saveFunction, setSaveFunction] = useState<(() => Promise<void>) | null>(null);
   const [rightTab, setRightTab] = useState<"chatbot" | "suggestion">("chatbot");
-
   const [selectedTextData, setSelectedTextData] = useState<{
     selectedText: string | null;
     startIndex: number;
     endIndex: number;
   } | null>(null);
+
+  const [title, setTitle] = useState<string>("");
+  const [contents, setContents] = useState<string>("");
+
+  const autosaveRef = useRef<((data: { title: string; contents: string }) => Promise<void>) | null>(null);
 
   const handleSaveReady = useCallback((saveFn: () => Promise<void>) => {
     setSaveFunction(() => saveFn);
@@ -30,18 +32,6 @@ const EditorPage = () => {
       await saveFunction();
     }
   }, [saveFunction]);
-
-  console.log("🔥 여기가 진짜 실행됨!");
-
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
-
-  useEffect(() => {
-    console.log("[EditorPage] title:", title);
-  }, [title]);
-  useEffect(() => {
-    console.log("[EditorPage] contents:", contents);
-  }, [contents]);
 
   return (
     <div>
@@ -62,6 +52,7 @@ const EditorPage = () => {
               setTitle={setTitle}
               contents={contents}
               setContents={setContents}
+              autosaveRef={autosaveRef}
             />
           }
           rightTab={rightTab}
@@ -75,6 +66,13 @@ const EditorPage = () => {
                 onClearSelectedText={() => setSelectedTextData(null)}
                 setEditorTitle={setTitle}
                 setEditorBody={setContents}
+                title={title}
+                contents={contents}
+                autosave={async (data) => {
+                  if (autosaveRef.current) {
+                    await autosaveRef.current(data);
+                  }
+                }}
               />
             ) : (
               <Suggestion docId={docId ?? ""} />

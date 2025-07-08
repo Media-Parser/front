@@ -48,20 +48,12 @@ interface EditDocProps {
   setTitle: (t: string) => void;    // ★ 추가
   contents: string;                 // ★ 추가
   setContents: (c: string) => void; // ★ 추가
+  autosaveRef?: React.MutableRefObject<((data: { title: string; contents: string }) => Promise<void>) | null>;
 }
 
-const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setContents }: EditDocProps) => {
+const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setContents, autosaveRef }: EditDocProps) => {
   const { id } = useParams<{ id: string }>();
   if (!id) return <div className={styles.message}>문서 ID가 없습니다.</div>;
-
-  useEffect(() => {
-    console.log("[EditDoc] title prop:", title, "/ contents prop:", contents);
-  }, [title, contents]);
-
-  useEffect(() => {
-    console.log("[EditDoc] 받은 props.title:", title);
-    console.log("[EditDoc] 받은 props.contents:", contents);
-  }, [title, contents]);
 
   const {
     document,
@@ -102,6 +94,12 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
       fetchDocument();
     }
   }, [id, fetchDocument]);
+
+  useEffect(() => {
+    if (autosaveRef) {
+      autosaveRef.current = autosave;
+    }
+  }, [autosave, autosaveRef]);
 
   // Handle temporary document check and restoration modal
   useEffect(() => {
@@ -179,6 +177,16 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
     }
   }, [document]);
 
+  useEffect(() => {
+    // contents state가 변경될 때마다 DOM 반영
+    if (editableRef.current && editableRef.current.innerText !== contents) {
+      editableRef.current.innerText = contents || "";
+      if (!contents) {
+        editableRef.current.innerHTML = "<br />";
+      }
+    }
+  }, [contents]);
+
   // ---
   // Autosave Logic
   // ---
@@ -203,21 +211,21 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
   // Event Handlers
   // ---
 
-  // const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newTitle = e.target.value;
-  //   setTitle(newTitle);
-  //   if (!isSavingFinal) {
-  //     debouncedAutoSave({ title: newTitle, contents });
-  //   }
-  // };
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    if (!isSavingFinal) {
+      debouncedAutoSave({ title: newTitle, contents });
+    }
+  };
 
-  // const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
-  //   const newContents = e.currentTarget.innerText;
-  //   setContents(newContents);
-  //   if (!isSavingFinal) {
-  //     debouncedAutoSave({ title, contents: newContents });
-  //   }
-  // };
+  const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContents = e.currentTarget.innerText;
+    setContents(newContents);
+    if (!isSavingFinal) {
+      debouncedAutoSave({ title, contents: newContents });
+    }
+  };
 
   // Logic for handling text selection and showing the AI button
   const handleTextSelection = useCallback(() => {
@@ -367,7 +375,12 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
       <textarea
         className={styles.titleInput}
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={e => {
+          setTitle(e.target.value);
+          if (!isSavingFinal) {
+            debouncedAutoSave({ title: e.target.value, contents });
+          }
+        }}
         placeholder="제목을 입력하세요"
         disabled={!isReady}
         aria-label="문서 제목"
@@ -393,7 +406,12 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
           onKeyUp={handleTextSelection}
           suppressContentEditableWarning
           spellCheck={false}
-          onInput={(e) => setContents(e.currentTarget.innerText)}
+          onInput={(e) => {
+            setContents(e.currentTarget.innerText);
+            if (!isSavingFinal) {
+              debouncedAutoSave({ title, contents: e.currentTarget.innerText });
+            }
+          }}
           tabIndex={0}
           aria-label="문서 편집기"
         />

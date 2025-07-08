@@ -136,7 +136,6 @@ const DashboardPage: React.FC = () => {
   
     // 모달 "확인" (editor로 이동)
     const handleModalConfirm = () => {
-      console.log('modal confirm');
       if (pendingDocId) {
         navigate(`/editor/${pendingDocId}`);
       }
@@ -146,7 +145,6 @@ const DashboardPage: React.FC = () => {
   
     // 모달 "다운로드" (다운로드 진행)
     const handleModalDownload = () => {
-      console.log('modal download');
       if (pendingDocId) {
         downloadDocument(pendingDocId);
       }
