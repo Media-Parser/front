@@ -1,3 +1,4 @@
+// 📁 src/components/Layout/Layout.tsx
 import type { ReactNode } from "react";
 import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";

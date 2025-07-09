@@ -10,8 +10,9 @@ import {
 } from "../../lib/api/aiApi";
 import type { ChatSendRequest, ChatQA } from "../../types/chatType";
 import { Eraser } from "lucide-react";
-import logo from "../../assets/a.png";
-import pPro from "../../assets/go.png";
+import pPro from "../../assets/logo.png";
+import questionImg from "../../assets/questionImg.png";
+import ReactMarkdown from "react-markdown";
 
 interface ChatbotProps {
   docId: string;
@@ -248,9 +249,9 @@ const Chatbot = ({
 
   return (
     <div className={styles.Wrapper}>
-      <div className={styles.chatHeaderArea}>
+      <div className={styles.headerArea}>
         <h3 className={styles.defaultMessage}>
-          <img src={logo} alt="로고" className={styles.logo} />
+          <img src={questionImg} alt="로고" className={styles.logo} />
         </h3>
         <button className={styles.resetButton} onClick={handleResetChat}>
           <Eraser strokeWidth={1.2} />
@@ -312,7 +313,19 @@ const Chatbot = ({
                     className={styles.botlogo}
                   />
                   <div className={styles.botMessage}>
-                    {isLast && loading ? "응답을 기다리는 중..." : chat.answer}
+                    {isLast && loading ? (
+                      "응답을 기다리는 중..."
+                    ) : (
+                      <ReactMarkdown
+                        // 줄바꿈 스타일 유지 (옵션)
+                        components={{
+                          // 스타일 커스터마이즈 가능
+                          strong: ({node, ...props}) => <strong style={{fontWeight: 700}} {...props} />,
+                        }}
+                      >
+                        {chat.answer || ""}
+                      </ReactMarkdown>
+                    )}
                   </div>
                 </div>
               )}

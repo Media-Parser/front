@@ -3,7 +3,7 @@ import { useState, type JSX } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import styles from "./EditorSidebar.module.css";
-import { Home, Trash2, Download, Save, LogOut } from "lucide-react";
+import { Home, Trash2, Download, Save, LogOut, MessageSquareMore } from "lucide-react";
 import { useDocumentActions } from "../../../hooks/useDocumentActions";
 import { useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
@@ -12,13 +12,18 @@ import { useCategories } from "../../../hooks/useCategories";
 
 interface EditorSidebarProps {
   onSave?: () => Promise<void>;
+  isRightOpen: boolean;
+  setIsRightOpen: (open: boolean) => void;
+  onOpenRightPanel: () => void; // 추가!
 }
 
 type MenuItem =
   | { icon: JSX.Element; label: string; action: () => void }
   | { icon: JSX.Element; label: string; path: string };
 
-const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
+const EditorSidebar = ({
+  onSave, isRightOpen, setIsRightOpen, onOpenRightPanel
+}: EditorSidebarProps & { onOpenRightPanel: () => void }) => {
   const { id } = useParams<{ id: string }>();
   if (!id) {
     return <div className={styles.message}>문서 ID가 없습니다.</div>;
@@ -100,6 +105,17 @@ const EditorSidebar = ({ onSave }: EditorSidebarProps) => {
           navigate("/dashboard");
         }
       },
+    },
+    {
+      icon: <MessageSquareMore />,
+      label: isRightOpen ? "챗봇 닫기" : "챗봇 열기",
+      action: () => {
+        if (isRightOpen) {
+          setIsRightOpen(false);
+        } else {
+          onOpenRightPanel(); // ← 이거!
+        }
+      }
     },
     { icon: <Save />, label: "저장", action: handleSave },
     { icon: <Trash2 />, label: "삭제", action: handleDelete },

@@ -1,8 +1,15 @@
 /* src/features/Editor/Editor.module.css */
 
-.pageWrapper {
-  height: 100vh;
-  overflow: hidden;
+.editorContentWrapper {
+  width: 100%;
+  height: 100%;
+  max-width: 1350px;   /* 대시보드 content와 동일 */
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  flex: 1;
+  background: #fff;
+  min-width: 0;
+  padding: 0 2rem;     /* 대시보드와 동일 양옆 여백 */
+  gap: 2rem;           /* 왼쪽 EditDoc과 오른쪽 패널 사이 간격 */
+  overflow: hidden;
 }

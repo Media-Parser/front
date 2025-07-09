@@ -344,6 +344,12 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
     return <div className={styles.message}>문서가 존재하지 않습니다.</div>;
   }
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain');
+    window.document.execCommand('insertText', false, text);
+  };
+
   return (
     <div className={styles.container}>
       {/* Autosave Toast */}
@@ -412,6 +418,7 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
               debouncedAutoSave({ title, contents: e.currentTarget.innerText });
             }
           }}
+          onPaste={handlePaste}
           tabIndex={0}
           aria-label="문서 편집기"
         />

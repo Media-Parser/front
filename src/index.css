@@ -33,6 +33,7 @@ a {
 }
 
 button {
+  font-family: inherit;
   cursor: pointer;
   border: none;
   outline: none;
@@ -44,8 +45,10 @@ textarea {
   font-family: inherit;
   font-size: 1rem;
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+}
+
+select {
+  font-family: inherit;
 }
 
 .container {
@@ -56,7 +59,7 @@ textarea {
 
 /* 스크롤바 스타일 */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-bg);

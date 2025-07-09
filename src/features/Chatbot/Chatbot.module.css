@@ -7,7 +7,7 @@
 }
 
 /* 헤더 영역 */
-.chatHeaderArea {
+.headerArea {
   position: sticky;
   top: 0;
   z-index: 3;
@@ -20,12 +20,11 @@
 }
 
 .logo {
-  width: 250px;
+  height: 25px;
 }
 
 .resetButton {
   font-size: 0.8rem;
-  padding: 5px 15px;
   cursor: pointer;
   transition: background 0.16s;
 }
@@ -78,6 +77,9 @@
   white-space: pre-wrap;
 }
 
+.botMessage ul, .botMessage ol { margin-left: 1em; }
+.botMessage strong { font-weight: bold; }
+
 /* 에러 메시지 */
 .errorMessage {
   color: var(--color-red);
@@ -125,6 +127,7 @@
 
 .optionButton {
   font-size: 0.8rem;
+  background-color: white;
   border: 1px solid var(--color-hover);
   border-radius: 8px;
   padding: 8px 12px;
