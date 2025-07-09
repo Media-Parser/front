@@ -51,6 +51,7 @@
 }
 
 .contentsInput {
+  white-space: pre-wrap;
   position: relative;
   min-height: 200px;
   height: 100%;

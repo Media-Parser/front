@@ -163,7 +163,7 @@ const EditorLayout = forwardRef<EditorLayoutHandle, EditorLayoutProps>((
   return (
     <div className={styles.wrapper}>
       <div className={styles.leftArea} style={{
-        marginRight: isRightOpen ? rightWidth - 150 : 0
+        marginRight: isRightOpen ? rightWidth - 100 : 0
       }}>
         {left}
       </div>

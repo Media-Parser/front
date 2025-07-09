@@ -211,21 +211,21 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
   // Event Handlers
   // ---
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-    if (!isSavingFinal) {
-      debouncedAutoSave({ title: newTitle, contents });
-    }
-  };
+  // const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newTitle = e.target.value;
+  //   setTitle(newTitle);
+  //   if (!isSavingFinal) {
+  //     debouncedAutoSave({ title: newTitle, contents });
+  //   }
+  // };
 
-  const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
-    const newContents = e.currentTarget.innerText;
-    setContents(newContents);
-    if (!isSavingFinal) {
-      debouncedAutoSave({ title, contents: newContents });
-    }
-  };
+  // const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
+  //   const newContents = e.currentTarget.innerText;
+  //   setContents(newContents);
+  //   if (!isSavingFinal) {
+  //     debouncedAutoSave({ title, contents: newContents });
+  //   }
+  // };
 
   // Logic for handling text selection and showing the AI button
   const handleTextSelection = useCallback(() => {
@@ -346,9 +346,24 @@ const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setCont
 
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const text = e.clipboardData.getData('text/plain');
-    window.document.execCommand('insertText', false, text);
+    const text = e.clipboardData.getData("text/plain");
+    insertTextAtCursor(text);
   };
+
+  function insertTextAtCursor(text: string) {
+    const sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return;
+    sel.deleteFromDocument(); // 선택 영역 삭제
+    const lines = text.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      sel.getRangeAt(0).insertNode(window.document.createTextNode(lines[i]));
+      if (i !== lines.length - 1) {
+        sel.getRangeAt(0).insertNode(window.document.createElement("br"));
+      }
+      // 커서 이동
+      sel.collapseToEnd();
+    }
+  }
 
   return (
     <div className={styles.container}>
