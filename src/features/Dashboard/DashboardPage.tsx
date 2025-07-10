@@ -16,7 +16,7 @@ import { useCategories } from "../../hooks/useCategories";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
 import useAuthStore from "../../store/useAuthStore";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import SearchBar from "../../components/Searchbar/SearchBar";
 import Button from "../../components/Button/Button";
 import DownloadDocModal from "../../components/Modal/DownloadDocModal";
 import { checkTempDocExists } from "../../lib/api/documentsApi";
@@ -136,7 +136,6 @@ const DashboardPage: React.FC = () => {
   
     // 모달 "확인" (editor로 이동)
     const handleModalConfirm = () => {
-      console.log('modal confirm');
       if (pendingDocId) {
         navigate(`/editor/${pendingDocId}`);
       }
@@ -146,7 +145,6 @@ const DashboardPage: React.FC = () => {
   
     // 모달 "다운로드" (다운로드 진행)
     const handleModalDownload = () => {
-      console.log('modal download');
       if (pendingDocId) {
         downloadDocument(pendingDocId);
       }

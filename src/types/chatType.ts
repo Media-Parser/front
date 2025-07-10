@@ -5,11 +5,16 @@
 export interface ChatQA {
   chat_id: string;
   doc_id: string;
-  question: string | ChatSendRequest; // 사용자가 보낸 질문
-  selection?: string; // 선택 영역
-  answer: string; // AI가 생성한 답변
-  suggestion?: string; // (optional) AI의 수정 제안
+  question: string | ChatSendRequest;
+  selection?: string;
+  answer: string;
+  suggestion?: string;
+  apply_title?: string;
+  apply_body?: string;
+  type?: "title" | "body";
   created_dt: string;
+  start_index?: number;
+  end_index?: number;
 }
 
 // 채팅 히스토리 응답

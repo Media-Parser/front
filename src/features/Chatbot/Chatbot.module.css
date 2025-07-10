@@ -7,7 +7,7 @@
 }
 
 /* 헤더 영역 */
-.chatHeaderArea {
+.headerArea {
   position: sticky;
   top: 0;
   z-index: 3;
@@ -20,12 +20,11 @@
 }
 
 .logo {
-  width: 250px;
+  height: 25px;
 }
 
 .resetButton {
   font-size: 0.8rem;
-  padding: 5px 15px;
   cursor: pointer;
   transition: background 0.16s;
 }
@@ -78,6 +77,9 @@
   white-space: pre-wrap;
 }
 
+.botMessage ul, .botMessage ol { margin-left: 1em; }
+.botMessage strong { font-weight: bold; }
+
 /* 에러 메시지 */
 .errorMessage {
   color: var(--color-red);
@@ -125,6 +127,7 @@
 
 .optionButton {
   font-size: 0.8rem;
+  background-color: white;
   border: 1px solid var(--color-hover);
   border-radius: 8px;
   padding: 8px 12px;
@@ -277,4 +280,63 @@
 .selectedText {
   font-style: italic;
   font-size: 0.98em;
+}
+
+.applyBox {
+  background: white;
+  border-radius: 4px;
+  padding: 12px 14px 10px 14px;
+  margin: 10px 0 5px 0;
+  box-shadow: none;
+  border: 1px solid var(--color-hover);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.applyTypeLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #636363;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+  background: none;
+  padding: 0;
+}
+
+.applyValueText {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #222;
+  font-weight: 400;
+  background: #f0f1f4;
+  padding: 10px;
+  border-radius: 10px;
+  word-break: break-word;
+  margin-bottom: 4px;
+}
+
+.applyBtnRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin: 0;
+}
+.applyBtn,
+.copyBtn {
+  border: none;
+  background: none;
+  color: #444;
+  font-size: 0.8rem;
+  padding: 0;
+  cursor: pointer;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  transition: color 0.18s;
+}
+.applyBtn:hover,
+.copyBtn:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+  background: none;
 }

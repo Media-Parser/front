@@ -44,9 +44,14 @@ const RestoreModal = ({ onRestore, onCancel }: RestoreModalProps) => (
 interface EditDocProps {
   onSaveReady?: (saveFunction: () => Promise<void>) => void;
   onSelectText?: (txt: string, start: number, end: number) => void;
+  title: string;                    // ★ 추가
+  setTitle: (t: string) => void;    // ★ 추가
+  contents: string;                 // ★ 추가
+  setContents: (c: string) => void; // ★ 추가
+  autosaveRef?: React.MutableRefObject<((data: { title: string; contents: string }) => Promise<void>) | null>;
 }
 
-const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
+const EditDoc = ({ onSaveReady, onSelectText, title, setTitle, contents, setContents, autosaveRef }: EditDocProps) => {
   const { id } = useParams<{ id: string }>();
   if (!id) return <div className={styles.message}>문서 ID가 없습니다.</div>;
 
@@ -62,8 +67,6 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
 
   // Component State
   const [isReady, setIsReady] = useState(false);
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [isSavingFinal, setIsSavingFinal] = useState(false); // Renamed from isFinalizing for clarity
   const [showAutosaveToast, setShowAutosaveToast] = useState(false);
@@ -91,6 +94,12 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
       fetchDocument();
     }
   }, [id, fetchDocument]);
+
+  useEffect(() => {
+    if (autosaveRef) {
+      autosaveRef.current = autosave;
+    }
+  }, [autosave, autosaveRef]);
 
   // Handle temporary document check and restoration modal
   useEffect(() => {
@@ -168,6 +177,16 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     }
   }, [document]);
 
+  useEffect(() => {
+    // contents state가 변경될 때마다 DOM 반영
+    if (editableRef.current && editableRef.current.innerText !== contents) {
+      editableRef.current.innerText = contents || "";
+      if (!contents) {
+        editableRef.current.innerHTML = "<br />";
+      }
+    }
+  }, [contents]);
+
   // ---
   // Autosave Logic
   // ---
@@ -192,21 +211,21 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
   // Event Handlers
   // ---
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-    if (!isSavingFinal) {
-      debouncedAutoSave({ title: newTitle, contents });
-    }
-  };
+  // const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newTitle = e.target.value;
+  //   setTitle(newTitle);
+  //   if (!isSavingFinal) {
+  //     debouncedAutoSave({ title: newTitle, contents });
+  //   }
+  // };
 
-  const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
-    const newContents = e.currentTarget.innerText;
-    setContents(newContents);
-    if (!isSavingFinal) {
-      debouncedAutoSave({ title, contents: newContents });
-    }
-  };
+  // const handleContentsInput = (e: React.FormEvent<HTMLDivElement>) => {
+  //   const newContents = e.currentTarget.innerText;
+  //   setContents(newContents);
+  //   if (!isSavingFinal) {
+  //     debouncedAutoSave({ title, contents: newContents });
+  //   }
+  // };
 
   // Logic for handling text selection and showing the AI button
   const handleTextSelection = useCallback(() => {
@@ -325,6 +344,27 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
     return <div className={styles.message}>문서가 존재하지 않습니다.</div>;
   }
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData("text/plain");
+    insertTextAtCursor(text);
+  };
+
+  function insertTextAtCursor(text: string) {
+    const sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return;
+    sel.deleteFromDocument(); // 선택 영역 삭제
+    const lines = text.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      sel.getRangeAt(0).insertNode(window.document.createTextNode(lines[i]));
+      if (i !== lines.length - 1) {
+        sel.getRangeAt(0).insertNode(window.document.createElement("br"));
+      }
+      // 커서 이동
+      sel.collapseToEnd();
+    }
+  }
+
   return (
     <div className={styles.container}>
       {/* Autosave Toast */}
@@ -353,14 +393,26 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
       )}
 
       {/* Title Input */}
-      <input
-        type="text"
+      <textarea
         className={styles.titleInput}
         value={title}
-        onChange={handleTitleChange}
+        onChange={e => {
+          setTitle(e.target.value);
+          if (!isSavingFinal) {
+            debouncedAutoSave({ title: e.target.value, contents });
+          }
+        }}
         placeholder="제목을 입력하세요"
         disabled={!isReady}
         aria-label="문서 제목"
+        rows={1}           // 기본 행 높이
+        style={{ resize: "none", height: "auto", overflow: "hidden" }} // (옵션) 수동 높이조절 비활성화, 자동 늘리기
+        onInput={e => {
+          const el = e.currentTarget;
+          el.style.height = 'auto';
+          el.style.height = el.scrollHeight + 'px'; // 내용에 맞게 높이 자동 조절
+          setTitle(el.value);
+        }}
       />
 
       {/* Content Editable Area */}
@@ -375,7 +427,13 @@ const EditDoc = ({ onSaveReady, onSelectText }: EditDocProps) => {
           onKeyUp={handleTextSelection}
           suppressContentEditableWarning
           spellCheck={false}
-          onInput={handleContentsInput}
+          onInput={(e) => {
+            setContents(e.currentTarget.innerText);
+            if (!isSavingFinal) {
+              debouncedAutoSave({ title, contents: e.currentTarget.innerText });
+            }
+          }}
+          onPaste={handlePaste}
           tabIndex={0}
           aria-label="문서 편집기"
         />

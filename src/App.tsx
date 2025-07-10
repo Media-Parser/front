@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import AppRouter from "./routes";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import useAuthStore from "./store/useAuthStore";
 import { getUserInfoApi } from "./lib/api/documentsApi"; // 유저 정보 불러오기
 
@@ -14,14 +14,12 @@ function App() {
       syncAuth();
     };
     window.addEventListener("storage", onStorage);
-    // 토큰이 있을 때만 유효성 검사
 
     const user_id = localStorage.getItem("user_id");
     if (token && user_id) {
-      getUserInfoApi(user_id)
-        .catch(() => {
-          clearAuth();
-        });
+      getUserInfoApi(user_id).catch(() => {
+        clearAuth();
+      });
     }
     return () => window.removeEventListener("storage", onStorage);
   }, [token, clearAuth, syncAuth]);
@@ -36,22 +34,24 @@ function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: "#ffffff",
-            color: "#000000",
-            borderRadius: "6px",
-            padding: "12px 12px",
-            fontSize: "15px",
+            background: "#f9f9f9", // 부드러운 흰회색
+            color: "#333333", // 진하지 않은 다크 그레이
+            borderRadius: "4px", // 살짝 더 둥글게
+            padding: "10px 8px", // 패딩 약간 키우기
+            fontSize: "14px", // 조금 작게, 깔끔하게
+            boxShadow: "0 4px 8px rgba(0,0,0,0.1)", // 은은한 그림자
+            fontWeight: 500, // 중간 굵기
           },
           success: {
             iconTheme: {
-              primary: "#000000",
-              secondary: "#ffffff",
+              primary: "#66cdaa",
+              secondary: "#000000",
             },
           },
           error: {
             iconTheme: {
-              primary: "#ef4444",
-              secondary: "#fee2e2",
+              primary: "#800020",
+              secondary: "#ffffff",
             },
           },
         }}

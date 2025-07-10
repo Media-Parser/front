@@ -1,25 +1,31 @@
-// 📁 src/features/Editor/EditorPage.tsx
+// src/features/Editor/EditorPage.tsx
+import { useRef, useState, useCallback } from "react";
+import EditDoc from "./EditDoc/EditDoc";
+import Chatbot from "../Chatbot/Chatbot";
+import type { EditorLayoutHandle } from "./EditorLayout/EditorLayout";
 import EditorLayout from "./EditorLayout/EditorLayout";
 import EditorSidebar from "./EditorSidebar/EditorSidebar";
 import styles from "./Editor.module.css";
-import Chatbot from "../Chatbot/Chatbot";
-import EditDoc from "./EditDoc/EditDoc";
-import { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Suggestion from "../Suggestion/Suggestion";
+import Layout from "../../components/Layout/Layout";
 
 const EditorPage = () => {
   const { id: docId } = useParams<{ id: string }>();
-  const [saveFunction, setSaveFunction] = useState<
-    (() => Promise<void>) | null
-  >(null);
+  const [saveFunction, setSaveFunction] = useState<(() => Promise<void>) | null>(null);
   const [rightTab, setRightTab] = useState<"chatbot" | "suggestion">("chatbot");
-
   const [selectedTextData, setSelectedTextData] = useState<{
     selectedText: string | null;
     startIndex: number;
     endIndex: number;
   } | null>(null);
+
+  const [title, setTitle] = useState<string>("");
+  const [contents, setContents] = useState<string>("");
+  const [isRightOpen, setIsRightOpen] = useState(true);
+  const editorLayoutRef = useRef<EditorLayoutHandle>(null);
+
+  const autosaveRef = useRef<((data: { title: string; contents: string }) => Promise<void>) | null>(null);
 
   const handleSaveReady = useCallback((saveFn: () => Promise<void>) => {
     setSaveFunction(() => saveFn);
@@ -32,10 +38,21 @@ const EditorPage = () => {
   }, [saveFunction]);
 
   return (
-    <div>
-      <EditorSidebar onSave={handleSave} />
-      <div className={styles.pageWrapper}>
+    <Layout
+      showHeader={false}
+      showSidebar={true}
+      sidebar={
+        <EditorSidebar
+          onSave={handleSave}
+          isRightOpen={isRightOpen}
+          setIsRightOpen={setIsRightOpen}
+          onOpenRightPanel={() => editorLayoutRef.current?.openRightPanel()}
+        />
+      }
+    >
+      <div className={styles.editorContentWrapper}>
         <EditorLayout
+          ref={editorLayoutRef}
           left={
             <EditDoc
               onSaveReady={handleSaveReady}
@@ -46,6 +63,11 @@ const EditorPage = () => {
                   endIndex: end,
                 });
               }}
+              title={title}
+              setTitle={setTitle}
+              contents={contents}
+              setContents={setContents}
+              autosaveRef={autosaveRef}
             />
           }
           rightTab={rightTab}
@@ -57,14 +79,25 @@ const EditorPage = () => {
                 selectedTextData={selectedTextData}
                 onMessageSent={() => setSelectedTextData(null)}
                 onClearSelectedText={() => setSelectedTextData(null)}
+                setEditorTitle={setTitle}
+                setEditorBody={setContents}
+                title={title}
+                contents={contents}
+                autosave={async (data) => {
+                  if (autosaveRef.current) {
+                    await autosaveRef.current(data);
+                  }
+                }}
               />
             ) : (
               <Suggestion docId={docId ?? ""} />
             )
           }
+          isRightOpen={isRightOpen}
+          setIsRightOpen={setIsRightOpen}
         />
       </div>
-    </div>
+    </Layout>
   );
 };
 

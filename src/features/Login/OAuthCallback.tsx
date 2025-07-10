@@ -30,7 +30,6 @@ const OAuthCallback = () => {
         // navigate 직전 localStorage에 값 확실히 들어갔는지 체크
         setTimeout(() => {
           // navigate 전에 콘솔로 한 번 더 체크
-          console.log('콜백 navigate 직전:', localStorage.getItem("token"), localStorage.getItem("user_id"));
           navigate("/dashboard");
         }, 0); // setTimeout은 0ms로만 써도 race condition 대부분 방지
       } else {
