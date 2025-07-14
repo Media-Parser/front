@@ -1,68 +1,80 @@
-// 📁 src/features/Suggestion/Suggestion.tsx
-import { useState, useCallback } from "react";
-// import { useParams } from "react-router-dom";
+// src/features/Suggestion/Suggestion.tsx
+import { useState, useEffect } from "react";
 import styles from "./Suggestion.module.css";
 import suggestionImage from "../../assets/suggestionImg.png";
+import { fetchSentenceAnalysisApi } from "../../lib/api/analyzeApi";
+import type { SentenceAnalysis } from "../../types/analyzeType";
 
-type SuggestionProps = {
-  docId: string;
-};
+type SuggestionProps = { docId: string, contents: string };
 
-const dummySuggestions = [
-  {
-    id: "1",
-    title: "문서 도입부가 부족해요",
-    description:
-      "도입부에서 독자의 주의를 끌 수 있는 간단한 문제 제기나 배경 설명을 추가해보세요.",
-  },
-  {
-    id: "2",
-    title: "문장 길이가 너무 길어요",
-    description: "긴 문장을 짧게 나누어 가독성을 높일 수 있어요.",
-  },
-];
+const Suggestion = ({ docId, contents }: SuggestionProps) => {
+  const [analysis, setAnalysis] = useState<SentenceAnalysis[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [openId, setOpenId] = useState<number | null>(null);
 
-const Suggestion = ({ docId }: SuggestionProps) => {
-  const [openId, setOpenId] = useState<string | null>(null);
+  useEffect(() => {
+    setLoading(true);
+    fetchSentenceAnalysisApi(docId, contents)
+      .then(setAnalysis)
+      .finally(() => setLoading(false));
+  }, [docId, contents]);
 
-  const handleToggle = (id: string) => {
-    setOpenId((prev) => (prev === id ? null : id));
+  const handleToggle = (idx: number) => {
+    setOpenId((prev) => (prev === idx ? null : idx));
   };
 
   return (
     <div className={styles.Wrapper}>
       <div className={styles.headerArea}>
         <h3 className={styles.heading}>
-          <img
-            src={suggestionImage}
-            alt="Suggestion Icon"
-            className={styles.image}
-          />
-        </h3>{" "}
+          <img src={suggestionImage} alt="Suggestion Icon" className={styles.image} />
+        </h3>
       </div>
       <div className={styles.suggestionArea}>
-        <ul className={styles.suggestionList}>
-          {dummySuggestions.map((sug) => (
-            <li
-              key={sug.id}
-              className={`${styles.suggestionItem} ${
-                openId === sug.id ? styles.open : ""
-              }`}
-              onClick={() => handleToggle(sug.id)}
-            >
-              <h4 className={styles.title}>{sug.title}</h4>
-              {openId === sug.id && (
-                <p className={styles.description}>{sug.description}</p>
-              )}
-              <button className={styles.applyBtn}>적용하기</button>
-            </li>
-          ))}
+        {loading ? (
+          <div className={styles.analysisLoading}>분석 중...</div>
+        ) : (
+          <ul className={styles.suggestionList}>
+          {analysis.filter(a => a.flag).map((sent, idx) => {
+            const explanations = Array.isArray(sent.explanation)
+              ? sent.explanation
+              : sent.explanation
+              ? [sent.explanation]
+              : [];
+            return (
+              <li
+                key={sent.index}
+                className={`${styles.suggestionItem} ${openId === idx ? styles.open : ""}`}
+                onClick={() => handleToggle(idx)}
+              >
+                <h4 className={styles.title}>
+                  <span className={styles.highlighted}>
+                    {sent.highlighted.join(", ") || sent.text}
+                  </span>
+                  {explanations.length > 0 && (
+                    <span className={styles.explanation}>
+                      [{explanations.join(", ")}]
+                    </span>
+                  )}
+                </h4>
+                {openId === idx && (
+                  <p className={styles.description}>{sent.text}</p>
+                )}
+                <button className={styles.applyBtn}>적용하기</button>
+              </li>
+            );
+          })}
+          {analysis.filter(a => a.flag).length === 0 && (
+            <div className={styles.noSuggestion}>
+              부적합(수정 제안) 문장이 없습니다. 😊
+            </div>
+          )}
         </ul>
+        )}
       </div>
       <div className={styles.noteArea}>
         <p className={styles.note}>
-          {" "}
-          이 문서는 다소 보수적으로 작성되어 있습니다.{" "}
+          {" "}문장별로 하이라이트된 부분과 라벨을 클릭해서 확인하세요.{" "}
         </p>
       </div>
     </div>

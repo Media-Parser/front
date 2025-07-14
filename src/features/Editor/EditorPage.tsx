@@ -68,6 +68,7 @@ const EditorPage = () => {
               contents={contents}
               setContents={setContents}
               autosaveRef={autosaveRef}
+              rightTab={rightTab}
             />
           }
           rightTab={rightTab}
@@ -90,7 +91,7 @@ const EditorPage = () => {
                 }}
               />
             ) : (
-              <Suggestion docId={docId ?? ""} />
+              <Suggestion docId={docId ?? ""} contents={contents} />
             )
           }
           isRightOpen={isRightOpen}

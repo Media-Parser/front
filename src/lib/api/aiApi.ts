@@ -6,6 +6,7 @@ import type {
   ChatSendRequest,
   ChatSendResponse,
 } from "../../types/chatType";
+import type { SentenceAnalysis } from "../../types/analyzeType";
 
 /** 1. 채팅 히스토리(문서별) 불러오기 */
 export const fetchChatHistoryApi = async (
@@ -34,4 +35,13 @@ export const patchArticleContentApi = async (
   content: string,
 ) => {
   await aiApi.patch(`/chat/article/${doc_id}`, { content });
+};
+
+/** 문서 문장 분석 (Suggestion 기능 연동) */
+export const analyzeDocumentApi = async (doc_id: string, contents: string) => {
+  const res = await aiApi.post<{ sentences: SentenceAnalysis[] }>("/analyze", {
+    doc_id,
+    contents,
+  });
+  return res.data.sentences;
 };

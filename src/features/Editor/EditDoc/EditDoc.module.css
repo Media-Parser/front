@@ -216,3 +216,33 @@
   visibility: visible;
   opacity: 1;
 }
+
+/* 분석 결과 하이라이트 */
+.analysisResult {
+  margin-top: 14px;
+  margin-bottom: 12px;
+}
+
+/* 밑줄 + 배경(부적합 문장) */
+.analysisHighlight {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #e44;
+  background: rgba(255,0,0,0.07);
+  cursor: help;
+  transition: background 0.18s;
+}
+
+.analysisPlain {
+  line-height: 1.8;
+  color: #252525;
+  transition: color 0.2s;
+  /* 부적합(밑줄) 아닌 문장용: 추가 스타일 원하면 여기서 */
+}
+
+.analysisExplanation {
+  color: #e44;
+  margin-left: 6px;
+  font-size: 13px;
+  vertical-align: middle;
+}
