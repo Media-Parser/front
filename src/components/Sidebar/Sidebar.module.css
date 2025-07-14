@@ -149,6 +149,14 @@ ul {
   color: var(--color-active);
 }
 
+/* 베타 */
+.menuBadge {
+  margin-left: 4px;
+  font-size: 0.6rem;
+  color: #888;
+  font-weight: 500;
+}
+
 /* 활성화된 카테고리 강조 스타일 */
 .activemenu {
   text-decoration: underline;
