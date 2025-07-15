@@ -497,32 +497,23 @@
         {rightTab === "suggestion" && (
         <div className={styles.analysisResult}>
           {analysis.length > 0 &&
-            analysis.map((sent) => {
-              // explanation이 string일 수도 있으니 항상 배열로
-              const explanations = Array.isArray(sent.explanation)
-              ? sent.explanation
-              : typeof sent.explanation === "string" && sent.explanation.length > 0
-                ? [sent.explanation]
-                : [];
-
-              return (
-                <div key={sent.index} style={{ marginBottom: 8 }}>
-                  <span
-                    className={
-                      sent.flag ? styles.analysisHighlight : styles.analysisPlain
-                    }
-                    title={explanations.join(" / ")}
-                  >
-                    {sent.text}
+            analysis.map((sent) => (
+              <div key={sent.index} style={{ marginBottom: 8 }}>
+                <span
+                  className={
+                    sent.flag ? styles.analysisHighlight : styles.analysisPlain
+                  }
+                  title={sent.explanation.join(" / ")}
+                >
+                  {sent.highlighted.length > 0 ? sent.highlighted.join(", ") : sent.text}
+                </span>
+                {sent.flag && sent.explanation.length > 0 && (
+                  <span className={styles.analysisExplanation}>
+                    ⚠️ {sent.explanation.join(" / ")}
                   </span>
-                  {sent.flag && explanations.length > 0 && (
-                    <span className={styles.analysisExplanation}>
-                      ⚠️ {explanations.join(" / ")}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
+                )}
+              </div>
+            ))}
         </div>
       )}
       </div>
