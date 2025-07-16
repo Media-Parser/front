@@ -1,0 +1,106 @@
+.mainArea {
+  overflow-y: auto;
+}
+
+.mainAreaHeader {
+  margin-bottom: 20px;
+}
+
+.mainAreaHeaderTitle {
+  font-size: 1.5em;
+  color: black;
+  margin: 0;
+}
+
+.Content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 전체 가운데 정렬 */
+}
+
+.topicButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-self: stretch; /* 부모의 가로 폭을 다 차지하게 함 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.topic {
+  font-size: 0.9em;
+}
+
+/* 공통 텍스트 스타일 */
+.topicText {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.9em;
+}
+
+/* 아무 토픽도 선택되지 않았을 때 */
+.default {
+  color: black;
+  font-size: 0.9em;
+}
+
+/* 선택된 토픽 */
+.active {
+  color: black;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* 선택되지 않은 토픽 */
+.inactive {
+  color: #b0b0b0;
+}
+
+/* 선택 시 hover 효과 (선택 전에도 예쁘게 보여줌) */
+.topicText:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.imgList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2열 */
+  gap: 30px; /* 간격을 넉넉하게 */
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 100px;
+}
+
+.imgItemWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 이미지와 텍스트 모두 가로 중앙 정렬 */
+  width: 400px; /* 이미지와 같은 너비로 맞춰주기 */
+}
+
+.imgItem {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.imageFallback {
+  width: 320px;
+  height: 300px; /* 이미지와 비슷한 높이 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px;
+  color: #888; /* 회색 텍스트 */
+}
+
+.partyLabel {
+  margin-top: 8px;
+  font-size: 16px;
+  color: #444;
+  text-align: center; /* 텍스트 가운데 정렬 */
+  width: 100%; /* 부모 너비만큼 꽉 채우기 */
+}

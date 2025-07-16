@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import EditorPage from "../features/Editor/EditorPage";
 import DashboardPage from "../features/Dashboard/DashboardPage";
 import Suggestion from "../features/Suggestion/Suggestion";
+import Keyword from "../features/Keyword/Keyword";
 
 const AppRouter = () => {
   return (
@@ -24,6 +25,7 @@ const AppRouter = () => {
         <Route path="/account" element={<AccountPage />} />
         <Route path="/support" element={<SupportPage />} />
         <Route path="/suggestion" element={<Suggestion />} />
+        <Route path="/keyword" element={<Keyword />} />
         <Route path="/editor/:id" element={<EditorPage />} />
       </Route>
     </Routes>

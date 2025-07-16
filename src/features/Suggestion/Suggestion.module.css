@@ -70,3 +70,40 @@
   padding: 12px;
   z-index: 2;
 }
+
+/* 분석 중 메시지 */
+.analysisLoading {
+  text-align: center;
+  color: #888;
+  padding: 30px 0 10px 0;
+}
+
+/* 부적합 문장 없음 메시지 */
+.noSuggestion {
+  color: #999;
+  padding: 2em 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250px; /* 원하는 높이 지정 */
+  font-size: 1.13rem;
+}
+
+/* 부적합 highlight 라벨 (제목) */
+.highlighted {
+  color: #e55;
+  font-weight: 600;
+}
+
+/* 라벨 설명(사유) */
+.explanation {
+  margin-left: 8px;
+  color: #888;
+  font-size: 13px;
+}
+
+/* suggestionItem 오픈 스타일 */
+.suggestionItem.open {
+  background-color: #f0f8ff;
+}

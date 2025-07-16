@@ -48,6 +48,7 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
   const topMenus = [
     { label: "문서", path: "/dashboard", hasDropdown: true },
     { label: "휴지통", path: "/trash" },
+    { label: "키워드", path: "/keyword", badge: "Beta" },
     { label: "계정", path: "/account" },
   ];
 
@@ -216,7 +217,10 @@ const Sidebar = ({ onRefetch }: SidebarProps) => {
                     className={styles.menuLabel}
                     onClick={() => handleMenuClick(menu)}
                   >
-                    {menu.label}
+                    {menu.label}{" "}
+                    {menu.badge && (
+                      <span className={styles.menuBadge}>{menu.badge}</span>
+                    )}
                   </span>
                   {menu.hasDropdown && (
                     <span
