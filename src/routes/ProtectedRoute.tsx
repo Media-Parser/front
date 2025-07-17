@@ -49,7 +49,6 @@ if (!token || !userId) {
     alert("잘못된 접근입니다. 로그인 후 이용해주세요.");
     alertedRef.current = true;
   }
-  return <Navigate to="/" replace state={{ from: location }} />;
 }
 
   // 6. 정상 접근

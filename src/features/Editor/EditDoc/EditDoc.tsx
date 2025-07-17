@@ -66,8 +66,13 @@
     autosaveRef,
     rightTab,
   }: EditDocProps) => {
+
+    const [isReady, setIsReady] = useState(false);
+
     const { id } = useParams<{ id: string }>();
-    if (!id) return <div className={styles.message}>문서 ID가 없습니다.</div>;
+    if (!id) {
+      return <div className={styles.message}>문서 ID가 없습니다.</div>; // Hook 호출 이후이므로 안전
+    }
 
     const {
       document,
@@ -80,7 +85,6 @@
     } = useEditDocument(id);
 
     // Component State
-    const [isReady, setIsReady] = useState(false);
     const [showRestoreModal, setShowRestoreModal] = useState(false);
     const [isSavingFinal, setIsSavingFinal] = useState(false); // Renamed from isFinalizing for clarity
     const [showAutosaveToast, setShowAutosaveToast] = useState(false);
@@ -164,6 +168,19 @@
       []
     );
 
+  const ensureTrailingBreak = () => {
+    const el = editableRef.current;
+    if (!el) return;
+  
+    const lastNode = el.lastChild;
+  
+    // 마지막이 텍스트가 아닌 블록(div 등)일 경우 뒤에 <br> 삽입
+    if (!lastNode || lastNode.nodeType !== Node.TEXT_NODE) {
+      const br = window.document.createElement("br");
+      el.appendChild(br);
+    }
+  };
+
     // 복원: 임시 문서 불러오기
     const handleRestore = useCallback(async () => {
       try {
@@ -206,12 +223,23 @@
     }, [document]);
 
     useEffect(() => {
-      // contents state가 변경될 때마다 DOM 반영
       if (editableRef.current && editableRef.current.innerText !== contents) {
         editableRef.current.innerText = contents || "";
-        if (!contents) {
-          editableRef.current.innerHTML = "<br />";
+    
+        // ✅ 커서 생성을 위해 <br> 삽입
+        const el = editableRef.current;
+        const lines = contents.split(/\r?\n/);
+    
+        // 기존 내용 제거
+        el.innerHTML = "";
+    
+        for (let i = 0; i < lines.length; i++) {
+          const textNode = window.document.createTextNode(lines[i]);
+          el.appendChild(textNode);
+          el.appendChild(window.document.createElement("br")); // 항상 줄 끝에 br 삽입
         }
+    
+        ensureTrailingBreak();
       }
     }, [contents]);
 
@@ -386,16 +414,35 @@
     function insertTextAtCursor(text: string) {
       const sel = window.getSelection();
       if (!sel || !sel.rangeCount) return;
-      sel.deleteFromDocument(); // 선택 영역 삭제
+    
+      sel.deleteFromDocument();
+    
+      const range = sel.getRangeAt(0);
       const lines = text.split(/\r?\n/);
+    
+      const fragment = window.document.createDocumentFragment();
       for (let i = 0; i < lines.length; i++) {
-        sel.getRangeAt(0).insertNode(window.document.createTextNode(lines[i]));
-        if (i !== lines.length - 1) {
-          sel.getRangeAt(0).insertNode(window.document.createElement("br"));
+        fragment.appendChild(window.document.createTextNode(lines[i]));
+        if (i < lines.length - 1) {
+          fragment.appendChild(window.document.createElement("br"));
         }
-        // 커서 이동
-        sel.collapseToEnd();
       }
+    
+      range.insertNode(fragment);
+      sel.collapseToEnd();
+    
+      ensureTrailingBreak();
+    
+      // ⛔️ 여기서 바로 contents 값 읽는 것은 stale할 수 있음
+      // ✅ 아래처럼 next tick에서 읽어야 정확함
+      setTimeout(() => {
+        const currentText = editableRef.current?.innerText || "";
+        setContents(currentText);
+    
+        if (!isSavingFinal) {
+          debouncedAutoSave({ title, contents: currentText });
+        }
+      }, 0);
     }
 
     return (
@@ -497,23 +544,32 @@
         {rightTab === "suggestion" && (
         <div className={styles.analysisResult}>
           {analysis.length > 0 &&
-            analysis.map((sent) => (
-              <div key={sent.index} style={{ marginBottom: 8 }}>
-                <span
-                  className={
-                    sent.flag ? styles.analysisHighlight : styles.analysisPlain
-                  }
-                  title={sent.explanation.join(" / ")}
-                >
-                  {sent.highlighted.length > 0 ? sent.highlighted.join(", ") : sent.text}
-                </span>
-                {sent.flag && sent.explanation.length > 0 && (
-                  <span className={styles.analysisExplanation}>
-                    ⚠️ {sent.explanation.join(" / ")}
+            analysis.map((sent) => {
+              // explanation이 string일 수도 있으니 항상 배열로
+              const explanations = Array.isArray(sent.explanation)
+              ? sent.explanation
+              : typeof sent.explanation === "string" && sent.explanation.length > 0
+                ? [sent.explanation]
+                : [];
+
+              return (
+                <div key={sent.index} style={{ marginBottom: 8 }}>
+                  <span
+                    className={
+                      sent.flag ? styles.analysisHighlight : styles.analysisPlain
+                    }
+                    title={explanations.join(" / ")}
+                  >
+                    {sent.text}
                   </span>
-                )}
-              </div>
-            ))}
+                  {sent.flag && explanations.length > 0 && (
+                    <span className={styles.analysisExplanation}>
+                      ⚠️ {explanations.join(" / ")}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
         </div>
       )}
       </div>
