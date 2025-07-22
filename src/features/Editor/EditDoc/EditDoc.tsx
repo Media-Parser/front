@@ -569,7 +569,7 @@ const EditDoc = ({
       {rightTab === "suggestion" && (
         <div className={styles.analysisResult}>
           {/* analysis가 배열이고 length 속성이 있는지 확인하는 타입 가드 추가 */}
-          {Array.isArray(analysis) && analysis.length > 0 ? ( 
+          {Array.isArray(analysis) && analysis.length > 0 &&
             analysis.map((sent) => {
               // explanation이 string[]로 온다고 가정하고 타입 가드 간소화
               const explanations = sent.explanation; // Assuming sent.explanation is always string[] now
@@ -592,12 +592,7 @@ const EditDoc = ({
                 </div>
               );
             })
-          ) : ( 
-            // analysis가 비어있을 때 메시지 출력
-            <div className={styles.noSuggestion}>
-              부적합(수정 제안) 문장이 없습니다. 😊
-            </div>
-          )}
+          }
         </div>
       )}
     </div>
