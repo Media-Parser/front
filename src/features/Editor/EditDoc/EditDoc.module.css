@@ -6,9 +6,9 @@
   gap: 1rem;
   height: 100%;
   min-height: 0;
-  width: 100%;         /* 부모가 중앙정렬, 전체 폭 할당 */
-  max-width: 900px;    /* 글쓰기 영역 최대폭(더 넓으면 줄어듦) */
-  margin: 0 auto;      /* 중앙정렬 */
+  width: 100%; /* 부모가 중앙정렬, 전체 폭 할당 */
+  max-width: 900px; /* 글쓰기 영역 최대폭(더 넓으면 줄어듦) */
+  margin: 0 auto; /* 중앙정렬 */
   background: #fff;
   box-sizing: border-box;
 }
@@ -21,8 +21,8 @@
   font-weight: bold;
   border: none;
   outline: none;
-  resize: none;      /* 사용자가 드래그로 크기 조절 못하게 */
-  overflow: hidden;  /* 스크롤바 안나오게 */
+  resize: none; /* 사용자가 드래그로 크기 조절 못하게 */
+  overflow: hidden; /* 스크롤바 안나오게 */
   background: transparent;
   display: block;
   margin: 0;
@@ -33,9 +33,33 @@
   border-bottom: solid 1px #ccc;
 }
 
-
 .titleInput:focus {
   border-color: #666;
+}
+
+.metaInfo {
+  margin: 8px;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.topicId {
+  margin-bottom: 4px;
+}
+
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hashtag {
+  background-color: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  color: #333;
 }
 
 .contentsWrapper {
@@ -71,10 +95,10 @@
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #66cdaa;
+  background-color: #000000;
   color: white;
   padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 0.9rem;
   z-index: 1000;
   animation: fadeInOut 3s ease forwards;
@@ -83,22 +107,20 @@
 .autosaveToast {
   position: fixed;
   right: 20px;
-  /* left: 20px; */
   bottom: 20px;
-  background-color: white;
+  background-color: #ffffff;
   color: rgba(0, 0, 0, 0.85);
   font-weight: 500;
-  padding: 9px 22px;
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(255, 229, 125, 0.12),
-    0 1.5px 4px rgba(0, 0, 0, 0.07);
+  padding: 9px 12px;
+  border-radius: 6px;
   z-index: 1000;
-  font-size: 15.5px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 7px;
   letter-spacing: -0.01em;
   line-height: 1.1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.18s;
   animation: fadeInOut 1.7s cubic-bezier(0.38, 1.15, 0.69, 0.91) forwards;
 }
@@ -106,10 +128,10 @@
 .autosaveIcon {
   display: flex;
   align-items: center;
-  font-size: 16px; /* 텍스트와 거의 일치 */
+  font-size: 16px;
   margin-right: 7px;
   color: #20a45598;
-  vertical-align: -2px; /* 필요시 미세조정 */
+  vertical-align: -2px;
 }
 
 /* 나타났다 사라지는 애니메이션 */
@@ -146,14 +168,18 @@
 }
 .modalContent {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.13);
-  padding: 2rem 3rem;
+  padding: 1.5rem;
   text-align: center;
 }
 .modalContent button {
   margin: 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
+}
+
+.modalContent button:hover {
+  background: #e6e6e6;
 }
 
 .spinner {
@@ -228,7 +254,7 @@
   text-decoration-line: underline;
   text-decoration-style: wavy;
   text-decoration-color: #e44;
-  background: rgba(255,0,0,0.07);
+  background: rgba(255, 0, 0, 0.07);
   cursor: help;
   transition: background 0.18s;
 }

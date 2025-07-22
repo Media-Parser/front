@@ -94,7 +94,6 @@ body.dragging * {
   padding: 6px 10px;
   cursor: pointer;
   font-weight: 500;
-  border: none;
 }
 .activeTab {
   border-bottom: 2px solid #222;
