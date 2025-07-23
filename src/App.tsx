@@ -34,7 +34,7 @@ function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: "#f9f9f9", // 부드러운 흰회색
+            background: "#ffffff", // 부드러운 흰회색
             color: "#333333", // 진하지 않은 다크 그레이
             borderRadius: "4px", // 살짝 더 둥글게
             padding: "10px 8px", // 패딩 약간 키우기
@@ -44,13 +44,13 @@ function App() {
           },
           success: {
             iconTheme: {
-              primary: "#66cdaa",
+              primary: "#aaaaaa",
               secondary: "#000000",
             },
           },
           error: {
             iconTheme: {
-              primary: "#800020",
+              primary: "#ff0000",
               secondary: "#ffffff",
             },
           },

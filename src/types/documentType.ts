@@ -12,6 +12,8 @@ export interface Document {
   category_id?: string; // 문서 카테고리
   category: string;
   delete_yn?: string; // 삭제 여부
+  topic_id?: number; // 토픽 ID (-1이면 없음)
+  hashtag?: string[]; // 해시태그 목록 (ex: ["재정", "부동산"])
 }
 
 // 카테고리 타입 정의

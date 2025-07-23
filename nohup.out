@@ -1,0 +1,570 @@
+INFO:     Will watch for changes in these directories: ['/home/ubuntu/ssami/ssami-front']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [501571] using WatchFiles
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/importer.py", line 22, in import_from_string
+    raise exc from None
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'app'
+INFO:     Stopping reloader process [501571]
+INFO:     Will watch for changes in these directories: ['/home/ubuntu/ssami/ssami-front']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [502571] using WatchFiles
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/importer.py", line 22, in import_from_string
+    raise exc from None
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'app'
+INFO:     Stopping reloader process [502571]
+
+> ssami-front@0.0.0 dev
+> vite --host
+
+
+  VITE v7.0.4  ready in 225 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://172.31.38.246:5173/
+2:44:03 AM [vite] (client) page reload src/lib/api/analyzeApi.ts
+2:44:04 AM [vite] (client) Pre-transform error: Failed to load url /src/lib/api/analyzeApi.ts (resolved id: /home/ubuntu/ssami/ssami-front/src/lib/api/analyzeApi.ts) in /home/ubuntu/ssami/ssami-front/src/features/Suggestion/Suggestion.tsx. Does the file exist?
+2:45:21 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:45:28 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:45:48 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:46:04 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:46:06 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:46:17 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:46:20 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:46:23 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:47:04 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:47:16 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:47:17 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:14: ERROR: The symbol "results" has already been declared
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:14
+  
+  The symbol "results" has already been declared
+  163|            const results = await analyzeDocumentApi(docId, contents);
+  164|            // aiApi의 analyzeDocumentApi를 사용하여 직접 분석 요청
+  165|          const results = await analyzeDocumentApi(docId, contents);
+     |                ^
+  166|          onAnalysisUpdate(results, false); // 부모에게 결과와 로딩 완료 알림
+  167|          } catch {
+  
+2:47:20 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:14: ERROR: The symbol "results" has already been declared
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:14
+  
+  The symbol "results" has already been declared
+  163|            const results = await analyzeDocumentApi(docId, contents);
+  164|            // aiApi의 analyzeDocumentApi를 사용하여 직접 분석 요청
+  165|          const results = await analyzeDocumentApi(docId, contents);
+     |                ^
+  166|          onAnalysisUpdate(results, false); // 부모에게 결과와 로딩 완료 알림
+  167|          } catch {
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+2:47:23 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:47:24 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:16: ERROR: The symbol "results" has already been declared
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:16
+  
+  The symbol "results" has already been declared
+  163|            const results = await analyzeDocumentApi(docId, contents);
+  164|            // aiApi의 analyzeDocumentApi를 사용하여 직접 분석 요청
+  165|            const results = await analyzeDocumentApi(docId, contents);
+     |                  ^
+  166|            onAnalysisUpdate(results, false); // 부모에게 결과와 로딩 완료 알림
+  167|          } catch {
+  
+2:47:26 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:16: ERROR: The symbol "results" has already been declared
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:165:16
+  
+  The symbol "results" has already been declared
+  163|            const results = await analyzeDocumentApi(docId, contents);
+  164|            // aiApi의 analyzeDocumentApi를 사용하여 직접 분석 요청
+  165|            const results = await analyzeDocumentApi(docId, contents);
+     |                  ^
+  166|            onAnalysisUpdate(results, false); // 부모에게 결과와 로딩 완료 알림
+  167|          } catch {
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+2:47:40 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:48:18 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:48:37 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:49:15 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:49:19 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:49:53 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:49:55 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:49:58 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:50:01 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:50:04 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:50:16 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:50:50 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:51:10 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:51:19 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:54:13 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:54:27 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+2:54:53 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+3:57:38 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:57:39 AM [vite] (client) Pre-transform error: Failed to resolve import "../../lib/api/analyzeApi" from "src/features/Suggestion/Suggestion.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /home/ubuntu/ssami/ssami-front/src/features/Suggestion/Suggestion.tsx:5:41
+  3  |  import styles from "./Suggestion.module.css";
+  4  |  import suggestionImage from "../../assets/suggestionImg.png";
+  5  |  import { fetchSentenceAnalysisApi } from "../../lib/api/analyzeApi";
+     |                                            ^
+  6  |  const Suggestion = ({ docId, contents }) => {
+  7  |    const [analysis, setAnalysis] = useState([]);
+3:57:39 AM [vite] (client) Pre-transform error: Failed to resolve import "../../lib/api/analyzeApi" from "src/features/Suggestion/Suggestion.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /home/ubuntu/ssami/ssami-front/src/features/Suggestion/Suggestion.tsx:5:41
+  3  |  import styles from "./Suggestion.module.css";
+  4  |  import suggestionImage from "../../assets/suggestionImg.png";
+  5  |  import { fetchSentenceAnalysisApi } from "../../lib/api/analyzeApi";
+     |                                            ^
+  6  |  const Suggestion = ({ docId, contents }) => {
+  7  |    const [analysis, setAnalysis] = useState([]);
+3:57:40 AM [vite] Internal server error: Failed to resolve import "../../lib/api/analyzeApi" from "src/features/Suggestion/Suggestion.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /home/ubuntu/ssami/ssami-front/src/features/Suggestion/Suggestion.tsx:5:41
+  3  |  import styles from "./Suggestion.module.css";
+  4  |  import suggestionImage from "../../assets/suggestionImg.png";
+  5  |  import { fetchSentenceAnalysisApi } from "../../lib/api/analyzeApi";
+     |                                            ^
+  6  |  const Suggestion = ({ docId, contents }) => {
+  7  |    const [analysis, setAnalysis] = useState([]);
+      at TransformPluginContext._formatLog (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:31435:43)
+      at TransformPluginContext.error (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:31432:14)
+      at normalizeUrl (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:29978:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:30036:32
+      at async Promise.all (index 4)
+      at async TransformPluginContext.transform (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:30004:4)
+      at async EnvironmentPluginContainer.transform (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:31249:14)
+      at async loadAndTransform (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:26419:26)
+      at async viteTransformMiddleware (file:///home/ubuntu/ssami/ssami-front/node_modules/vite/dist/node/chunks/dep-DZ2tZksn.js:27504:20)
+3:57:46 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:57:53 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:58:00 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:58:05 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:58:17 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:58:22 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+3:58:28 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:03:50 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:04:02 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:04:04 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:04:07 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:04:09 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:04:12 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:04:14 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+4:06:38 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:07:57 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:13:05 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:14:49 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:14:59 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:15:10 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:15:33 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
+4:39:46 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:07 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:10 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:17 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:31 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:34 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:36 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:39 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:42:48 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:43:04 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:43:05 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:43:25 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:43:46 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:44:31 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:44:44 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:50:10 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+4:53:24 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:18:08 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:18:11 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:18:39 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:18:58 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:18:59 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0
+  
+  Unexpected "export"
+  526|  };
+  527|  
+  528|  export default EditDoc;
+     |  ^
+  529|  
+  
+5:19:01 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0
+  
+  Unexpected "export"
+  526|  };
+  527|  
+  528|  export default EditDoc;
+     |  ^
+  529|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:19:02 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:19:05 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:19:05 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0
+  
+  Unexpected "export"
+  526|  };
+  527|  
+  528|  export default EditDoc;
+     |  ^
+  529|  
+  
+5:19:08 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:528:0
+  
+  Unexpected "export"
+  526|  };
+  527|  
+  528|  export default EditDoc;
+     |  ^
+  529|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:19:39 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:19:40 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:539:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:539:0
+  
+  Unexpected "export"
+  537|  };
+  538|  
+  539|  export default EditDoc;
+     |  ^
+  540|  
+  
+5:19:42 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:539:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:539:0
+  
+  Unexpected "export"
+  537|  };
+  538|  
+  539|  export default EditDoc;
+     |  ^
+  540|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:19:47 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:19:48 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:541:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:541:0
+  
+  Unexpected "export"
+  539|  };
+  540|  
+  541|  export default EditDoc;
+     |  ^
+  542|  
+  
+5:19:50 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:541:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:541:0
+  
+  Unexpected "export"
+  539|  };
+  540|  
+  541|  export default EditDoc;
+     |  ^
+  542|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:20:19 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:20:20 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0
+  
+  Unexpected "export"
+  632|  };
+  633|  
+  634|  export default EditDoc;
+     |  ^
+  635|  
+  
+5:20:22 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0
+  
+  Unexpected "export"
+  632|  };
+  633|  
+  634|  export default EditDoc;
+     |  ^
+  635|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:20:27 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:20:28 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0
+  
+  Unexpected "export"
+  632|  };
+  633|  
+  634|  export default EditDoc;
+     |  ^
+  635|  
+  
+5:20:32 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:634:0
+  
+  Unexpected "export"
+  632|  };
+  633|  
+  634|  export default EditDoc;
+     |  ^
+  635|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:20:37 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:20:38 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0
+  
+  Unexpected "export"
+  642|  };
+  643|  
+  644|  export default EditDoc;
+     |  ^
+  645|  
+  
+5:20:41 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0
+  
+  Unexpected "export"
+  642|  };
+  643|  
+  644|  export default EditDoc;
+     |  ^
+  645|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:22:07 AM [vite] (client) page reload src/lib/api/analyzeApi.ts
+5:22:10 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0
+  
+  Unexpected "export"
+  642|  };
+  643|  
+  644|  export default EditDoc;
+     |  ^
+  645|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:22:14 AM [vite] (client) page reload src/features/Suggestion/Suggestion.tsx
+5:22:15 AM [vite] (client) Pre-transform error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0
+  
+  Unexpected "export"
+  642|  };
+  643|  
+  644|  export default EditDoc;
+     |  ^
+  645|  
+  
+5:22:17 AM [vite] Internal server error: Transform failed with 1 error:
+/home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0: ERROR: Unexpected "export"
+  Plugin: vite:esbuild
+  File: /home/ubuntu/ssami/ssami-front/src/features/Editor/EditDoc/EditDoc.tsx:644:0
+  
+  Unexpected "export"
+  642|  };
+  643|  
+  644|  export default EditDoc;
+     |  ^
+  645|  
+  
+      at failureErrorWithLog (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:1465:15)
+      at /home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:734:50
+      at responseCallbacks.<computed> (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:601:9)
+      at handleIncomingPacket (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:656:12)
+      at Socket.readFromStdout (/home/ubuntu/ssami/ssami-front/node_modules/esbuild/lib/main.js:579:7)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+5:22:19 AM [vite] (client) page reload src/features/Editor/EditDoc/EditDoc.tsx
+5:22:23 AM [vite] (client) page reload src/features/Editor/EditorPage.tsx
