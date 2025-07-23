@@ -40,14 +40,15 @@
   background-color: #f9f9f9;
 }
 
-/* .suggestionItem.open {
-  background-color: #f0f8ff;
-} */
-
+/* 상세 설명 부분 (클릭 시 나타남) */
 .description {
   margin-top: 8px;
   color: #555;
   font-size: 0.95rem;
+  line-height: 1.5;
+  background-color: #f5f5f5; /* 설명 박스 배경색 */
+  padding: 8px;
+  border-radius: 4px;
 }
 
 .applyBtn {
@@ -86,24 +87,103 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 250px; /* 원하는 높이 지정 */
+  height: 250px;
   font-size: 1.13rem;
 }
 
-/* 부적합 highlight 라벨 (제목) */
-.highlighted {
-  color: #e55;
-  font-weight: 600;
+/* 라벨별로 색상이 들어갈 실제 하이라이트 요소 (문장 내용 내에서) */
+.inlineHighlighted {
+  text-decoration-line: underline;
+  /* text-decoration-style: wavy; */
+  font-weight: 600; /* 텍스트 자체 강조 */
+  transition: all 0.2s ease-in-out;
 }
 
-/* 라벨 설명(사유) */
-.explanation {
-  margin-left: 8px;
-  color: #888;
-  font-size: 13px;
+/* 문장 텍스트 전체를 감싸는 컨테이너 (클릭 전 상태) */
+.sentenceTextContainer {
+  display: block;
+  color: #252525; /* 기본 텍스트 색상 */
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+/* 하이라이트된 텍스트 요약 (클릭 후 상태의 제목) */
+.highlightedSummary {
+  font-weight: bold;
+  font-size: 1.05rem;
+  padding: 2px 5px; /* 약간의 패딩 */
+  border-radius: 3px; /* 약간 둥근 모서리 */
+  display: inline-block; /* 배경색 적용을 위해 */
+  /* color, text-decoration-color, background-color는 라벨별 클래스에서 정의 */
+  transition: all 0.2s ease-in-out;
+  text-decoration-line: underline; /* ✅ 밑줄 추가 */
+  text-decoration-style: wavy; /* ✅ 물결 밑줄 추가 */
+}
+
+/* 라벨 설명(사유) 블록 스타일 (클릭 시 표시) */
+.explanationBlock {
+  display: flex; /* 아이콘과 텍스트 정렬을 위해 flex 사용 */
+  align-items: flex-start;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.03); /* 기본 설명 블록 배경색 */
+  color: #555; /* 설명 텍스트 기본 색상 */
+  transition: all 0.2s ease-in-out;
+}
+
+/* 설명 옆의 아이콘 스타일 */
+.explanationIcon {
+  margin-right: 5px;
+  color: #f0ad4e;
+  font-size: 1em;
 }
 
 /* suggestionItem 오픈 스타일 */
 .suggestionItem.open {
-  background-color: #f0f8ff;
+  background-color: #f3faff; /* 클릭 시 배경색 */
 }
+
+/* 클릭 시 (open 상태) 하이라이트와 설명의 색상을 더욱 강조 */
+.suggestionItem.open .inlineHighlighted {
+  filter: brightness(1.15);
+  /* background-color: rgba(0, 0, 0, 0.07); */
+  transform: scale(1.01);
+}
+.suggestionItem.open .highlightedSummary {
+  filter: brightness(1.15);
+  /* background-color: rgba(0, 0, 0, 0.1); 클릭 시 배경색 약간 더 진하게 */
+}
+.suggestionItem.open .explanationBlock {
+  filter: brightness(1.05);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+/* --- 라벨별 색상 정의 (Highlight 및 Summary 텍스트 색상) --- */
+
+.labelColor_framing { color: #FF7043; text-decoration-color: #FF7043; }
+.labelColor_emotionalCriticism { color: #E53935; text-decoration-color: #E53935; }
+.labelColor_negativeExpression { color: #f4511e; text-decoration-color: #f4511e; }
+.labelColor_negativeMetaphor { color: #fb8c00; text-decoration-color: #fb8c00; }
+.labelColor_sarcasm { color: #ffb300; text-decoration-color: #ffb300; }
+.labelColor_personalAttack { color: #ae33ca; text-decoration-color: #ae33ca; }
+.labelColor_generalization { color: #7cb342; text-decoration-color: #7cb342; }
+.labelColor_assertionBias { color: #26a69a; text-decoration-color: #26a69a; }
+.labelColor_unclearFact { color: #00acc1; text-decoration-color: #00acc1; }
+.labelColor_blameShifting { color: #29b6f6; text-decoration-color: #29b6f6; }
+.labelColor_extremeDepiction { color: #1e88e5; text-decoration-color: #1e88e5; }
+
+/* 라벨별 배경색 (highlightedSummary용) */
+.labelColor_framing.highlightedSummary { background-color: rgba(255, 112, 67, 0.15); }
+.labelColor_emotionalCriticism.highlightedSummary { background-color: rgba(229, 57, 53, 0.15); }
+.labelColor_negativeExpression.highlightedSummary { background-color: rgba(244, 81, 30, 0.15); }
+.labelColor_negativeMetaphor.highlightedSummary { background-color: rgba(251, 140, 0, 0.15); }
+.labelColor_sarcasm.highlightedSummary { background-color: rgba(255, 179, 0, 0.15); }
+.labelColor_personalAttack.highlightedSummary { background-color: rgba(192, 202, 51, 0.15); }
+.labelColor_generalization.highlightedSummary { background-color: rgba(124, 179, 66, 0.15); }
+.labelColor_assertionBias.highlightedSummary { background-color: rgba(38, 166, 154, 0.15); }
+.labelColor_unclearFact.highlightedSummary { background-color: rgba(0, 172, 193, 0.15); }
+.labelColor_blameShifting.highlightedSummary { background-color: rgba(41, 182, 246, 0.15); }
+.labelColor_extremeDepiction.highlightedSummary { background-color: rgba(30, 136, 229, 0.15); }

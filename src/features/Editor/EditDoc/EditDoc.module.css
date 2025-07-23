@@ -65,7 +65,6 @@
 .contentsWrapper {
   overflow-y: auto;
   padding: 0.5rem;
-  /* padding-right: 30px; */
   min-height: 200px;
   height: 100%;
   cursor: text;
@@ -81,6 +80,10 @@
   height: 100%;
   outline: none;
   cursor: text;
+  /* `dangerouslySetInnerHTML` 사용 시 React가 내용 관리 */
+  /* 이곳에 기본 텍스트 색상 및 줄 간격 설정 가능 */
+  line-height: 1.5; 
+  color: #252525;
 }
 
 .message {
@@ -243,29 +246,74 @@
   opacity: 1;
 }
 
-/* 분석 결과 하이라이트 */
-.analysisResult {
-  margin-top: 14px;
-  margin-bottom: 12px;
-}
-
-/* 밑줄 + 배경(부적합 문장) */
+/* 분석 결과 하이라이트 (EditDoc에서 텍스트에 직접 적용) */
 .analysisHighlight {
   text-decoration-line: underline;
   text-decoration-style: wavy;
-  text-decoration-color: #e44;
-  background: rgba(255, 0, 0, 0.07);
   cursor: help;
-  transition: background 0.18s;
+}
+
+/* 라벨별 밑줄 및 배경색 */
+/* Suggestion.module.css와 동일한 색상 팔레트 사용 */
+.labelColor_framing {
+  text-decoration-color: #FF7043; /* 오렌지 */
+  background-color: rgba(255, 112, 67, 0.1); /* 연한 오렌지 배경 */
+}
+.labelColor_emotionalCriticism {
+  text-decoration-color: #E53935; /* 진한 빨강 */
+  background-color: rgba(229, 57, 53, 0.1); /* 연한 빨강 배경 */
+}
+.labelColor_negativeExpression {
+  text-decoration-color: #f4511e; /* 다크 오렌지 */
+  background-color: rgba(244, 81, 30, 0.1);
+}
+.labelColor_negativeMetaphor {
+  text-decoration-color: #fb8c00; /* 앰버 */
+  background-color: rgba(251, 140, 0, 0.1);
+}
+.labelColor_sarcasm {
+  text-decoration-color: #ffb300; /* 황금색 */
+  background-color: rgba(255, 179, 0, 0.1);
+}
+.labelColor_personalAttack {
+  text-decoration-color: #c0ca33; /* 라임 그린 */
+  background-color: rgba(192, 202, 51, 0.1);
+}
+.labelColor_generalization {
+  text-decoration-color: #7cb342; /* 라이트 그린 */
+  background-color: rgba(124, 179, 66, 0.1);
+}
+.labelColor_assertionBias {
+  text-decoration-color: #26a69a; /* 청록색 */
+  background-color: rgba(38, 166, 154, 0.1);
+}
+.labelColor_unclearFact {
+  text-decoration-color: #00acc1; /* 스카이 블루 */
+  background-color: rgba(0, 172, 193, 0.1);
+}
+.labelColor_blameShifting {
+  text-decoration-color: #29b6f6; /* 라이트 블루 */
+  background-color: rgba(41, 182, 246, 0.1);
+}
+.labelColor_extremeDepiction {
+  text-decoration-color: #1e88e5; /* 짙은 파랑 */
+  background-color: rgba(30, 136, 229, 0.1);
+}
+
+/* 전체 문장 감싸는 span (내부 하이라이트가 없어도 툴팁을 위해 필요할 수 있음) */
+.analysisContainerSpan {
+  /* display: inline; 또는 display: inline-block; 필요에 따라 */
+  /* text-decoration-color는 개별 하이라이트 span에서 정의되므로 여기에선 필요 없음 */
+  /* background-color도 개별 하이라이트 span에서 정의됨 */
 }
 
 .analysisPlain {
   line-height: 1.8;
   color: #252525;
   transition: color 0.2s;
-  /* 부적합(밑줄) 아닌 문장용: 추가 스타일 원하면 여기서 */
 }
 
+/* 분석 설명 (EditDoc에서는 사용하지 않지만, CSS 파일이므로 그대로 둘 수 있음) */
 .analysisExplanation {
   color: #e44;
   margin-left: 6px;

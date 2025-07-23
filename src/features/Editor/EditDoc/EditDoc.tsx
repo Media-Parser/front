@@ -54,6 +54,7 @@ interface EditDocProps {
     ((data: { title: string; contents: string }) => Promise<void>) | null
   >;
   rightTab: "chatbot" | "suggestion";
+  onAutosave?: (data: { title: string; contents: string }) => void;
 }
 
 const EditDoc = ({
@@ -64,7 +65,8 @@ const EditDoc = ({
   contents,
   setContents,
   autosaveRef,
-  rightTab,
+  // rightTab,
+  onAutosave,
 }: EditDocProps) => {
   const [isReady, setIsReady] = useState(false);
 
@@ -87,7 +89,7 @@ const EditDoc = ({
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [isSavingFinal, setIsSavingFinal] = useState(false); // Renamed from isFinalizing for clarity
   const [showAutosaveToast, setShowAutosaveToast] = useState(false);
-  const [analysis, setAnalysis] = useState<SentenceAnalysis[]>([] as SentenceAnalysis[]); 
+  // const [analysis, setAnalysis] = useState<SentenceAnalysis[]>([] as SentenceAnalysis[]); 
 
   // contenteditable related state and refs
   const editableRef = useRef<HTMLDivElement>(null);
@@ -152,17 +154,17 @@ const EditDoc = ({
   }, [id, setDocument]);
 
   // 분석 요청 함수
-  const analyzeDocument = useCallback(
-    async (docId: string, contents: string) => {
-      try {
-        const results = await analyzeDocumentApi(docId, contents);
-        setAnalysis(results);
-      } catch {
-        setAnalysis([]);
-      }
-    },
-    []
-  );
+  // const analyzeDocument = useCallback(
+  //   async (docId: string, contents: string) => {
+  //     try {
+  //       const results = await analyzeDocumentApi(docId, contents);
+  //       setAnalysis(results);
+  //     } catch {
+  //       setAnalysis([]);
+  //     }
+  //   },
+  //   []
+  // );
 
   const ensureTrailingBreak = () => {
     const el = editableRef.current;
@@ -249,11 +251,20 @@ const EditDoc = ({
   // Debounced autosave function
   const debouncedAutoSave = useRef(
     debounce(async (data: Partial<Document>) => {
-      await autosave({ title: data.title, contents: data.contents });
+      await autosave({
+        title: data.title ?? "",
+        contents: data.contents ?? "",
+      });
+      console.log("💾 [EditDoc] 임시저장 완료!", { title: data.title ?? "", contentsLen: (data.contents ?? "").length });
       setShowAutosaveToast(true);
       setTimeout(() => setShowAutosaveToast(false), 1000);
-      if (rightTab === "suggestion" && id && data.contents) {
-        analyzeDocument(id, data.contents);
+  
+      // 자동저장이 실제로 끝난 다음에만 콜백!
+      if (onAutosave) {
+        onAutosave({
+          title: data.title ?? "",
+          contents: data.contents ?? "",
+        });
       }
     }, 3000)
   ).current;
@@ -368,13 +379,19 @@ const EditDoc = ({
 
   useEffect(() => {
     if (document) {
-      console.log("document 전체:", document);
+      // console.log("document 전체:", document);
       setTitle(document.title || "");
       setContents(document.contents || "");
       setTopicId(document.topic_id ?? null);
       setHashtags(document.hashtag ?? []);
     }
   }, [document]);
+
+  useEffect(() => {
+    return () => {
+      debouncedAutoSave.cancel();
+    };
+  }, [debouncedAutoSave]);
 
   // Expose a save function to parent component
   useEffect(() => {
@@ -564,36 +581,6 @@ const EditDoc = ({
           </span>
           <span className={styles.gptTooltip}>Polexible에게 묻기</span>
         </span>
-      )}
-      {/* === 분석 결과 하이라이트 === */}
-      {rightTab === "suggestion" && (
-        <div className={styles.analysisResult}>
-          {/* analysis가 배열이고 length 속성이 있는지 확인하는 타입 가드 추가 */}
-          {Array.isArray(analysis) && analysis.length > 0 &&
-            analysis.map((sent) => {
-              // explanation이 string[]로 온다고 가정하고 타입 가드 간소화
-              const explanations = sent.explanation; // Assuming sent.explanation is always string[] now
-
-              return (
-                <div key={sent.index} style={{ marginBottom: 8 }}>
-                  <span
-                    className={
-                      sent.flag ? styles.analysisHighlight : styles.analysisPlain
-                    }
-                    title={explanations.join(" / ")}
-                  >
-                    {sent.text}
-                  </span>
-                  {sent.flag && explanations.length > 0 && (
-                    <span className={styles.analysisExplanation}>
-                      ⚠️ {explanations.join(" / ")}
-                    </span>
-                  )}
-                </div>
-              );
-            })
-          }
-        </div>
       )}
     </div>
   );
