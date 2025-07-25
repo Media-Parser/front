@@ -28,6 +28,7 @@ interface ChatbotProps {
   autosave?: (data: { title: string; contents: string }) => Promise<void>;
   title: string;
   contents: string;
+  getCurrentEditorContents?: () => string;
 }
 
 const Chatbot = ({
@@ -42,7 +43,6 @@ const Chatbot = ({
   contents,
 }: ChatbotProps) => {
   const token = useAuthStore((state) => state.token);
-  const isApplyingRef = useRef(false);
 
   const [displayedMessage, setDisplayedMessage] = useState("");
   const [showOptions, setShowOptions] = useState(false);
@@ -51,16 +51,17 @@ const Chatbot = ({
   const [userInput, setUserInput] = useState("");
   const [chatLog, setChatLog] = useState<ChatQA[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isApplying, setIsApplying] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const chatMessagesRef = useRef<HTMLDivElement>(null);
 
   // 옵션 버튼 → 메시지 변환
-  const optionMessages: Record<string, string> = {
-    "기사 제목 추천 받기": "이 기사의 내용을 보고 어울릴만한 제목을 추천해줘",
-    "기사 톤 다듬기": "이 기사의 톤을 다듬어줘",
-    "유사 기사 추천": "이 기사의 내용을 보고 유사한 기사를 추천해줘",
+const optionMessages: Record<string, string> = {
+    "제목 추천 받기": "이 기사의 내용을 보고 어울릴만한 제목을 추천해줘",
+    "반박 받기": "이 문서의 내용에 반박해줘",
+    "문서 요약하기": "이 기사를 요약해줘",
+    "주제 더 알아보기": "이 기사의 주제를 파악하고 그거에 대한 내용을 더 자세히 설명해줘",
+    "다른 기사 찾아보기" : "이 주제에 대한 다른 기사 내용을 알려줘"
   };
 
   // 채팅 메시지 스크롤
@@ -113,7 +114,7 @@ const Chatbot = ({
     setLoading(true);
     setHasShownOptionsOnce(true);
 
-    // Q: 임시 chat_id 유니크하게 idx도 추가
+    // Q: 임시 chat_id 유니크하게 idx도 추가f
     setChatLog((prev) => [
       ...prev,
       {
@@ -225,90 +226,71 @@ const Chatbot = ({
     }
   };
 
-  // 적용 핸들러
-  const handleApply = async (
+   // 적용 핸들러
+   const handleApply = async (
     text: string,
     type?: "title" | "body",
     startIndex?: number,
-    endIndex?: number
+    endIndex?: number,
+    selectedText?: string
   ) => {
-    if (isApplying) {
-      console.log("[handleApply] 이미 적용 중이므로 무시됨");
-      return;
+    if (!window.confirm("이 내용을 적용할까요?")) return;
+  
+    let newTitle = title;
+    let newContents = contents;
+  
+    // ✅ 제목은 조건 없이 바로 적용
+    if (type === "title" && typeof setEditorTitle === "function") {
+      setEditorTitle(text);
+      newTitle = text;
     }
   
-    setIsApplying(true);
-    console.log("[handleApply] 시작", { text, type, startIndex, endIndex });
+    // ✅ 본문은 기존 검증 로직 유지
+    else if (type === "body" && typeof setEditorBody === "function") {
+      const actualStart = startIndex ?? -1;
+      const actualEnd = endIndex ?? -1;
   
-    let shouldExitEarly = false;
+      if (
+        typeof actualStart === "number" &&
+        typeof actualEnd === "number" &&
+        actualStart >= 0 &&
+        actualEnd > actualStart &&
+        selectedText
+      ) {
+        const fromDoc = contents.slice(actualStart, actualEnd);
   
-    try {
-      if (!window.confirm("이 내용을 적용할까요?")) {
-        console.log("[handleApply] 사용자 취소");
-        shouldExitEarly = true;
+        if (fromDoc === selectedText) {
+          newContents =
+            contents.slice(0, actualStart) + text + contents.slice(actualEnd);
+          setEditorBody(newContents);
+        } else {
+          alert(
+            "문서 내용이 변경되어 선택한 텍스트를 찾을 수 없습니다.\n" +
+              "이미 수정되었거나 인덱스가 달라졌을 수 있습니다.\n" +
+              "복사해서 직접 붙여넣어 주세요."
+          );
+          handleCopy(text);
+          return;
+        }
       } else {
-        let newTitle = title;
-        let newContents = contents;
-  
-        if (type === "title" && typeof setEditorTitle === "function") {
-          console.log("[handleApply] 제목 적용 중");
-          setEditorTitle(text);
-          newTitle = text;
-        } else if (type === "body" && typeof setEditorBody === "function") {
-          const selectedText = selectedTextData?.selectedText;
-          console.log("[handleApply] 본문 적용 디버깅 로그:", {
-            selectedText,
-            startIndex,
-            endIndex,
-            actualSlice: contents.slice(startIndex ?? 0, endIndex ?? 0),
-          });
-  
-          if (
-            selectedText &&
-            contents.includes(selectedText) &&
-            typeof startIndex === "number" &&
-            typeof endIndex === "number" &&
-            contents.slice(startIndex, endIndex) === selectedText
-          ) {
-            console.log("[handleApply] 선택된 텍스트 기반 적용 중");
-            const updated =
-              contents.slice(0, startIndex) + text + contents.slice(endIndex);
-            setEditorBody(updated);
-            newContents = updated;
-          } else {
-            console.warn(
-              "[handleApply] 선택 텍스트 없음 또는 인덱스 불일치 → 복사 후 종료"
-            );
-            console.warn("[handleApply] selectedTextData:", selectedTextData);
-            alert("본문에서 선택한 텍스트를 찾을 수 없습니다. 수동으로 붙여넣어 주세요.");
-            handleCopy(text);
-            shouldExitEarly = true;
-          }
-        }
-  
-        if (!shouldExitEarly && typeof autosave === "function") {
-          console.log("[handleApply] autosave 호출 중");
-          await autosave({ title: newTitle, contents: newContents });
-        }
-  
-        if (!shouldExitEarly && typeof onClearSelectedText === "function") {
-          console.log("[handleApply] 선택 영역 초기화");
-          onClearSelectedText();
-        }
-  
-        if (!shouldExitEarly) {
-          console.log("[handleApply] 적용 완료");
-        }
+        alert(
+          "문서 내용이 변경되어 선택한 텍스트를 찾을 수 없습니다.\n" +
+            "이미 수정되었거나 인덱스가 달라졌을 수 있습니다.\n" +
+            "복사해서 직접 붙여넣어 주세요."
+        );
+        handleCopy(text);
+        return;
       }
-    } catch (err) {
-      console.error("[handleApply] 오류 발생", err);
-    } finally {
-      setIsApplying(false);
-      console.log("[handleApply] isApplying 해제");
-      if (shouldExitEarly) console.log("[handleApply] 일찍 종료됨");
+    }
+  
+    // autosave 및 선택 초기화
+    if (typeof autosave === "function") {
+      await autosave({ title: newTitle, contents: newContents });
+    }
+    if (typeof onClearSelectedText === "function") {
+      onClearSelectedText();
     }
   };
-
   
   // 페이지 이탈 경고 (로딩 중일 때)
   useEffect(() => {
@@ -407,45 +389,37 @@ const Chatbot = ({
 
               {/* 적용/복사 박스 */}
               {chat.apply_title && (
-                <div className={styles.applyBox}>
-                  <div className={styles.applyTypeLabel}>[제목 수정]</div>
-                  <div className={styles.applyValueText}>{chat.apply_title}</div>
-                  <div className={styles.applyBtnRow}>
-                    <button
-                      className={styles.applyBtn}
-                      disabled={isApplyingRef.current} 
-                      onClick={() =>
-                        handleApply(
-                          chat.apply_title as string,
-                          "title",
-                          typeof chat.question !== "string"
-                            ? chat.question.start_index
-                            : undefined,
-                          typeof chat.question !== "string"
-                            ? chat.question.end_index
-                            : undefined
-                        )
-                      }
-                    >
-                      적용
-                    </button>
-                    <button
-                      className={styles.copyBtn}
-                      onClick={() => handleCopy(chat.apply_title as string)}
-                    >
-                      복사
-                    </button>
-                  </div>
+              <div className={styles.applyBox}>
+                <div className={styles.applyTypeLabel}>[제목 수정]</div>
+                <div className={styles.applyValueText}>{chat.apply_title}</div>
+                <div className={styles.applyBtnRow}>
+                  <button
+                    className={styles.applyBtn}
+                    onClick={() =>
+                      handleApply(
+                        chat.apply_title as string, // ✅ 제목 내용 전달
+                        "title" // ✅ 제목 타입 전달
+                      )
+                    }
+                  >
+                    적용
+                  </button>
+                  <button
+                    className={styles.copyBtn}
+                    onClick={() => handleCopy(chat.apply_title as string)}
+                  >
+                    복사
+                  </button>
                 </div>
-              )}
+              </div>
+            )}
               {chat.apply_body && (
                 <div className={styles.applyBox}>
                   <div className={styles.applyTypeLabel}>[내용 수정]</div>
                   <div className={styles.applyValueText}>{chat.apply_body}</div>
                   <div className={styles.applyBtnRow}>
                     <button
-                      className={styles.applyBtn} 
-                      disabled={isApplyingRef.current}
+                      className={styles.applyBtn}
                       onClick={() =>
                         handleApply(
                           chat.apply_body as string,
@@ -455,7 +429,10 @@ const Chatbot = ({
                             : undefined,
                           typeof chat.question !== "string"
                             ? chat.question.end_index
-                            : undefined
+                            : undefined,
+                          typeof chat.question !== "string"
+                            ? chat.question.selected_text
+                            : undefined 
                         )
                       }
                     >

@@ -164,14 +164,14 @@
 /* --- 라벨별 색상 정의 (Highlight 및 Summary 텍스트 색상) --- */
 
 .labelColor_framing { color: #FF7043; text-decoration-color: #FF7043; }
-.labelColor_emotionalCriticism { color: #E53935; text-decoration-color: #E53935; }
+.labelColor_emotionalCriticism { color: #ff0400; text-decoration-color: #ff0400; }
 .labelColor_negativeExpression { color: #f4511e; text-decoration-color: #f4511e; }
-.labelColor_negativeMetaphor { color: #fb8c00; text-decoration-color: #fb8c00; }
-.labelColor_sarcasm { color: #ffb300; text-decoration-color: #ffb300; }
+.labelColor_negativeMetaphor { color: #f8a203; text-decoration-color: #fb8c00; }
+.labelColor_sarcasm { color: yellow; text-decoration-color: yellow }
 .labelColor_personalAttack { color: #ae33ca; text-decoration-color: #ae33ca; }
 .labelColor_generalization { color: #7cb342; text-decoration-color: #7cb342; }
 .labelColor_assertionBias { color: #26a69a; text-decoration-color: #26a69a; }
-.labelColor_unclearFact { color: #00acc1; text-decoration-color: #00acc1; }
+.labelColor_unclearFact { color: #c1003d; text-decoration-color: #c1003d; }
 .labelColor_blameShifting { color: #29b6f6; text-decoration-color: #29b6f6; }
 .labelColor_extremeDepiction { color: #1e88e5; text-decoration-color: #1e88e5; }
 
