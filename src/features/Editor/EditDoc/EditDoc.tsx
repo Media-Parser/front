@@ -13,8 +13,8 @@ import {
 } from "../../../lib/api/documentsApi";
 import type { Document } from "../../../types/documentType";
 import styles from "./EditDoc.module.css";
-import { analyzeDocumentApi } from "../../../lib/api/aiApi";
-import type { SentenceAnalysis } from "../../../types/analyzeType";
+// import { analyzeDocumentApi } from "../../../lib/api/aiApi";
+// import type { SentenceAnalysis } from "../../../types/analyzeType";
 
 // ---
 // Components
@@ -55,6 +55,7 @@ interface EditDocProps {
   >;
   rightTab: "chatbot" | "suggestion";
   onAutosave?: (data: { title: string; contents: string }) => void;
+  onGetCurrentEditorContents?: (getContentsFn: () => string) => void;
 }
 
 const EditDoc = ({
@@ -67,6 +68,7 @@ const EditDoc = ({
   autosaveRef,
   // rightTab,
   onAutosave,
+  onGetCurrentEditorContents,
 }: EditDocProps) => {
   const [isReady, setIsReady] = useState(false);
 
@@ -152,6 +154,16 @@ const EditDoc = ({
       isMounted = false;
     };
   }, [id, setDocument]);
+
+  const getCurrentEditorContentsFn = useCallback(() => {
+    return editableRef.current?.innerText || "";
+  }, []);
+
+  useEffect(() => {
+    if (onGetCurrentEditorContents) {
+      onGetCurrentEditorContents(getCurrentEditorContentsFn);
+    }
+  }, [onGetCurrentEditorContents, getCurrentEditorContentsFn]);
 
   // 분석 요청 함수
   // const analyzeDocument = useCallback(
@@ -243,7 +255,6 @@ const EditDoc = ({
       ensureTrailingBreak();
     }
   }, [contents]);
-
   // ---
   // Autosave Logic
   // ---
