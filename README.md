@@ -1,4 +1,5 @@
 # Polexible 
+![Polexible 로고](src/assets/polexibleBold.png)
 
 > **편향 없는 기사 작성을 위한 AI 기반 스마트 편집 도구**  
 > 정치 기자 및 언론인을 위한 인터랙티브 문서 보조 시스템
