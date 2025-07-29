@@ -78,7 +78,6 @@ VITE_GOOGLE_CLIENT_ID=...
 VITE_KAKAO_CLIENT_ID=...
 VITE_NAVER_CLIENT_ID=...
 
----
 
 ## 개발자 참고 사항
 
@@ -88,13 +87,11 @@ VITE_NAVER_CLIENT_ID=...
 * 문서 분류 기능은 `Keyword`, 휴지통은 `Trash`로 분리되어 있습니다.
 * `ProtectedRoute.tsx`를 통해 인증된 사용자만 특정 라우트를 접근할 수 있도록 구성합니다.
 
----
 
 ## 저작권 및 라이선스
 
 본 프로젝트는 내부 연구/개발 목적에 따라 제작되었으며, 별도 라이선스 조건이 적용될 수 있습니다.
 
----
 
 🔧 문의 및 협업: \[프로젝트 관리자에게 문의하세요]
 
