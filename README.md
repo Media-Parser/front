@@ -29,7 +29,7 @@
 ---
 
 ## 📁 폴더 구조
-
+```
 ssami-front/
 ├── public/                    # 정적 파일
 ├── src/
@@ -59,7 +59,7 @@ ssami-front/
 ├── index.html                # HTML 진입점
 ├── package.json
 └── vite.config.ts
-
+```
 
 ---
 
