@@ -1,5 +1,7 @@
 <img src="src/assets/polexibleBold.png" alt="Polexible 로고" width="300" />
 
+[![Polexible 시연 영상](https://img.youtube.com/vi/영상ID/0.jpg)](https://youtu.be/iwoOOeFYyHI)
+
 
 > **편향 없는 기사 작성을 위한 AI 기반 스마트 편집 도구 Polexible**  
 > 정치 기자 및 언론인을 위한 인터랙티브 문서 보조 시스템
@@ -97,6 +99,9 @@ VITE_NAVER_CLIENT_ID=...
 
 
 문의 및 협업: \[프로젝트 관리자에게 문의하세요]
+
+
+## 설치 및 실행 방법
 
 ```
 
