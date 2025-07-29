@@ -31,34 +31,35 @@
 ## 📁 폴더 구조
 
 ssami-front/
-├── public/                 # 정적 파일
+├── public/                    # 정적 파일
 ├── src/
-│   ├── assets/             # 이미지 및 스타일 에셋
-│   ├── components/         # 재사용 가능한 UI 컴포넌트
+│   ├── assets/               # 이미지 및 스타일 에셋
+│   ├── components/           # 재사용 가능한 UI 컴포넌트
 │   │   ├── Button/
 │   │   ├── Header/
 │   │   ├── Modal/
 │   │   └── ...
-│   ├── features/           # 페이지 단위 기능 모듈
+│   ├── features/             # 페이지 단위 기능 모듈
 │   │   ├── Editor/
 │   │   ├── Chatbot/
 │   │   ├── Suggestion/
 │   │   └── ...
-│   ├── hooks/              # 커스텀 훅 모음
-│   ├── lib/                # API 함수 및 유틸
+│   ├── hooks/                # 커스텀 훅 모음
+│   ├── lib/                  # API 함수 및 유틸
 │   │   ├── api/
 │   │   └── utils/
-│   ├── routes/             # 라우팅 설정
-│   ├── store/              # Zustand 상태 관리
-│   ├── types/              # 전역 타입 선언
-│   ├── App.tsx            # 최상위 컴포넌트
-│   ├── main.tsx           # 진입점
+│   ├── routes/               # 라우팅 설정
+│   ├── store/                # Zustand 상태 관리
+│   ├── types/                # 전역 타입 선언
+│   ├── App.tsx               # 최상위 컴포넌트
+│   ├── main.tsx              # 진입점
 │   └── index.css
-├── .env                    # 환경 변수
-├── Dockerfile              # Docker 설정
-├── index.html              # HTML 진입점
+├── .env                      # 환경 변수
+├── Dockerfile                # Docker 설정
+├── index.html                # HTML 진입점
 ├── package.json
 └── vite.config.ts
+
 
 ---
 
