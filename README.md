@@ -1,4 +1,3 @@
-```markdown
 # 📘 ssami-front
 
 > 문서 작성, 분석, 정리를 돕는 스마트 문서 편집 시스템의 프론트엔드 레포지토리입니다.  
@@ -31,8 +30,6 @@
 
 ## 📁 폴더 구조
 
-```
-
 ssami-front/
 ├── public/                 # 정적 파일
 ├── src/
@@ -63,8 +60,6 @@ ssami-front/
 ├── package.json
 └── vite.config.ts
 
-````
-
 ---
 
 ## 📦 설치 및 실행 방법
@@ -81,7 +76,6 @@ VITE_API_URL=http://localhost:8000
 VITE_GOOGLE_CLIENT_ID=...
 VITE_KAKAO_CLIENT_ID=...
 VITE_NAVER_CLIENT_ID=...
-````
 
 ---
 
