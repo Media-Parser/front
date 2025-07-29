@@ -16,7 +16,7 @@ import { useCategories } from "../../hooks/useCategories";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { useDocumentActions } from "../../hooks/useDocumentActions";
 import useAuthStore from "../../store/useAuthStore";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import SearchBar from "../../components/Searchbar/SearchBar";
 import Button from "../../components/Button/Button";
 import DownloadDocModal from "../../components/Modal/DownloadDocModal";
 import { checkTempDocExists } from "../../lib/api/documentsApi";

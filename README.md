@@ -76,7 +76,6 @@ VITE_API_URL=http://localhost:8000
 VITE_GOOGLE_CLIENT_ID=...
 VITE_KAKAO_CLIENT_ID=...
 VITE_NAVER_CLIENT_ID=...
-```
 
 ---
 
@@ -99,5 +98,4 @@ VITE_NAVER_CLIENT_ID=...
 🔧 문의 및 협업: \[프로젝트 관리자에게 문의하세요]
 
 ```
-
 
