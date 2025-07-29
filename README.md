@@ -1,8 +1,7 @@
-# Polexible 
 <img src="src/assets/polexibleBold.png" alt="Polexible 로고" width="300" />
 
 
-> **편향 없는 기사 작성을 위한 AI 기반 스마트 편집 도구**  
+> **편향 없는 기사 작성을 위한 AI 기반 스마트 편집 도구 Polexible**  
 > 정치 기자 및 언론인을 위한 인터랙티브 문서 보조 시스템
 > 중립적 문서 작성, 분석, 정리를 돕는 스마트 문서 편집 시스템 polexible의 프론트엔드 레포지토리입니다.  
 > FastAPI 기반 백엔드와 함께 작동하며, React + TypeScript 기반의 인터페이스를 제공합니다.
