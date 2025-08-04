@@ -249,62 +249,66 @@
 /* 분석 결과 하이라이트 (EditDoc에서 텍스트에 직접 적용) */
 .analysisHighlight {
   text-decoration-line: underline;
-  text-decoration-style: wavy;
-  cursor: help;
+  font-weight: 600;
+  transition: all 0.18s;
+  /* 텍스트 색상은 라벨별 클래스에서 지정됨 */
 }
 
-/* 라벨별 밑줄 및 배경색 */
-/* Suggestion.module.css와 동일한 색상 팔레트 사용 */
+/* 라벨별 밑줄 + 배경색 + 텍스트색 (Suggestion과 통일) */
 .labelColor_framing {
-  text-decoration-color: #FF7043; /* 오렌지 */
-  background-color: rgba(255, 112, 67, 0.1); /* 연한 오렌지 배경 */
+  color: #FF7043;
+  text-decoration-color: #FF7043;
+  /* background-color: rgba(255, 112, 67, 0.15); */
 }
 .labelColor_emotionalCriticism {
-  text-decoration-color: #E53935; /* 진한 빨강 */
-  background-color: rgba(229, 57, 53, 0.1); /* 연한 빨강 배경 */
+  color: #ff0400;
+  text-decoration-color: #ff0400;
+  /* background-color: rgba(229, 57, 53, 0.15); */
 }
 .labelColor_negativeExpression {
-  text-decoration-color: #f4511e; /* 다크 오렌지 */
-  background-color: rgba(244, 81, 30, 0.1);
+  color: #f4511e;
+  text-decoration-color: #f4511e;
+  /* background-color: rgba(244, 81, 30, 0.15); */
 }
 .labelColor_negativeMetaphor {
-  text-decoration-color: #fb8c00; /* 앰버 */
-  background-color: rgba(251, 140, 0, 0.1);
+  color: #f8a203;
+  text-decoration-color: #fb8c00;
+  /* background-color: rgba(251, 140, 0, 0.15); */
 }
 .labelColor_sarcasm {
-  text-decoration-color: #ffb300; /* 황금색 */
-  background-color: rgba(255, 179, 0, 0.1);
+  color: yellow;
+  text-decoration-color: yellow;
+  /* background-color: rgba(255, 179, 0, 0.15); */
 }
 .labelColor_personalAttack {
-  text-decoration-color: #c0ca33; /* 라임 그린 */
-  background-color: rgba(192, 202, 51, 0.1);
+  color: #ae33ca;
+  text-decoration-color: #ae33ca;
+  /* background-color: rgba(192, 202, 51, 0.15); */
 }
 .labelColor_generalization {
-  text-decoration-color: #7cb342; /* 라이트 그린 */
-  background-color: rgba(124, 179, 66, 0.1);
+  color: #7cb342;
+  text-decoration-color: #7cb342;
+  /* background-color: rgba(124, 179, 66, 0.15); */
 }
 .labelColor_assertionBias {
-  text-decoration-color: #26a69a; /* 청록색 */
-  background-color: rgba(38, 166, 154, 0.1);
+  color: #26a69a;
+  text-decoration-color: #26a69a;
+  /* background-color: rgba(38, 166, 154, 0.15); */
 }
 .labelColor_unclearFact {
-  text-decoration-color: #00acc1; /* 스카이 블루 */
-  background-color: rgba(0, 172, 193, 0.1);
+  color: #c1003d;
+  text-decoration-color: #c1003d;
+  /* background-color: rgba(0, 172, 193, 0.15); */
 }
 .labelColor_blameShifting {
-  text-decoration-color: #29b6f6; /* 라이트 블루 */
-  background-color: rgba(41, 182, 246, 0.1);
+  color: #29b6f6;
+  text-decoration-color: #29b6f6;
+  /* background-color: rgba(41, 182, 246, 0.15); */
 }
 .labelColor_extremeDepiction {
-  text-decoration-color: #1e88e5; /* 짙은 파랑 */
-  background-color: rgba(30, 136, 229, 0.1);
-}
-
-/* 전체 문장 감싸는 span (내부 하이라이트가 없어도 툴팁을 위해 필요할 수 있음) */
-.analysisContainerSpan {
-  /* display: inline; 또는 display: inline-block; 필요에 따라 */
-  /* text-decoration-color는 개별 하이라이트 span에서 정의되므로 여기에선 필요 없음 */
-  /* background-color도 개별 하이라이트 span에서 정의됨 */
+  color: #1e88e5;
+  text-decoration-color: #1e88e5;
+  /* background-color: rgba(30, 136, 229, 0.15); */
 }
 
 .analysisPlain {
