@@ -6,10 +6,11 @@ import { fetchSentenceAnalysisApi } from "../../lib/api/analyzeApi";
 import type { SentenceAnalysis } from "../../types/analyzeType";
 
 type SuggestionProps = {
-  docId: string;
-  contents: string;
-  shouldAnalyze: number; // 분석 트리거(숫자 키). 0이 아니면 분석 요청으로 간주.
-  onAnalyzed?: () => void; // 분석 완료 후 호출될 콜백
+  docId: string;
+  contents: string;
+  shouldAnalyze: number; // 분석 트리거(숫자 키). 0이 아니면 분석 요청으로 간주.
+  onAnalyzed?: () => void; // 분석 완료 후 호출될 콜백
+  onAnalyzedResult?: (result: SentenceAnalysis[]) => void;
 };
 
 // 라벨별 색상을 매핑하는 헬퍼 함수 (이전과 동일)
@@ -31,7 +32,7 @@ const getLabelColorClass = (label: string): string => {
   }
 };
 
-const Suggestion = ({ docId, contents, shouldAnalyze, onAnalyzed }: SuggestionProps) => {
+const Suggestion = ({ docId, contents, shouldAnalyze, onAnalyzed, onAnalyzedResult }: SuggestionProps) => {
   const [loading, setLoading] = useState(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [flaggedSentences, setFlaggedSentences] = useState<SentenceAnalysis[]>([]);
@@ -81,6 +82,7 @@ const Suggestion = ({ docId, contents, shouldAnalyze, onAnalyzed }: SuggestionPr
       console.log(`[Suggestion-Filter] Total sentences: ${result.length}, Flagged sentences count: ${filtered.length}`, filtered);
 
       if (onAnalyzed) onAnalyzed();
+      if (onAnalyzedResult) onAnalyzedResult(result);
 
     } catch (error) {
       console.error("[Suggestion-API] 분석 API 호출 에러:", error);
@@ -88,7 +90,7 @@ const Suggestion = ({ docId, contents, shouldAnalyze, onAnalyzed }: SuggestionPr
     } finally {
       setLoading(false);
     }
-  }, [docId, onAnalyzed]); // latestContentsRef는 current로, loading은 내부에서만 제어.
+  }, [docId, onAnalyzed, onAnalyzedResult]); // latestContentsRef는 current로, loading은 내부에서만 제어.
 
   // shouldAnalyze 값이 변경될 때만 분석을 트리거하는 useEffect
   useEffect(() => {

@@ -13,8 +13,7 @@ import {
 } from "../../../lib/api/documentsApi";
 import type { Document } from "../../../types/documentType";
 import styles from "./EditDoc.module.css";
-// import { analyzeDocumentApi } from "../../../lib/api/aiApi";
-// import type { SentenceAnalysis } from "../../../types/analyzeType";
+import type { SentenceAnalysis } from "../../../types/analyzeType";
 
 // ---
 // Components
@@ -39,6 +38,78 @@ const RestoreModal = ({ onRestore, onCancel }: RestoreModalProps) => (
   </div>
 );
 
+const getLabelColorClass = (label: string): string => {
+  switch (label) {
+    case "문제 없음": return "";
+    case "프레이밍": return styles.labelColor_framing;
+    case "감정적 비난": return styles.labelColor_emotionalCriticism;
+    case "부정적 표현": return styles.labelColor_negativeExpression;
+    case "부정적 비유": return styles.labelColor_negativeMetaphor;
+    case "조롱/비아냥/풍자": return styles.labelColor_sarcasm;
+    case "인신공격": return styles.labelColor_personalAttack;
+    case "일반화": return styles.labelColor_generalization;
+    case "단정/확증편향": return styles.labelColor_assertionBias;
+    case "사실 여부 불명확": return styles.labelColor_unclearFact;
+    case "책임 전가": return styles.labelColor_blameShifting;
+    case "극단적 묘사": return styles.labelColor_extremeDepiction;
+    default: return "";
+  }
+};
+
+function escapeHtml(str?: string): string {
+  return (str ?? "").replace(/[&<>"']/g, (m) =>
+    ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[m] ?? m) // undefined이면 m 반환
+  );
+}
+
+function renderContentsWithHighlight(contents?: string, analysis?: SentenceAnalysis[]) {
+  // 하이라이트가 없으면 항상 줄바꿈 그대로 챗봇탭 스타일
+  if (!analysis || analysis.length === 0) {
+    return escapeHtml(contents).replace(/\n/g, "<br />");
+  }
+
+  // 줄 단위로 쪼개서 매칭
+  const lines = (contents || "").split('\n');
+  let html = "";
+
+  for (const line of lines) {
+    // 해당 줄이 분석결과(analysis) 중 하나와 정확히 일치하는지 확인
+    const sentence = analysis.find(s => s.text === line);
+
+    if (sentence && sentence.highlighted && sentence.highlighted.length > 0) {
+      // 하이라이트 존재하면 하이라이트 태그로 감싸기
+      let parts: string[] = [];
+      let lastIndex = 0;
+      for (const hl of sentence.highlighted) {
+        let start = line.indexOf(hl, lastIndex);
+        if (start === -1) start = line.indexOf(hl); // fallback
+        if (start === -1 || start < lastIndex) continue;
+        if (start > lastIndex) {
+          parts.push(escapeHtml(line.slice(lastIndex, start)));
+        }
+        parts.push(
+          `<span class="${styles.analysisHighlight} ${getLabelColorClass(sentence.label)}">${escapeHtml(hl)}</span>`
+        );
+        lastIndex = start + hl.length;
+      }
+      if (lastIndex < line.length) {
+        parts.push(escapeHtml(line.slice(lastIndex)));
+      }
+      html += `<span class="${styles.analysisPlain}">${parts.join("")}</span><br />`;
+    } else {
+      // 하이라이트가 없거나 매칭이 안 되는 줄은 그냥 보여줌
+      html += `<span class="${styles.analysisPlain}">${escapeHtml(line)}</span><br />`;
+    }
+  }
+  return html;
+}
+
 // ---
 // Main Component
 // ---
@@ -56,6 +127,7 @@ interface EditDocProps {
   rightTab: "chatbot" | "suggestion";
   onAutosave?: (data: { title: string; contents: string }) => void;
   onGetCurrentEditorContents?: (getContentsFn: () => string) => void;
+  analyzeResult?: SentenceAnalysis[];
 }
 
 const EditDoc = ({
@@ -66,9 +138,10 @@ const EditDoc = ({
   contents,
   setContents,
   autosaveRef,
-  // rightTab,
+  rightTab,
   onAutosave,
   onGetCurrentEditorContents,
+  analyzeResult,
 }: EditDocProps) => {
   const [isReady, setIsReady] = useState(false);
 
@@ -107,6 +180,7 @@ const EditDoc = ({
   } | null>(null);
   const [topicId, setTopicId] = useState<number | null>(null);
   const [hashtags, setHashtags] = useState<string[]>([]);
+  const [showingAnalysis, setShowingAnalysis] = useState(false);
 
   //  Initial document fetch on ID change
   useEffect(() => {
@@ -235,26 +309,55 @@ const EditDoc = ({
     }
   }, [document]);
 
-  useEffect(() => {
-    if (editableRef.current && editableRef.current.innerText !== contents) {
-      editableRef.current.innerText = contents || "";
+  // (1) 입력 도중에는 React 상태만 바꿈, DOM에 직접 터치 안 함
+const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+  setContents(e.currentTarget.innerText);
+  setShowingAnalysis(false);
+  if (!isSavingFinal) {
+    debouncedAutoSave({ title, contents: e.currentTarget.innerText });
+  }
+};
 
-      // ✅ 커서 생성을 위해 <br> 삽입
-      const el = editableRef.current;
-      const lines = contents.split(/\r?\n/);
-
-      // 기존 내용 제거
-      el.innerHTML = "";
-
-      for (let i = 0; i < lines.length; i++) {
-        const textNode = window.document.createTextNode(lines[i]);
-        el.appendChild(textNode);
-        el.appendChild(window.document.createElement("br")); // 항상 줄 끝에 br 삽입
-      }
-
-      ensureTrailingBreak();
+// (2) 문서가 "진짜 새로 바뀔 때"만 동기화
+useEffect(() => {
+  if (document && editableRef.current) {
+    // 문서가 처음 로드되거나, id 바뀌었을 때만!
+    editableRef.current.innerText = document.contents || "";
+    if (!document.contents) {
+      editableRef.current.innerHTML = "<br />";
     }
-  }, [contents]);
+  }
+  // setTitle/setContents 등 상태는 여기서 동기화
+}, [document]); // 'contents'로 트리거시키지 마세요!
+
+// (4) renderContentsWithHighlight 부분은 분석 결과가 새로 왔을 때만
+useEffect(() => {
+  if (!editableRef.current) return;
+  if (showingAnalysis && analyzeResult && analyzeResult.length > 0) {
+    editableRef.current.innerHTML = renderContentsWithHighlight(contents, analyzeResult);
+  }
+}, [showingAnalysis, analyzeResult, contents]);
+  
+  useEffect(() => {
+    if (analyzeResult && analyzeResult.length > 0) {
+      setShowingAnalysis(true);
+      const timeout = setTimeout(() => setShowingAnalysis(false), 2500); // 2.5초 표시
+      return () => clearTimeout(timeout);
+    }
+  }, [analyzeResult]);
+
+  useEffect(() => {
+    if (rightTab === "chatbot" && editableRef.current) {
+      // 하이라이트된 innerHTML을 깨끗하게 원본 텍스트로 되돌림
+      editableRef.current.innerText = contents || "";
+      if (!contents) editableRef.current.innerHTML = "<br />";
+      // "분석 모드" 플래그도 꺼줘야 함!
+      setShowingAnalysis(false);
+    }
+    // rightTab만 의존성에!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rightTab]);
+
   // ---
   // Autosave Logic
   // ---
@@ -542,12 +645,7 @@ const EditDoc = ({
           onKeyUp={handleTextSelection}
           suppressContentEditableWarning
           spellCheck={false}
-          onInput={(e) => {
-            setContents(e.currentTarget.innerText);
-            if (!isSavingFinal) {
-              debouncedAutoSave({ title, contents: e.currentTarget.innerText });
-            }
-          }}
+          onInput={handleInput}
           onPaste={handlePaste}
           tabIndex={0}
           aria-label="문서 편집기"
