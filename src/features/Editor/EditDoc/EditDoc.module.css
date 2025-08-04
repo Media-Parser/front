@@ -65,11 +65,10 @@
 .contentsWrapper {
   overflow-y: auto;
   padding: 0.5rem;
-  min-height: 200px;
   height: 100%;
   cursor: text;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* flex-grow를 사용하기 위해 추가 */
   outline: none;
 }
 
@@ -77,11 +76,9 @@
   white-space: pre-wrap;
   position: relative;
   min-height: 200px;
-  height: 100%;
+  flex-grow: 1; /* 남은 공간 모두 차지하도록 수정 */
   outline: none;
   cursor: text;
-  /* `dangerouslySetInnerHTML` 사용 시 React가 내용 관리 */
-  /* 이곳에 기본 텍스트 색상 및 줄 간격 설정 가능 */
   line-height: 1.5; 
   color: #252525;
 }
