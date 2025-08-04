@@ -69,21 +69,25 @@ function escapeHtml(str?: string): string {
 }
 
 function renderContentsWithHighlight(contents?: string, analysis?: SentenceAnalysis[]) {
-  // 하이라이트가 없으면 항상 줄바꿈 그대로 챗봇탭 스타일
   if (!analysis || analysis.length === 0) {
     return escapeHtml(contents).replace(/\n/g, "<br />");
   }
 
-  // 줄 단위로 쪼개서 매칭
+  // 줄 단위로 쪼개서 매칭 (줄과 문장 완전 일치 안 해도 하이라이트!)
   const lines = (contents || "").split('\n');
   let html = "";
 
   for (const line of lines) {
-    // 해당 줄이 분석결과(analysis) 중 하나와 정확히 일치하는지 확인
-    const sentence = analysis.find(s => s.text === line);
+    // ① 완전 일치 → ② 부분 포함 → ③ 가장 긴 매칭 우선
+    let sentence = analysis.find(s => s.text === line);
+    if (!sentence) {
+      // 부분 일치 (가장 긴 문장 우선)
+      sentence = analysis
+        .filter(s => line && s.text && line.includes(s.text))
+        .sort((a, b) => (b.text.length - a.text.length))[0];
+    }
 
     if (sentence && sentence.highlighted && sentence.highlighted.length > 0) {
-      // 하이라이트 존재하면 하이라이트 태그로 감싸기
       let parts: string[] = [];
       let lastIndex = 0;
       for (const hl of sentence.highlighted) {
@@ -103,7 +107,6 @@ function renderContentsWithHighlight(contents?: string, analysis?: SentenceAnaly
       }
       html += `<span class="${styles.analysisPlain}">${parts.join("")}</span><br />`;
     } else {
-      // 하이라이트가 없거나 매칭이 안 되는 줄은 그냥 보여줌
       html += `<span class="${styles.analysisPlain}">${escapeHtml(line)}</span><br />`;
     }
   }
@@ -425,26 +428,25 @@ useEffect(() => {
       setSelectedText("");
       return;
     }
-
+  
     const range = sel.getRangeAt(0);
     const rects = range.getClientRects();
-
     if (rects.length === 0 || (rects[0].width === 0 && rects[0].height === 0)) {
       setShowAskAIButton(false);
       setSelectionButtonPosition(null);
       return;
     }
-
+  
     const rect = rects[0];
     setShowAskAIButton(true);
     setSelectionButtonPosition({
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX,
     });
-
+  
     const text = sel.toString();
     setSelectedText(text);
-
+  
     const fullText = editableRef.current?.innerText || "";
     const start = fullText.indexOf(text);
     setSelectionRange(
